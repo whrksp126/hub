@@ -1,0 +1,29 @@
+# hub.ghmate.com — base compose (로컬 개발/공용)
+# - 로컬: localhost:3002 로 접속 (호스트 3000은 다른 Docker 점유)
+# - 홈서버(prod): docker-compose.prod.yml override 와 함께 사용 → scripts/up.sh 가 자동 처리
+# - 형제 프로젝트(objectstore/serverstate/openday) 컨벤션 준수
+name: hub
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hub:latest
+    container_name: hub-app
+    restart: unless-stopped
+    ports:
+      - '3002:3000'
+    volumes:
+      # SQLite DB(WAL) 영속 — 컨테이너 /app/data 에 마운트
+      - ./data:/app/data
+    env_file:
+      - .env.local
+    environment:
+      NODE_ENV: production
+    networks:
+      - hub-net
+
+networks:
+  hub-net:
+    driver: bridge

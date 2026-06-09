@@ -1,0 +1,34 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# next.js
+.next/
+out/
+next-env.d.ts
+
+# payload
+src/payload-types.ts.bak
+
+# data (SQLite + WAL) — 백업은 별도 절차
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# env / secrets (절대 커밋 금지)
+.env
+.env.*
+!.env.example
+
+# claude code (개인 설정 / 런타임 상태)
+.claude/settings.local.json
+.claude/.state/
+.claude/scheduled_tasks.lock
+CLAUDE.local.md
+
+# misc
+.DS_Store
+*.log
+.vercel
+.turbo

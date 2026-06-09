@@ -1,0 +1,19 @@
+# 홈서버(ghmate) 운영 override.
+# - 가이드 GHMATE_SERVER_GUIDE.md 패턴: 호스트 포트 노출 안 함, nginx_proxy 네트워크 join
+# - 사용: docker compose -f docker-compose.yml -f docker-compose.prod.yml --env-file .env.dev up -d --build
+# - scripts/up.sh dev 가 위 명령을 자동 실행 (Next 앱이라 서버에서 직접 빌드)
+services:
+  app:
+    container_name: hub_app_prod
+    ports: !reset []
+    expose:
+      - '3000'
+    env_file:
+      - .env.dev
+    networks:
+      - hub-net
+      - nginx_proxy
+
+networks:
+  nginx_proxy:
+    external: true # /srv/nginx-proxy 가 생성한 글로벌 네트워크
