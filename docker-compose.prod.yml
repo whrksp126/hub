@@ -8,7 +8,8 @@ services:
     ports: !reset []
     expose:
       - '3000'
-    env_file:
+    # base의 env_file(.env.local)을 병합하지 않고 교체(서버엔 .env.dev만 존재)
+    env_file: !override
       - .env.dev
     networks:
       - hub-net
