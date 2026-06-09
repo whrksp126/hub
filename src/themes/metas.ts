@@ -2,10 +2,10 @@
 export type ThemeCardMeta = { id: string; name: string; description: string; preview: 'hero' | 'minimal' | 'side' | 'card' | 'dark' }
 
 export const BLOG_THEME_METAS: ThemeCardMeta[] = [
-  { id: 'clean', name: '깔끔 텍스트', description: '중앙 정렬·넉넉한 여백, 가독성 최우선', preview: 'minimal' },
-  { id: 'magazine', name: '매거진', description: '큰 커버 히어로 + 타이틀 오버레이', preview: 'hero' },
-  { id: 'devlog', name: '개발노트', description: '모노 악센트·카테고리 라벨, 기술글에 적합', preview: 'side' },
-  { id: 'card', name: '카드형', description: '박스 컨테이너 + 부드러운 그림자', preview: 'card' },
-  { id: 'notebook', name: '노트', description: '좌측 악센트 보더, 메모 같은 느낌', preview: 'side' },
+  { id: 'clean', name: '에디토리얼', description: '중앙 세리프 헤드라인 + 드롭캡, 잡지 사설 느낌', preview: 'minimal' },
+  { id: 'magazine', name: '매거진', description: '풀블리드 커버 히어로 + 큰 타이틀 오버레이', preview: 'hero' },
+  { id: 'devlog', name: '칼럼', description: '좌측 메타 레일(비대칭) + 세리프 헤드라인', preview: 'side' },
+  { id: 'card', name: '피처', description: '커버를 품은 큰 피처드 카드 + 부드러운 그림자', preview: 'card' },
+  { id: 'notebook', name: '사이드룰', description: '굵은 좌측 악센트 바 + 대형 세리프 헤드라인', preview: 'side' },
 ]
 

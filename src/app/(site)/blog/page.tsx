@@ -14,8 +14,8 @@ export default async function BlogListPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-16">
-      <h1 className="text-3xl font-bold tracking-tight">블로그</h1>
-      <p className="mt-2 text-[var(--fg-muted)]">개발 기록 · 뉴스 · 버그 해결</p>
+      <h1 className="font-display text-4xl font-extrabold tracking-tight sm:text-5xl">블로그</h1>
+      <p className="mt-3 text-[var(--fg-muted)]">개발 기록 · 뉴스 · 버그 해결</p>
 
       {posts.length === 0 ? (
         <div className="mt-12 rounded-2xl border border-dashed border-[var(--line)] p-12 text-center text-sm text-[var(--fg-muted)]">
@@ -35,7 +35,7 @@ export default async function BlogListPage() {
                     <span className="text-[var(--brand)]">{CATEGORY_LABEL[p.category] ?? p.category}</span>
                     {p.publishedAt && <time>{p.publishedAt.toISOString().slice(0, 10)}</time>}
                   </div>
-                  <h2 className="mt-1 text-lg font-semibold transition-colors group-hover:text-[var(--brand)]">{p.title}</h2>
+                  <h2 className="font-display mt-1 text-xl font-bold tracking-tight transition-colors group-hover:text-[var(--brand)]">{p.title}</h2>
                   {p.excerpt && <p className="mt-1 line-clamp-2 text-sm text-[var(--fg-muted)]">{p.excerpt}</p>}
                 </div>
               </Link>

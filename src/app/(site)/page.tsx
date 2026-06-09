@@ -19,9 +19,11 @@ export default async function HomePage() {
 
       {/* Hero */}
       <section className="mx-auto max-w-3xl px-5 py-20 sm:py-28">
-        <p className="text-sm font-medium text-[var(--brand)]">{SITE_AUTHOR} · {SITE_NAME}</p>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight sm:text-5xl">개발 기록과 생각.</h1>
-        <p className="mt-5 max-w-2xl text-lg text-[var(--fg-muted)]">{SITE_DESCRIPTION}</p>
+        <span className="kicker kicker--both">{SITE_AUTHOR} · {SITE_NAME}</span>
+        <h1 className="font-display mt-5 text-5xl font-extrabold leading-[1.1] tracking-tight sm:text-6xl">
+          개발 기록과 생각.
+        </h1>
+        <p className="mt-6 max-w-2xl text-lg text-[var(--fg-muted)]">{SITE_DESCRIPTION}</p>
         <div className="mt-8">
           <Link
             href="/blog"
@@ -35,7 +37,7 @@ export default async function HomePage() {
       {/* Recent posts */}
       <section className="mx-auto max-w-3xl px-5 pb-20">
         <div className="mb-6 flex items-baseline justify-between">
-          <h2 className="text-xl font-bold">최근 글</h2>
+          <h2 className="font-display text-2xl font-bold tracking-tight">최근 글</h2>
           <Link href="/blog" className="text-sm text-[var(--fg-muted)] hover:text-[var(--fg)]">
             전체 보기 →
           </Link>

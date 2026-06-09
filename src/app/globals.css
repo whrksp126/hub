@@ -1,4 +1,5 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&display=swap');
 
 @plugin 'tailwind-scrollbar-hide';
 @import 'tailwindcss';
@@ -8,6 +9,8 @@
 @theme {
   --font-sans:
     'Pretendard Variable', Pretendard, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* 에디토리얼/매거진 디스플레이 세리프 (헤드라인·인용구) */
+  --font-serif: 'Noto Serif KR', 'Pretendard Variable', Georgia, 'Times New Roman', serif;
 }
 
 /* 사이트 자체 토큰 */
@@ -132,23 +135,26 @@ body {
   margin-top: 1rem;
 }
 .hub-prose h1 {
-  font-size: 2rem;
+  font-family: var(--font-serif);
+  font-size: 2.1rem;
   font-weight: 700;
   line-height: 1.25;
-  letter-spacing: -0.02em;
-  margin-top: 2rem;
+  letter-spacing: -0.01em;
+  margin-top: 2.4rem;
 }
 .hub-prose h2 {
-  font-size: 1.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
   font-weight: 700;
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-  margin-top: 1.75rem;
+  line-height: 1.32;
+  letter-spacing: -0.01em;
+  margin-top: 2.2rem;
 }
 .hub-prose h3 {
   font-size: 1.2rem;
-  font-weight: 600;
-  margin-top: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-top: 1.6rem;
 }
 .hub-prose a {
   color: var(--brand);
@@ -156,10 +162,17 @@ body {
   text-underline-offset: 2px;
 }
 .hub-prose blockquote {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  line-height: 1.6;
+  font-weight: 500;
+  color: var(--fg);
   border-left: 3px solid var(--brand);
-  padding-left: 1rem;
-  color: var(--fg-muted);
-  font-style: italic;
+  padding: 0.25rem 0 0.25rem 1.25rem;
+  margin: 1.75rem 0;
+}
+.hub-prose blockquote p {
+  margin-top: 0.5rem;
 }
 .hub-prose ul,
 .hub-prose ol {
@@ -203,4 +216,40 @@ body {
   border: none;
   border-top: 1px solid var(--line);
   margin: 2rem 0;
+}
+
+/* ── 에디토리얼/매거진 테마 유틸 ─────────────────────────────────── */
+/* 디스플레이 세리프 헤드라인 (테마 타이틀) */
+.font-display {
+  font-family: var(--font-serif);
+  letter-spacing: -0.01em;
+}
+/* 키커: 카테고리 라벨 위 작은 대문자 라벨 + 양옆 룰 */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.kicker::before,
+.kicker.kicker--both::after {
+  content: '';
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+/* 본문 첫 글자 드롭캡 (에디토리얼) */
+.drop-cap > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-weight: 900;
+  font-size: 3.4em;
+  line-height: 0.82;
+  padding: 0.05em 0.12em 0 0;
+  color: var(--brand);
 }
