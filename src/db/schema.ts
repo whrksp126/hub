@@ -19,7 +19,7 @@ const contentStatus = { enum: ['draft', 'published'] as const }
 // ── 관리자 계정 (단일~소수, 세션 로그인) ──────────────────────────────
 export const users = sqliteTable('users', {
   id: integer('id').primaryKey({ autoIncrement: true }),
-  email: text('email').notNull().unique(),
+  username: text('username').notNull().unique(),
   passwordHash: text('password_hash').notNull(),
   name: text('name'),
   role: text('role').notNull().default('admin'),

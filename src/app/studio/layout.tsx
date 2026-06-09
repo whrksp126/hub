@@ -9,7 +9,7 @@ export default async function StudioLayout({ children }: { children: React.React
   const user = await getCurrentUser()
   return (
     <div className="min-h-dvh">
-      <StudioHeader email={user?.email} />
+      <StudioHeader username={user?.username} />
       {children}
     </div>
   )

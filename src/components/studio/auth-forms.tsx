@@ -12,7 +12,7 @@ export function LoginForm() {
   const [error, action, pending] = useActionState(loginAction, null)
   return (
     <form action={action} className="space-y-3">
-      <input name="email" type="text" placeholder="아이디" autoComplete="username" className={inputCls} />
+      <input name="username" type="text" placeholder="아이디" autoComplete="username" className={inputCls} />
       <input
         name="password"
         type="password"
@@ -33,7 +33,7 @@ export function SetupForm() {
   return (
     <form action={action} className="space-y-3">
       <input name="name" type="text" placeholder="이름(선택)" className={inputCls} />
-      <input name="email" type="email" placeholder="이메일" autoComplete="username" className={inputCls} />
+      <input name="username" type="text" placeholder="아이디" autoComplete="username" className={inputCls} />
       <input
         name="password"
         type="password"

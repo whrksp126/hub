@@ -28,10 +28,10 @@ export async function verifyPassword(password: string, stored: string): Promise<
 }
 
 // ── 세션 (jose JWT httpOnly 쿠키) ────────────────────────────────────
-type SessionPayload = { uid: number; email: string; role: string }
+type SessionPayload = { uid: number; username: string; role: string }
 
-export async function createSession(user: { id: number; email: string; role: string }) {
-  const token = await new SignJWT({ uid: user.id, email: user.email, role: user.role })
+export async function createSession(user: { id: number; username: string; role: string }) {
+  const token = await new SignJWT({ uid: user.id, username: user.username, role: user.role })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('30d')

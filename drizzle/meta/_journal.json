@@ -15,6 +15,13 @@
       "when": 1781015677321,
       "tag": "0001_spooky_black_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1781025843452,
+      "tag": "0002_dizzy_red_wolf",
+      "breakpoints": true
     }
   ]
 }

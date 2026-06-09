@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { logoutAction } from '@/lib/studio-actions'
 
-export function StudioHeader({ email }: { email?: string | null }) {
+export function StudioHeader({ username }: { username?: string | null }) {
   return (
     <header className="border-b border-[var(--line)]">
       <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-5">
@@ -15,9 +15,9 @@ export function StudioHeader({ email }: { email?: string | null }) {
           <Link href="/" className="hover:text-[var(--fg)]">
             사이트 보기
           </Link>
-          {email && (
+          {username && (
             <>
-              <span className="hidden sm:inline">{email}</span>
+              <span className="hidden sm:inline">{username}</span>
               <form action={logoutAction}>
                 <button
                   type="submit"

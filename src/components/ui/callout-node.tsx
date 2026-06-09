@@ -4,6 +4,7 @@ import * as React from 'react';
 
 import { useCalloutEmojiPicker } from '@platejs/callout/react';
 import { useEmojiDropdownMenuState } from '@platejs/emoji/react';
+import { Lightbulb } from 'lucide-react';
 import { PlateElement } from 'platejs/react';
 
 import { Button } from '@/components/ui/button';
@@ -52,7 +53,7 @@ export function CalloutElement({
               }}
               contentEditable={false}
             >
-              {(props.element.icon as any) || '💡'}
+              {(props.element.icon as any) || <Lightbulb className="size-[18px]" />}
             </Button>
           }
         >

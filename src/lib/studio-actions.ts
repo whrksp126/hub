@@ -38,27 +38,27 @@ function slugify(input: string): string {
 
 // ── 인증 ─────────────────────────────────────────────────────────────
 export async function loginAction(_prev: string | null, formData: FormData): Promise<string | null> {
-  const email = String(formData.get('email') || '').trim()
+  const username = String(formData.get('username') || '').trim()
   const password = String(formData.get('password') || '')
-  if (!email || !password) return '이메일과 비밀번호를 입력하세요.'
-  const rows = await db.select().from(users).where(eq(users.email, email)).limit(1)
+  if (!username || !password) return '아이디와 비밀번호를 입력하세요.'
+  const rows = await db.select().from(users).where(eq(users.username, username)).limit(1)
   const user = rows[0]
   if (!user || !(await verifyPassword(password, user.passwordHash))) {
-    return '이메일 또는 비밀번호가 올바르지 않습니다.'
+    return '아이디 또는 비밀번호가 올바르지 않습니다.'
   }
-  await createSession({ id: user.id, email: user.email, role: user.role })
+  await createSession({ id: user.id, username: user.username, role: user.role })
   redirect('/studio')
 }
 
 export async function setupAction(_prev: string | null, formData: FormData): Promise<string | null> {
   if (await hasAnyUser()) redirect('/studio/login')
-  const email = String(formData.get('email') || '').trim()
+  const username = String(formData.get('username') || '').trim()
   const password = String(formData.get('password') || '')
   const name = String(formData.get('name') || '').trim() || null
-  if (!email || password.length < 8) return '이메일과 8자 이상 비밀번호가 필요합니다.'
+  if (!username || password.length < 8) return '아이디와 8자 이상 비밀번호가 필요합니다.'
   const passwordHash = await hashPassword(password)
-  const [user] = await db.insert(users).values({ email, passwordHash, name }).returning()
-  await createSession({ id: user.id, email: user.email, role: user.role })
+  const [user] = await db.insert(users).values({ username, passwordHash, name }).returning()
+  await createSession({ id: user.id, username: user.username, role: user.role })
   redirect('/studio')
 }
 
