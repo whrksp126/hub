@@ -59,7 +59,10 @@ export default async function BlogDetailPage({
         coverUrl={cover}
         tags={post.tags}
       >
-        <PlateStaticRender value={post.content} />
+        <PlateStaticRender
+          value={post.content}
+          className="text-[17px] leading-[1.85] text-[var(--fg)] [&_a]:text-[var(--brand)] [&_a]:underline [&_a]:underline-offset-2"
+        />
       </Layout>
     </>
   )

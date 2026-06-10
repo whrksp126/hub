@@ -2,53 +2,91 @@
 
 import { useState, useTransition } from 'react'
 import { createDraftAction } from '@/lib/studio-actions'
-import { BLOG_THEME_METAS, type ThemeCardMeta } from '@/themes/metas'
+import { BLOG_THEME_METAS } from '@/themes/metas'
 
-// 테마별 추상 미리보기(미니 목업)
-function Preview({ kind }: { kind: ThemeCardMeta['preview'] }) {
-  const line = 'h-1.5 rounded bg-[var(--line)]'
-  const base = 'flex h-28 flex-col gap-2 overflow-hidden rounded-lg border border-[var(--line)] p-3'
-  if (kind === 'hero')
-    return (
-      <div className={base}>
-        <div className="-mx-3 -mt-3 mb-1 h-12 bg-gradient-to-br from-[var(--brand)] to-black" />
-        <div className={`${line} w-3/4`} />
-        <div className={`${line} w-1/2`} />
-      </div>
-    )
-  if (kind === 'side')
-    return (
-      <div className={`${base} flex-row gap-3`}>
-        <div className="w-1 shrink-0 rounded bg-[var(--brand)]" />
-        <div className="flex flex-1 flex-col gap-2 pt-1">
-          <div className={`${line} w-2/3`} />
-          <div className={`${line} w-full`} />
-          <div className={`${line} w-5/6`} />
-        </div>
-      </div>
-    )
-  if (kind === 'card')
-    return (
-      <div className="flex h-28 items-center justify-center rounded-lg bg-[var(--line)]/40 p-3">
-        <div className="flex w-full flex-col gap-2 rounded-md border border-[var(--line)] bg-[var(--bg)] p-3 shadow-sm">
-          <div className={`${line} w-2/3`} />
-          <div className={`${line} w-full`} />
-        </div>
-      </div>
-    )
-  if (kind === 'dark')
-    return (
-      <div className="flex h-28 flex-col gap-2 rounded-lg bg-[#0a0a0b] p-3">
-        <div className="h-1.5 w-1/4 rounded bg-[var(--brand)]" />
-        <div className="h-1.5 w-3/4 rounded bg-white/30" />
-        <div className="h-1.5 w-1/2 rounded bg-white/15" />
-      </div>
-    )
+// 본문 더미 라인
+function Lines({ n = 3, className = '' }: { n?: number; className?: string }) {
+  const w = ['w-full', 'w-[92%]', 'w-[85%]', 'w-[70%]']
   return (
-    <div className={`${base} items-center justify-center`}>
-      <div className={`${line} w-1/2`} />
-      <div className={`${line} w-2/3`} />
-      <div className={`${line} w-1/2`} />
+    <div className={`space-y-[5px] ${className}`}>
+      {Array.from({ length: n }).map((_, i) => (
+        <div key={i} className={`h-[3px] rounded-full bg-[var(--line)] ${w[i % w.length]}`} />
+      ))}
+    </div>
+  )
+}
+
+const KICKER = 'text-[6px] font-bold uppercase tracking-[0.22em] text-[var(--brand)]'
+const TITLE = 'font-[family-name:var(--font-serif)] font-bold leading-[1.15] text-[var(--fg)]'
+const FRAME = 'h-36 overflow-hidden rounded-lg border border-[var(--line)] bg-[var(--bg)]'
+
+// 실제 테마 축소 미리보기(미니 목업) — id별
+function Preview({ id }: { id: string }) {
+  // 1) 에디토리얼 — 중앙 정렬 세리프 + 드롭캡 느낌
+  if (id === 'clean')
+    return (
+      <div className={`${FRAME} flex flex-col items-center px-5 py-4 text-center`}>
+        <span className={KICKER}>NEWS</span>
+        <div className={`${TITLE} mt-1.5 text-[13px]`}>깊이 있는 기록</div>
+        <div className="mt-1.5 text-[6px] text-[var(--fg-muted)]">건호 · 2026. 06. 10</div>
+        <Lines n={3} className="mt-3 w-full text-left" />
+      </div>
+    )
+  // 2) 매거진 — 풀블리드 커버 히어로 + 타이틀 오버레이
+  if (id === 'magazine')
+    return (
+      <div className={FRAME}>
+        <div className="relative flex h-[62%] items-end bg-gradient-to-br from-[var(--brand)] via-slate-700 to-black p-3">
+          <div>
+            <span className="text-[6px] font-bold uppercase tracking-[0.22em] text-white/80">기술</span>
+            <div className={`${TITLE} text-[13px] text-white`}>커버 위의 제목</div>
+          </div>
+        </div>
+        <div className="px-3 py-2.5">
+          <Lines n={2} />
+        </div>
+      </div>
+    )
+  // 3) 칼럼 — 좌측 메타 레일(비대칭)
+  if (id === 'devlog')
+    return (
+      <div className={`${FRAME} px-4 py-4`}>
+        <div className="border-b border-[var(--fg)]/30 pb-2">
+          <span className={KICKER}>기술</span>
+          <div className={`${TITLE} mt-1 text-[12px]`}>연재 칼럼</div>
+        </div>
+        <div className="mt-2.5 grid grid-cols-[24px_1fr] gap-2.5">
+          <div className="border-r border-[var(--line)] pr-1.5">
+            <div className="h-[3px] w-full rounded-full bg-[var(--line)]" />
+            <div className="mt-1 h-[3px] w-3/4 rounded-full bg-[var(--line)]" />
+          </div>
+          <Lines n={3} />
+        </div>
+      </div>
+    )
+  // 4) 피처 — 커버를 품은 피처드 카드
+  if (id === 'card')
+    return (
+      <div className={`${FRAME} flex items-center justify-center bg-[var(--line)]/30 p-3`}>
+        <div className="w-full overflow-hidden rounded-md border border-[var(--line)] bg-[var(--bg)] shadow-[0_4px_14px_-6px_rgba(0,0,0,0.3)]">
+          <div className="h-8 bg-gradient-to-r from-[var(--brand)]/30 to-[var(--brand)]/5" />
+          <div className="px-3 py-2.5">
+            <span className={KICKER}>버그해결</span>
+            <div className={`${TITLE} mt-1 text-[12px]`}>피처드 카드</div>
+            <Lines n={2} className="mt-2" />
+          </div>
+        </div>
+      </div>
+    )
+  // 5) 사이드룰 — 굵은 좌측 악센트 바
+  return (
+    <div className={`${FRAME} flex gap-3 px-4 py-4`}>
+      <div className="w-[3px] shrink-0 rounded-full bg-[var(--brand)]" />
+      <div className="flex-1">
+        <span className={KICKER}>뉴스</span>
+        <div className={`${TITLE} mt-1 text-[13px]`}>큰 제목 한 줄</div>
+        <Lines n={3} className="mt-2.5" />
+      </div>
     </div>
   )
 }
@@ -91,7 +129,7 @@ export function NewGallery() {
             onClick={() => create(m.id)}
             className="group rounded-xl border border-[var(--line)] p-3 text-left transition-colors hover:border-[var(--brand)] disabled:opacity-50"
           >
-            <Preview kind={m.preview} />
+            <Preview id={m.id} />
             <div className="mt-3 font-semibold group-hover:text-[var(--brand)]">{m.name}</div>
             <div className="mt-1 text-xs text-[var(--fg-muted)]">{m.description}</div>
           </button>

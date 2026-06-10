@@ -77,7 +77,7 @@ function Editorial(p: BlogThemeProps) {
           className="mt-12 aspect-[16/9] w-full rounded-2xl object-cover"
         />
       )}
-      <div className="drop-cap mt-12 text-left">{p.children}</div>
+      <div className="mt-12 text-left">{p.children}</div>
       <Tags tags={p.tags} />
     </article>
   )
@@ -106,7 +106,7 @@ function Magazine(p: BlogThemeProps) {
         </div>
       </header>
       <div className="mx-auto max-w-2xl px-5 py-14">
-        <div className="drop-cap">{p.children}</div>
+        <div>{p.children}</div>
         <Tags tags={p.tags} />
       </div>
     </article>

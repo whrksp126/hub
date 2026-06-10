@@ -21,7 +21,7 @@ import {
   type ContentType,
 } from '@/lib/content-types'
 import { safeRevalidate } from '@/lib/revalidate'
-import { blogSample } from '@/themes/samples'
+import { blogSample, blogSampleExcerpt } from '@/themes/samples'
 
 const tableOf = (_type: ContentType) => posts
 
@@ -80,10 +80,11 @@ export async function createDraftAction(formData: FormData) {
   const title = String(formData.get('title') || '').trim() || '제목 없음'
   const slug = `${slugify(title)}-${randomBytes(3).toString('hex')}`
   const content = blank ? EMPTY_PLATE_VALUE : blogSample()
+  const excerpt = blank ? null : blogSampleExcerpt
 
   const [row] = await db
     .insert(tableOf(type))
-    .values({ title, slug, theme, status: 'draft', content })
+    .values({ title, slug, theme, status: 'draft', content, excerpt })
     .returning({ id: tableOf(type).id })
   redirect(`/studio/${type}/${row.id}`)
 }

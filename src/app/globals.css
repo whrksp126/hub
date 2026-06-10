@@ -243,13 +243,3 @@ body {
   background: currentColor;
   opacity: 0.5;
 }
-/* 본문 첫 글자 드롭캡 (에디토리얼) */
-.drop-cap > p:first-of-type::first-letter {
-  float: left;
-  font-family: var(--font-serif);
-  font-weight: 900;
-  font-size: 3.4em;
-  line-height: 0.82;
-  padding: 0.05em 0.12em 0 0;
-  color: var(--brand);
-}
