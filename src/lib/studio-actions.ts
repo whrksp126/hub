@@ -1,10 +1,9 @@
 'use server'
 
-import { randomBytes } from 'crypto'
+import { and, eq, isNull } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
-import { eq } from 'drizzle-orm'
 import { db } from '@/db'
-import { apiKeys, posts, users } from '@/db/schema'
+import { apiKeys, profiles, users } from '@/db/schema'
 import {
   createSession,
   destroySession,
@@ -14,16 +13,6 @@ import {
   hashPassword,
   verifyPassword,
 } from '@/lib/auth'
-import {
-  CONTENT_TYPE_META,
-  EMPTY_PLATE_VALUE,
-  isContentType,
-  type ContentType,
-} from '@/lib/content-types'
-import { safeRevalidate } from '@/lib/revalidate'
-import { blogSample, blogSampleExcerpt } from '@/themes/samples'
-
-const tableOf = (_type: ContentType) => posts
 
 function slugify(input: string): string {
   const base = input
@@ -33,7 +22,17 @@ function slugify(input: string): string {
     .replace(/[^\w가-힣-]/g, '')
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '')
-  return base || 'untitled'
+  return base || 'me'
+}
+
+// profiles.username 유일성 보장(중복이면 -2, -3 … 붙임).
+async function uniqueProfileSlug(base: string): Promise<string> {
+  let slug = base
+  for (let i = 2; ; i++) {
+    const hit = await db.select({ id: profiles.id }).from(profiles).where(eq(profiles.username, slug)).limit(1)
+    if (!hit[0]) return slug
+    slug = `${base}-${i}`
+  }
 }
 
 // ── 인증 ─────────────────────────────────────────────────────────────
@@ -50,14 +49,41 @@ export async function loginAction(_prev: string | null, formData: FormData): Pro
   redirect('/studio')
 }
 
-export async function setupAction(_prev: string | null, formData: FormData): Promise<string | null> {
-  if (await hasAnyUser()) redirect('/studio/login')
+// 공개 회원가입(멀티유저).
+// 맨 처음 가입자 = 운영자(admin): 소유자 없는 시드 프로필(geonho 등)을 인계받는다.
+// 이후 가입자 = 일반 사용자(user): 본인 새 프로필을 만든다.
+export async function signupAction(_prev: string | null, formData: FormData): Promise<string | null> {
   const username = String(formData.get('username') || '').trim()
   const password = String(formData.get('password') || '')
-  const name = String(formData.get('name') || '').trim() || null
+  const name = String(formData.get('name') || '').trim()
   if (!username || password.length < 8) return '아이디와 8자 이상 비밀번호가 필요합니다.'
+
+  const taken = await db.select({ id: users.id }).from(users).where(eq(users.username, username)).limit(1)
+  if (taken[0]) return '이미 사용 중인 아이디입니다.'
+
+  const isFirst = !(await hasAnyUser())
+  const role = isFirst ? 'admin' : 'user'
   const passwordHash = await hashPassword(password)
-  const [user] = await db.insert(users).values({ username, passwordHash, name }).returning()
+  const [user] = await db.insert(users).values({ username, passwordHash, name: name || null, role }).returning()
+
+  const orphans = isFirst
+    ? await db.select({ id: profiles.id }).from(profiles).where(isNull(profiles.userId))
+    : []
+  if (orphans.length > 0) {
+    // 운영자: 시드된 소유자 없는 프로필 전부 인계.
+    for (const o of orphans) {
+      await db.update(profiles).set({ userId: user.id }).where(eq(profiles.id, o.id))
+    }
+  } else {
+    // 새 프로필 생성(아이디 기반 고유 주소).
+    await db.insert(profiles).values({
+      userId: user.id,
+      username: await uniqueProfileSlug(slugify(username)),
+      name: name || username,
+      status: 'draft',
+    })
+  }
+
   await createSession({ id: user.id, username: user.username, role: user.role })
   redirect('/studio')
 }
@@ -67,70 +93,31 @@ export async function logoutAction() {
   redirect('/studio/login')
 }
 
-// ── 콘텐츠 ───────────────────────────────────────────────────────────
-export async function createDraftAction(formData: FormData) {
-  const user = await getCurrentUser()
-  if (!user) redirect('/studio/login')
-  const type = String(formData.get('type') || '')
-  if (!isContentType(type)) redirect('/studio')
-  const blank = formData.get('blank') === '1'
-  const theme = blank
-    ? CONTENT_TYPE_META[type].defaultTheme
-    : String(formData.get('theme') || CONTENT_TYPE_META[type].defaultTheme)
-  const title = String(formData.get('title') || '').trim() || '제목 없음'
-  const slug = `${slugify(title)}-${randomBytes(3).toString('hex')}`
-  const content = blank ? EMPTY_PLATE_VALUE : blogSample()
-  const excerpt = blank ? null : blogSampleExcerpt
-
-  const [row] = await db
-    .insert(tableOf(type))
-    .values({ title, slug, theme, status: 'draft', content, excerpt })
-    .returning({ id: tableOf(type).id })
-  redirect(`/studio/${type}/${row.id}`)
+// ── 운영자(admin) ────────────────────────────────────────────────────
+// 사용자 삭제(프로필·프로젝트·경력 cascade). 본인은 삭제 불가.
+export async function deleteUserAction(formData: FormData) {
+  const me = await getCurrentUser()
+  if (!me || me.role !== 'admin') redirect('/studio')
+  const id = Number(formData.get('id') || 0)
+  if (id && id !== me.id) {
+    await db.delete(users).where(eq(users.id, id))
+  }
+  redirect('/studio')
 }
 
-type SaveInput = {
-  type: ContentType
-  id: number
-  title: string
-  slug: string
-  content: unknown
-  status: 'draft' | 'published'
-  publish?: boolean
+// 권한 변경(admin ↔ user). 본인 권한은 못 내림(잠김 방지).
+export async function setUserRoleAction(formData: FormData) {
+  const me = await getCurrentUser()
+  if (!me || me.role !== 'admin') redirect('/studio')
+  const id = Number(formData.get('id') || 0)
+  const role = String(formData.get('role') || '') === 'admin' ? 'admin' : 'user'
+  if (id && id !== me.id) {
+    await db.update(users).set({ role }).where(eq(users.id, id))
+  }
+  redirect('/studio')
 }
 
-export async function saveDocAction(input: SaveInput): Promise<{ ok: boolean; error?: string }> {
-  const user = await getCurrentUser()
-  if (!user) return { ok: false, error: '로그인이 필요합니다.' }
-  if (!isContentType(input.type)) return { ok: false, error: '잘못된 타입' }
-
-  const t = tableOf(input.type)
-  const existing = (await db.select().from(t).where(eq(t.id, input.id)).limit(1))[0]
-  if (!existing) return { ok: false, error: '문서를 찾을 수 없습니다.' }
-
-  const status = input.publish ? 'published' : input.status
-  const publishedAt =
-    status === 'published' && !existing.publishedAt ? new Date() : existing.publishedAt
-
-  await db
-    .update(t)
-    .set({
-      title: input.title || '제목 없음',
-      slug: slugify(input.slug || input.title),
-      content: input.content,
-      status,
-      publishedAt,
-      updatedAt: new Date(),
-    })
-    .where(eq(t.id, input.id))
-
-  // 즉시 반영: 공개 경로 무효화.
-  const meta = CONTENT_TYPE_META[input.type]
-  safeRevalidate('/', meta.publicPath, `${meta.publicPath}/${slugify(input.slug || input.title)}`)
-  return { ok: true }
-}
-
-// ── API 키 (에이전트) ────────────────────────────────────────────────
+// ── 에이전트 API 키 ──────────────────────────────────────────────────
 export async function createApiKeyAction(
   _prev: { key?: string; error?: string } | null,
   formData: FormData,
@@ -139,7 +126,7 @@ export async function createApiKeyAction(
   if (!user) return { error: '로그인이 필요합니다.' }
   const name = String(formData.get('name') || '').trim() || '에이전트 키'
   const { key, prefix, keyHash } = generateApiKey()
-  await db.insert(apiKeys).values({ name, prefix, keyHash })
+  await db.insert(apiKeys).values({ userId: user.id, name, prefix, keyHash })
   return { key } // 평문은 이때 1회만 노출
 }
 
@@ -147,18 +134,7 @@ export async function revokeApiKeyAction(formData: FormData) {
   const user = await getCurrentUser()
   if (!user) redirect('/studio/login')
   const id = Number(formData.get('id') || 0)
-  if (id) await db.update(apiKeys).set({ revokedAt: new Date() }).where(eq(apiKeys.id, id))
+  // 본인 소유 키만 폐기.
+  if (id) await db.update(apiKeys).set({ revokedAt: new Date() }).where(and(eq(apiKeys.id, id), eq(apiKeys.userId, user.id)))
   redirect('/studio/keys')
-}
-
-export async function deleteDocAction(formData: FormData) {
-  const user = await getCurrentUser()
-  if (!user) redirect('/studio/login')
-  const type = String(formData.get('type') || '')
-  const id = Number(formData.get('id') || 0)
-  if (!isContentType(type) || !id) redirect('/studio')
-  const t = tableOf(type)
-  await db.delete(t).where(eq(t.id, id))
-  safeRevalidate('/', CONTENT_TYPE_META[type].publicPath)
-  redirect('/studio')
 }

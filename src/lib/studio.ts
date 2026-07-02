@@ -1,30 +1,19 @@
 import 'server-only'
-import { desc, eq } from 'drizzle-orm'
+import { and, desc, eq } from 'drizzle-orm'
 import { db } from '@/db'
-import { apiKeys, posts } from '@/db/schema'
-import type { ContentType } from '@/lib/content-types'
+import { apiKeys } from '@/db/schema'
 
-export async function listApiKeys() {
-  return db.select().from(apiKeys).orderBy(desc(apiKeys.createdAt))
+// 내 에이전트 API 키 목록 (사용자별).
+export async function listMyApiKeys(userId: number) {
+  return db.select().from(apiKeys).where(eq(apiKeys.userId, userId)).orderBy(desc(apiKeys.createdAt))
 }
 
-export type StudioItem = {
-  id: number
-  title: string
-  slug: string
-  status: string
-  updatedAt: Date
-  type: ContentType
-}
-
-export async function listStudioItems(): Promise<StudioItem[]> {
-  const rows = await db
-    .select({ id: posts.id, title: posts.title, slug: posts.slug, status: posts.status, updatedAt: posts.updatedAt })
-    .from(posts)
-    .orderBy(desc(posts.updatedAt))
-  return rows.map((r) => ({ ...r, type: 'posts' as const }))
-}
-
-export async function getStudioDoc(_type: ContentType, id: number) {
-  return (await db.select().from(posts).where(eq(posts.id, id)).limit(1))[0] ?? null
+// 내 소유 키인지 확인.
+export async function ownsApiKey(userId: number, keyId: number) {
+  const r = await db
+    .select({ id: apiKeys.id })
+    .from(apiKeys)
+    .where(and(eq(apiKeys.id, keyId), eq(apiKeys.userId, userId)))
+    .limit(1)
+  return !!r[0]
 }

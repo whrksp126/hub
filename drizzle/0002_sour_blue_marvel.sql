@@ -1,0 +1,1 @@
+ALTER TABLE `profiles` ADD `user_id` integer REFERENCES users(id);

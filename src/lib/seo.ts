@@ -5,6 +5,18 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SERVER_URL || 'https://hub.ghma
   /\/$/,
   '',
 )
+// 공개 포트폴리오 URL prefix. 루트 네임스페이스와 충돌하지 않도록 한 단계 들여쓴다.
+// 나중에 '/portfolio' 등으로 바꾸려면 이 한 줄만 고치면 전 구간에 반영된다.
+export const PF_PREFIX = '/p'
+// 포트폴리오 상대 경로 (예: pfPath('geonho', '/projects') → '/p/geonho/projects')
+export function pfPath(username: string, sub = ''): string {
+  return `${PF_PREFIX}/${username}${sub}`
+}
+// 포트폴리오 절대 URL (canonical/OG/JSON-LD/sitemap용)
+export function pfUrl(username: string, sub = ''): string {
+  return `${SITE_URL}${PF_PREFIX}/${username}${sub}`
+}
+
 export const SITE_NAME = 'GhMate'
 export const SITE_DESCRIPTION = 'GhMate의 개발 기록 — 뉴스 · 버그 해결 · 기술 노트'
 export const SITE_AUTHOR = '건호'

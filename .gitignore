@@ -32,3 +32,4 @@ CLAUDE.local.md
 *.log
 .vercel
 .turbo
+*.tsbuildinfo

@@ -77,10 +77,18 @@ export async function requireUser() {
   return user
 }
 
-// 관리자가 한 명도 없으면 최초 설정(setup) 필요.
+// 사용자가 한 명도 없으면 첫 가입자가 운영자(admin)가 된다.
 export async function hasAnyUser(): Promise<boolean> {
   const rows = await db.select({ n: sql<number>`count(*)` }).from(users)
   return (rows[0]?.n ?? 0) > 0
+}
+
+// 운영자(admin) 전용 페이지 가드.
+export async function requireAdmin() {
+  const user = await getCurrentUser()
+  if (!user) redirect('/studio/login')
+  if (user.role !== 'admin') redirect('/studio')
+  return user
 }
 
 // ── 에이전트 API 키 ──────────────────────────────────────────────────
