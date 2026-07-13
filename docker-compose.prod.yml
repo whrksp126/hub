@@ -11,6 +11,26 @@ services:
     # base의 env_file(.env.local)을 병합하지 않고 교체(서버엔 .env.dev만 존재)
     env_file: !override
       - .env.dev
+    # 공용 홈서버(13GB/8코어) — 한 프로젝트가 서버 전체를 잡아먹지 않도록 상한.
+    # OOM 시 옆 프로젝트까지 죽는 것을 방지(미설정 시 무제한).
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+          cpus: '1.5'
+        reservations:
+          memory: 256m
+    # 정전/재부팅 자동 복구 — 앱이 뜨고 마이그레이션(멱등)까지 끝났는지 감시.
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "require('http').get('http://127.0.0.1:3000/',r=>process.exit(r.statusCode<500?0:1)).on('error',()=>process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
     networks:
       - hub-net
       - nginx_proxy
