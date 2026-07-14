@@ -5,13 +5,14 @@ import { Logo } from '@/components/brand/logo'
 import { JsonLd } from '@/components/json-ld'
 import { Thumb } from '@/components/portfolio/pieces'
 import { getMediaUrls, getPublishedProfiles } from '@/db/queries'
-import { websiteJsonLd } from '@/lib/jsonld'
+import { softwareApplicationJsonLd, websiteJsonLd } from '@/lib/jsonld'
 import { SITE_NAME, SITE_URL, pfPath } from '@/lib/seo'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'HubGmate — AI로 완성하는 개발자 포트폴리오',
+  // 이미 사이트명을 포함하므로 template( — HubGmate) 우회.
+  title: { absolute: 'HubGmate — AI로 완성하는 개발자 포트폴리오' },
   description:
     'AI 에이전트가 저장소를 읽어 케이스 스터디 초안을 만들고, 워드프레스식 테마로 발행까지. REST·SDK·CLI·MCP로 프로그램 발행하는 개발자 포트폴리오 빌더.',
   alternates: { canonical: SITE_URL },
@@ -45,6 +46,7 @@ export default async function LandingPage() {
   return (
     <div className="pf relative min-h-dvh overflow-x-hidden">
       <JsonLd data={websiteJsonLd()} />
+      <JsonLd data={softwareApplicationJsonLd()} />
 
       {/* 상단 바 */}
       <header className="pointer-events-none fixed inset-x-0 top-0 z-60 flex justify-center px-4 pt-[22px]">

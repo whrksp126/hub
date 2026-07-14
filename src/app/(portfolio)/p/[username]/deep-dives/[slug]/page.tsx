@@ -2,11 +2,13 @@ import { ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { JsonLd } from '@/components/json-ld'
 import { NoteBody } from '@/components/portfolio/note-blocks'
 import { PortfolioColumns } from '@/components/portfolio/portfolio-columns'
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell'
 import { getMediaUrl, getMediaUrls, getNoteBySlug, getProfileByUsername } from '@/db/queries'
 import type { NoteBlock } from '@/db/schema'
+import { blogPostingJsonLd } from '@/lib/jsonld'
 import { pfPath, pfUrl } from '@/lib/seo'
 
 export const revalidate = 3600
@@ -61,6 +63,19 @@ export default async function NoteDetail({ params }: Params) {
 
   return (
     <PortfolioShell profile={profile}>
+      <JsonLd
+        data={blogPostingJsonLd({
+          username,
+          slug,
+          title: note.title,
+          excerpt: note.excerpt,
+          image: coverUrl ?? undefined,
+          authorName: profile.name,
+          datePublished: note.publishedAt?.toISOString() ?? null,
+          dateModified: note.updatedAt?.toISOString() ?? null,
+          category: note.category,
+        })}
+      />
       <PortfolioColumns profile={profile} avatarUrl={avatarUrl} align="left">
         <article className="max-w-[760px]">
           <Link href={pfPath(username, '/deep-dives')} className="mb-8 inline-flex items-center gap-1.5 text-sm text-[var(--pf-fg-muted)] transition-colors hover:text-[var(--pf-fg)]">

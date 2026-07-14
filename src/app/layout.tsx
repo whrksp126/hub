@@ -2,7 +2,12 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { buildMetadata, SITE_LOCALE } from '@/lib/seo'
 
-export const metadata: Metadata = buildMetadata({})
+export const metadata: Metadata = {
+  ...buildMetadata({}),
+  // 하위 페이지의 문자열 title에 자동으로 ' — HubGmate' 접미(브랜딩 일관).
+  // title.absolute를 쓰는 페이지(랜딩 등)는 접미가 붙지 않는다.
+  title: { default: 'HubGmate', template: '%s — HubGmate' },
+}
 
 // 모바일 주소창 색 — 다크 우선 브랜드 배경.
 export const viewport: Viewport = {

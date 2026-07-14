@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { getProjectsByProfile, getPublishedProfiles } from '@/db/queries'
+import { getNotesByProfile, getProjectsByProfile, getPublishedProfiles } from '@/db/queries'
 import { SITE_URL, pfUrl } from '@/lib/seo'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -24,6 +24,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       entries.push({
         url: `${base}/projects/${pr.slug}`,
         lastModified: pr.updatedAt ?? undefined,
+        changeFrequency: 'monthly',
+        priority: 0.7,
+      })
+    }
+    const notes = await getNotesByProfile(p.id)
+    for (const nt of notes) {
+      entries.push({
+        url: `${base}/deep-dives/${encodeURIComponent(nt.slug)}`,
+        lastModified: nt.updatedAt ?? undefined,
         changeFrequency: 'monthly',
         priority: 0.7,
       })
