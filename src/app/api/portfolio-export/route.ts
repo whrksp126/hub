@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
 import {
   getExperiencesByProfile,
+  getHomeNotes,
+  getHomeProjects,
   getNotesByProfile,
   getProfileByUsername,
   getProjectsByProfile,
@@ -15,18 +17,24 @@ export async function GET(req: Request) {
   const profile = await getProfileByUsername(u)
   if (!profile) return NextResponse.json({ error: 'not found' }, { status: 404 })
 
-  const [projects, notes, experiences] = await Promise.all([
+  const [projects, notes, experiences, homeProjects, homeNotes] = await Promise.all([
     getProjectsByProfile(profile.id),
     getNotesByProfile(profile.id),
     getExperiencesByProfile(profile.id),
+    getHomeProjects(profile.id),
+    getHomeNotes(profile.id),
   ])
 
   return NextResponse.json({
     name: profile.name,
+    // 홈 화면 섹션 존재 여부
     hasStats: (profile.stats?.length ?? 0) > 0,
     hasSkills: (profile.skills?.length ?? 0) > 0,
-    hasAwards: (profile.awards?.length ?? 0) > 0,
+    hasCards: (profile.cards?.length ?? 0) > 0,
+    hasHomeProjects: homeProjects.length > 0,
+    hasHomeNotes: homeNotes.length > 0,
     hasExperience: experiences.length > 0,
+    // 상세 선택용 전체 목록
     projects: projects.map((p) => ({ slug: p.slug, title: p.titleKr || p.title })),
     notes: notes.map((n) => ({ slug: n.slug, title: n.title })),
   })

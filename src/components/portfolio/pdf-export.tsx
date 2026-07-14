@@ -6,16 +6,18 @@ import { useCallback, useEffect, useState } from 'react'
 type Options = {
   hasStats: boolean
   hasSkills: boolean
-  hasAwards: boolean
+  hasCards: boolean
+  hasHomeProjects: boolean
+  hasHomeNotes: boolean
   hasExperience: boolean
   projects: { slug: string; title: string }[]
   notes: { slug: string; title: string }[]
 }
 
-type SectionKey = 'intro' | 'stats' | 'skills' | 'awards' | 'experience' | 'projects' | 'notes'
+type HomeKey = 'hero' | 'stats' | 'services' | 'projects' | 'experience' | 'skills' | 'notes' | 'cta'
 
-// 브라우저 인쇄(PDF 저장) 기반 포트폴리오 내보내기.
-// 버튼 클릭 → 담을 섹션/프로젝트/글을 체크 → print 라우트를 새 탭에서 열어 인쇄 대화상자를 띄운다.
+// 실제 화면의 다크 디자인 그대로 담는 PDF 내보내기.
+// 화면의 섹션(홈 요소별 + 프로젝트/경력/글 상세)을 체크박스로 골라 print 라우트를 새 탭에서 연다.
 export function PdfExportButton({
   username,
   variant = 'floating',
@@ -26,15 +28,17 @@ export function PdfExportButton({
   const [open, setOpen] = useState(false)
   const [opts, setOpts] = useState<Options | null>(null)
   const [loading, setLoading] = useState(false)
-  const [sections, setSections] = useState<Record<SectionKey, boolean>>({
-    intro: true,
+  const [home, setHome] = useState<Record<HomeKey, boolean>>({
+    hero: true,
     stats: true,
-    skills: true,
-    awards: true,
-    experience: true,
+    services: true,
     projects: true,
+    experience: true,
+    skills: true,
     notes: true,
+    cta: true,
   })
+  const [expDetail, setExpDetail] = useState(true)
   const [projSel, setProjSel] = useState<Set<string>>(new Set())
   const [noteSel, setNoteSel] = useState<Set<string>>(new Set())
 
@@ -48,7 +52,7 @@ export function PdfExportButton({
       setProjSel(new Set(data.projects.map((p) => p.slug)))
       setNoteSel(new Set(data.notes.map((n) => n.slug)))
     } catch {
-      setOpts({ hasStats: false, hasSkills: false, hasAwards: false, hasExperience: false, projects: [], notes: [] })
+      setOpts({ hasStats: false, hasSkills: false, hasCards: false, hasHomeProjects: false, hasHomeNotes: false, hasExperience: false, projects: [], notes: [] })
     } finally {
       setLoading(false)
     }
@@ -58,7 +62,6 @@ export function PdfExportButton({
     if (open && !opts && !loading) load()
   }, [open, opts, loading, load])
 
-  // esc 닫기
   useEffect(() => {
     if (!open) return
     const h = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
@@ -66,7 +69,7 @@ export function PdfExportButton({
     return () => window.removeEventListener('keydown', h)
   }, [open])
 
-  const toggle = (k: SectionKey) => setSections((s) => ({ ...s, [k]: !s[k] }))
+  const toggleHome = (k: HomeKey) => setHome((s) => ({ ...s, [k]: !s[k] }))
   const toggleIn = (set: Set<string>, setSet: (s: Set<string>) => void, slug: string) => {
     const next = new Set(set)
     if (next.has(slug)) next.delete(slug)
@@ -75,13 +78,31 @@ export function PdfExportButton({
   }
 
   const generate = () => {
-    const s: SectionKey[] = (Object.keys(sections) as SectionKey[]).filter((k) => sections[k])
+    if (!opts) return
     const params = new URLSearchParams()
-    params.set('s', s.join(','))
-    if (sections.projects && opts && projSel.size < opts.projects.length) params.set('p', [...projSel].join(','))
-    if (sections.notes && opts && noteSel.size < opts.notes.length) params.set('n', [...noteSel].join(','))
-    const url = `/p/${encodeURIComponent(username)}/print?${params.toString()}`
-    window.open(url, '_blank', 'noopener')
+    // 홈 섹션 — 존재하며 켠 것만. 항상 명시(빈 값이어도 direct-visit과 구분).
+    const avail: Record<HomeKey, boolean> = {
+      hero: true,
+      stats: opts.hasStats,
+      services: opts.hasCards,
+      projects: opts.hasHomeProjects,
+      experience: opts.hasExperience,
+      skills: opts.hasSkills,
+      notes: opts.hasHomeNotes,
+      cta: true,
+    }
+    const homeKeys = (Object.keys(home) as HomeKey[]).filter((k) => home[k] && avail[k])
+    params.set('home', homeKeys.join(','))
+    // 프로젝트 상세
+    if (opts.projects.length > 0 && projSel.size === opts.projects.length) params.set('pd', 'all')
+    else if (projSel.size > 0) params.set('pd', [...projSel].join(','))
+    // 글 상세
+    if (opts.notes.length > 0 && noteSel.size === opts.notes.length) params.set('nd', 'all')
+    else if (noteSel.size > 0) params.set('nd', [...noteSel].join(','))
+    // 경력 상세 페이지
+    if (opts.hasExperience && expDetail) params.set('exp', '1')
+
+    window.open(`/p/${encodeURIComponent(username)}/print?${params.toString()}`, '_blank', 'noopener')
     setOpen(false)
   }
 
@@ -111,18 +132,15 @@ export function PdfExportButton({
     <>
       {trigger}
       {open && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
-          onClick={() => setOpen(false)}
-        >
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm" onClick={() => setOpen(false)}>
           <div
-            className="flex max-h-[85vh] w-full max-w-[440px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#17181c] text-white shadow-2xl"
+            className="flex max-h-[86vh] w-full max-w-[460px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#17181c] text-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
               <div>
                 <h2 className="text-[15px] font-bold">PDF로 내보내기</h2>
-                <p className="mt-0.5 text-[12px] text-white/50">담을 내용을 선택하세요</p>
+                <p className="mt-0.5 text-[12px] text-white/50">화면 그대로 · 담을 섹션을 선택하세요</p>
               </div>
               <button type="button" onClick={() => setOpen(false)} className="rounded-md p-1.5 text-white/50 hover:bg-white/10 hover:text-white">
                 <X size={18} />
@@ -136,45 +154,36 @@ export function PdfExportButton({
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
-                  <Group title="기본">
-                    <Row label="소개" checked={sections.intro} onClick={() => toggle('intro')} />
-                    {opts.hasStats && <Row label="핵심 지표" checked={sections.stats} onClick={() => toggle('stats')} />}
-                    {opts.hasSkills && <Row label="기술 스택" checked={sections.skills} onClick={() => toggle('skills')} />}
-                    {opts.hasAwards && <Row label="수상 · 자격" checked={sections.awards} onClick={() => toggle('awards')} />}
-                    {opts.hasExperience && <Row label="경력" checked={sections.experience} onClick={() => toggle('experience')} />}
+                  <Group title="홈 화면">
+                    <Row label="소개 (히어로)" checked={home.hero} onClick={() => toggleHome('hero')} />
+                    {opts.hasStats && <Row label="핵심 지표" checked={home.stats} onClick={() => toggleHome('stats')} />}
+                    {opts.hasCards && <Row label="서비스 카드" checked={home.services} onClick={() => toggleHome('services')} />}
+                    {opts.hasHomeProjects && <Row label="프로젝트 요약" checked={home.projects} onClick={() => toggleHome('projects')} />}
+                    {opts.hasExperience && <Row label="경력 요약" checked={home.experience} onClick={() => toggleHome('experience')} />}
+                    {opts.hasSkills && <Row label="기술 스택" checked={home.skills} onClick={() => toggleHome('skills')} />}
+                    {opts.hasHomeNotes && <Row label="최근 글" checked={home.notes} onClick={() => toggleHome('notes')} />}
+                    <Row label="CTA (연락 유도)" checked={home.cta} onClick={() => toggleHome('cta')} />
                   </Group>
 
                   {opts.projects.length > 0 && (
-                    <Group
-                      title="프로젝트"
-                      checked={sections.projects}
-                      onToggle={() => toggle('projects')}
-                    >
-                      {sections.projects &&
-                        opts.projects.map((p) => (
-                          <Row
-                            key={p.slug}
-                            label={p.title}
-                            sub
-                            checked={projSel.has(p.slug)}
-                            onClick={() => toggleIn(projSel, setProjSel, p.slug)}
-                          />
-                        ))}
+                    <Group title="프로젝트 상세" hint="케이스 스터디 전체">
+                      {opts.projects.map((p) => (
+                        <Row key={p.slug} label={p.title} sub checked={projSel.has(p.slug)} onClick={() => toggleIn(projSel, setProjSel, p.slug)} />
+                      ))}
+                    </Group>
+                  )}
+
+                  {opts.hasExperience && (
+                    <Group title="경력 상세 페이지">
+                      <Row label="경력 카드 + 수상·학력·연락처" sub checked={expDetail} onClick={() => setExpDetail((v) => !v)} />
                     </Group>
                   )}
 
                   {opts.notes.length > 0 && (
-                    <Group title="딥다이브 · 글" checked={sections.notes} onToggle={() => toggle('notes')}>
-                      {sections.notes &&
-                        opts.notes.map((n) => (
-                          <Row
-                            key={n.slug}
-                            label={n.title}
-                            sub
-                            checked={noteSel.has(n.slug)}
-                            onClick={() => toggleIn(noteSel, setNoteSel, n.slug)}
-                          />
-                        ))}
+                    <Group title="딥다이브 · 글 상세" hint="본문 전체">
+                      {opts.notes.map((n) => (
+                        <Row key={n.slug} label={n.title} sub checked={noteSel.has(n.slug)} onClick={() => toggleIn(noteSel, setNoteSel, n.slug)} />
+                      ))}
                     </Group>
                   )}
                 </div>
@@ -184,7 +193,7 @@ export function PdfExportButton({
             <div className="border-t border-white/10 px-5 py-4">
               <p className="mb-3 text-[11.5px] leading-relaxed text-white/40">
                 새 탭에서 인쇄 창이 열립니다. <b className="text-white/70">대상 → PDF로 저장</b>을 선택하고, 옵션에서
-                <b className="text-white/70"> 배경 그래픽</b>을 켜면 색이 그대로 나옵니다.
+                <b className="text-white/70"> 배경 그래픽</b>을 켜야 다크 디자인이 그대로 나옵니다.
               </p>
               <button
                 type="button"
@@ -202,25 +211,14 @@ export function PdfExportButton({
   )
 }
 
-function Group({
-  title,
-  checked,
-  onToggle,
-  children,
-}: {
-  title: string
-  checked?: boolean
-  onToggle?: () => void
-  children: React.ReactNode
-}) {
+function Group({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
-      {onToggle ? (
-        <Row label={title} checked={checked!} onClick={onToggle} head />
-      ) : (
-        <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-white/40">{title}</div>
-      )}
-      <div className={onToggle ? 'mt-1' : ''}>{children}</div>
+      <div className="mb-1.5 flex items-baseline gap-2">
+        <span className="text-[11px] font-bold uppercase tracking-wider text-white/40">{title}</span>
+        {hint && <span className="text-[10.5px] text-white/25">{hint}</span>}
+      </div>
+      {children}
     </div>
   )
 }
@@ -230,22 +228,19 @@ function Row({
   checked,
   onClick,
   sub,
-  head,
 }: {
   label: string
   checked: boolean
   onClick: () => void
   sub?: boolean
-  head?: boolean
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={[
-        'flex w-full items-center gap-2.5 rounded-md py-1.5 text-left transition-colors hover:bg-white/[0.04]',
+        'flex w-full items-center gap-2.5 rounded-md py-1.5 text-left text-[13.5px] text-white/85 transition-colors hover:bg-white/[0.04]',
         sub ? 'pl-6 pr-2' : 'px-2',
-        head ? 'text-[13px] font-bold uppercase tracking-wider text-white/70' : 'text-[13.5px] text-white/85',
       ].join(' ')}
     >
       <span

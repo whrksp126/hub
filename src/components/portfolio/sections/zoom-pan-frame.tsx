@@ -1,6 +1,7 @@
 'use client'
 
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch'
+import { usePrintMode } from '@/components/portfolio/print/print-context'
 import { PinchZoomControls } from '@/components/portfolio/sections/zoom-controls'
 
 const MIN = 0.6
@@ -19,6 +20,10 @@ export function ZoomPanFrame({
   className?: string
   heightClass?: string
 }) {
+  const print = usePrintMode()
+  // 인쇄(PDF): 줌/팬 프레임 없이 다이어그램 전체를 자연 크기로 펼쳐 "렌더된 이미지"처럼 담는다.
+  if (print) return <div className={`pfp-diagram flex w-full justify-center ${className}`}>{children}</div>
+
   return (
     <div className={`relative overflow-hidden ${heightClass} ${className}`}>
       <TransformWrapper

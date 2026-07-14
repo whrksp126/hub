@@ -1,45 +1,66 @@
-/* 포트폴리오 PDF(브라우저 인쇄) 전용 스타일 — 밝은 A4 문서. 공개 다크 테마와 독립. */
+/* 포트폴리오 PDF(브라우저 인쇄) — 실제 다크 디자인 그대로. */
 
-@page {
-  size: A4;
-  margin: 14mm 14mm 16mm;
-}
-
-.pfp {
-  --ac: #f1531b;
-  --fg: #1a1a1a;
-  --muted: #4a4a4a;
-  --faint: #6b7280;
-  --line: #e5e7eb;
-  --bg-soft: #f6f7f9;
-  max-width: 210mm;
-  margin: 0 auto;
-  padding: 40px 44px 64px;
-  background: #fff;
-  color: var(--fg);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 13px;
-  line-height: 1.6;
+.pfp-root {
+  min-height: 100dvh;
+  background: var(--pf-bg, #0e0e0e);
+  color: var(--pf-fg, #f4f4f2);
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
 
-/* ── 툴바(화면 전용) ─────────────────────────────────────────── */
+/* pf-reveal 진입 애니메이션은 인쇄/미리보기에서 항상 펼친 상태로(빈 페이지 방지). */
+.pfp-root .pf-reveal {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* 다이어그램: 인쇄 시 자연 크기로 가운데 정렬(줌 프레임 제거됨). SVG는 폭 맞춤. */
+.pfp-root .pfp-diagram :where(svg) {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 인쇄 시 각 상세 블록은 새 페이지에서 시작 + 내부에서 최대한 안 끊기게. */
+.pfp-pagebreak {
+  break-before: page;
+}
+.pfp-block {
+  break-inside: auto;
+}
+
+@media print {
+  html,
+  body {
+    background: var(--pf-bg, #0e0e0e) !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  /* 인쇄 여백 0 → 다크 배경이 가장자리까지(배경 그래픽 켜기 필요). 내부 패딩은 컴포넌트가 가짐. */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  .pfp-root {
+    min-height: 0;
+  }
+}
+
+/* ── 화면 미리보기(툴바 + 중앙 정렬) ─────────────────────────── */
 .pfp-toolbar {
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 80;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  max-width: 210mm;
-  margin: 0 auto 12px;
   padding: 12px 20px;
   background: #17181c;
   color: #e8e8ea;
-  border-radius: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 .pfp-toolbar-hint {
   font-size: 12.5px;
@@ -66,471 +87,7 @@
   color: #e8e8ea;
 }
 .pfp-btn-primary {
-  background: var(--ac);
-  border-color: var(--ac);
+  background: var(--pf-ac, #f1531b);
+  border-color: var(--pf-ac, #f1531b);
   color: #fff;
-}
-
-/* ── 헤더 ────────────────────────────────────────────────────── */
-.pfp-header {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-  padding-bottom: 20px;
-  border-bottom: 3px solid var(--ac);
-}
-.pfp-avatar {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-  border: 1px solid var(--line);
-}
-.pfp-name {
-  font-size: 27px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
-}
-.pfp-name-en {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--faint);
-  letter-spacing: 0.02em;
-}
-.pfp-title {
-  margin-top: 3px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ac);
-}
-.pfp-tagline {
-  margin-top: 6px;
-  font-size: 13px;
-  color: var(--muted);
-  max-width: 60ch;
-}
-.pfp-contact {
-  margin-top: 9px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  font-size: 12px;
-  color: var(--faint);
-}
-.pfp-contact span {
-  position: relative;
-}
-.pfp-contact span:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  right: -8px;
-  top: 3px;
-  bottom: 3px;
-  width: 1px;
-  background: var(--line);
-}
-.pfp-contact-sub {
-  margin-top: 3px;
-}
-
-/* ── 섹션 공통 ───────────────────────────────────────────────── */
-.pfp-section {
-  margin-top: 26px;
-}
-.pfp-sec-head {
-  margin-bottom: 12px;
-}
-.pfp-sec-label {
-  display: block;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  color: var(--ac);
-}
-.pfp-sec-title {
-  font-size: 17px;
-  font-weight: 700;
-  margin-top: 1px;
-}
-.pfp-p {
-  font-size: 13px;
-  color: var(--fg);
-  margin: 0 0 8px;
-}
-.pfp-p:last-child {
-  margin-bottom: 0;
-}
-.pfp-lead {
-  color: var(--muted);
-}
-.pfp-muted {
-  color: var(--muted);
-}
-.pfp-strong {
-  font-weight: 700;
-  color: #000;
-}
-.pfp-code-inline {
-  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
-  font-size: 0.86em;
-  background: var(--bg-soft);
-  color: var(--ac);
-  padding: 1px 5px;
-  border-radius: 4px;
-}
-
-.pfp-h3 {
-  font-size: 14.5px;
-  font-weight: 700;
-  margin: 14px 0 6px;
-}
-.pfp-h4 {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--muted);
-  margin: 10px 0 4px;
-}
-.pfp-ul,
-.pfp-ol {
-  margin: 6px 0 8px;
-  padding-left: 20px;
-  font-size: 13px;
-}
-.pfp-ul {
-  list-style: disc;
-}
-.pfp-ol {
-  list-style: decimal;
-}
-.pfp-ul li,
-.pfp-ol li {
-  margin: 2px 0;
-}
-.pfp-ul li::marker,
-.pfp-ol li::marker {
-  color: var(--ac);
-}
-.pfp-hr {
-  border: 0;
-  border-top: 1px solid var(--line);
-  margin: 12px 0;
-}
-.pfp-quote {
-  border-left: 3px solid var(--ac);
-  padding: 2px 0 2px 14px;
-  margin: 8px 0;
-  color: var(--muted);
-  font-style: italic;
-}
-.pfp-callout {
-  background: var(--bg-soft);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin: 8px 0;
-  font-size: 12.5px;
-}
-.pfp-code {
-  background: #f6f8fa;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin: 8px 0;
-  overflow-x: auto;
-  font-family: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
-  font-size: 11.5px;
-  line-height: 1.55;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-.pfp-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 8px 0;
-  font-size: 12px;
-}
-.pfp-table th,
-.pfp-table td {
-  border: 1px solid var(--line);
-  padding: 6px 9px;
-  text-align: left;
-  vertical-align: top;
-}
-.pfp-table th {
-  background: var(--bg-soft);
-  font-weight: 700;
-}
-
-/* 태그/칩 */
-.pfp-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px 6px;
-  list-style: none;
-  padding: 0;
-  margin: 8px 0;
-}
-.pfp-tag {
-  font-size: 11px;
-  font-weight: 500;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: var(--bg-soft);
-  border: 1px solid var(--line);
-  color: var(--muted);
-}
-
-/* 통계 */
-.pfp-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 14px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-.pfp-stat {
-  flex: 1 1 auto;
-  min-width: 90px;
-}
-.pfp-stat-v {
-  font-size: 21px;
-  font-weight: 800;
-  color: var(--ac);
-  line-height: 1.1;
-}
-.pfp-stat-l {
-  font-size: 11px;
-  color: var(--faint);
-  margin-top: 2px;
-}
-
-/* 스킬 */
-.pfp-skills {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.pfp-skill-group {
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 8px;
-  align-items: baseline;
-}
-.pfp-skill-area {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--faint);
-}
-.pfp-skill-group .pfp-tags {
-  margin: 0;
-}
-
-/* 수상 */
-.pfp-awards {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  font-size: 13px;
-}
-.pfp-award-kind {
-  display: inline-block;
-  min-width: 68px;
-  font-weight: 700;
-  color: var(--ac);
-  margin-right: 8px;
-}
-
-/* 경력 */
-.pfp-exp-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.pfp-exp-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-  margin-bottom: 4px;
-}
-.pfp-exp-company {
-  font-size: 14.5px;
-  font-weight: 700;
-}
-.pfp-exp-role {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 500;
-}
-.pfp-exp-period {
-  font-size: 11.5px;
-  color: var(--faint);
-  white-space: nowrap;
-}
-.pfp-exp-len {
-  color: var(--line);
-}
-
-/* 프로젝트 */
-.pfp-proj-list {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-}
-.pfp-proj-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-}
-.pfp-proj-title {
-  font-size: 16px;
-  font-weight: 800;
-}
-.pfp-proj-title-en {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--faint);
-}
-.pfp-proj-meta {
-  font-size: 11.5px;
-  color: var(--faint);
-  white-space: nowrap;
-}
-.pfp-proj-url {
-  font-size: 11.5px;
-  color: var(--ac);
-  margin-top: 1px;
-}
-.pfp-metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin: 10px 0;
-  padding: 10px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-}
-.pfp-metric-v {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--ac);
-}
-.pfp-metric-l {
-  font-size: 10.5px;
-  color: var(--faint);
-}
-.pfp-psecs {
-  margin-top: 8px;
-}
-.pfp-psec {
-  margin-top: 10px;
-}
-
-/* 딥다이브 */
-.pfp-note-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-.pfp-note-title {
-  font-size: 16px;
-  font-weight: 800;
-}
-.pfp-note-cat {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--ac);
-  margin-top: 2px;
-}
-.pfp-note-body {
-  margin-top: 8px;
-}
-
-/* 미디어 */
-.pfp-media {
-  margin: 10px 0;
-}
-.pfp-media-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.pfp-figure {
-  margin: 10px 0;
-}
-.pfp-img {
-  width: 100%;
-  max-height: 130mm;
-  object-fit: contain;
-  border-radius: 8px;
-  border: 1px solid var(--line);
-  background: var(--bg-soft);
-}
-.pfp-cap {
-  margin-top: 4px;
-  font-size: 11px;
-  color: var(--faint);
-  text-align: center;
-}
-
-.pfp-footer {
-  margin-top: 32px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-  font-size: 10.5px;
-  color: var(--faint);
-  text-align: center;
-}
-
-/* 페이지 나눔: 섹션/카드 내부에서 끊기지 않게 */
-.pfp-avoid,
-.pfp-exp,
-.pfp-project,
-.pfp-note,
-.pfp-figure,
-.pfp-table,
-.pfp-psec {
-  break-inside: avoid;
-}
-.pfp-sec-head {
-  break-after: avoid;
-}
-
-/* ── 인쇄 시 ─────────────────────────────────────────────────── */
-@media print {
-  html,
-  body {
-    background: #fff !important;
-  }
-  .no-print {
-    display: none !important;
-  }
-  .pfp {
-    max-width: none;
-    margin: 0;
-    padding: 0;
-    box-shadow: none;
-  }
-}
-
-/* ── 화면 미리보기 배경 ──────────────────────────────────────── */
-@media screen {
-  .pfp-screen-bg {
-    min-height: 100vh;
-    background: #33363d;
-    padding: 20px 16px 60px;
-  }
-  .pfp {
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
-    border-radius: 6px;
-  }
 }

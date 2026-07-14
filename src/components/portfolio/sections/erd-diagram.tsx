@@ -15,6 +15,7 @@ import '@xyflow/react/dist/style.css'
 import dagre from 'dagre'
 import { Diamond, Key, Table2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { usePrintMode } from '@/components/portfolio/print/print-context'
 import { ZoomSlider } from '@/components/portfolio/sections/zoom-controls'
 
 const ERD_MIN_ZOOM = 0.4
@@ -141,15 +142,13 @@ function KeyIcon({ k }: { k: ColKey }) {
   return <Diamond size={10} className="text-white/30" strokeWidth={1.8} />
 }
 
-function TableNode({ data }: NodeProps<Node<TableData>>) {
-  const { entity, width } = data
+// Workbench 테이블 카드(React Flow 노드 + 인쇄 정적 렌더 공용).
+function EntityCard({ entity, width }: { entity: Entity; width: number }) {
   return (
     <div
       className="overflow-hidden rounded-[9px] border border-white/12 bg-[#1a1a1a] font-sans shadow-[0_10px_28px_rgba(0,0,0,0.5)]"
       style={{ width }}
     >
-      <Handle type="target" position={Position.Left} id="l" style={{ opacity: 0, left: 0 }} />
-      <Handle type="source" position={Position.Right} id="r" style={{ opacity: 0, right: 0 }} />
       {/* 헤더 */}
       <div
         className="flex items-center gap-1.5 border-b border-white/10 px-2.5 font-semibold text-[#ededed]"
@@ -183,6 +182,17 @@ function TableNode({ data }: NodeProps<Node<TableData>>) {
       >
         Indexes
       </div>
+    </div>
+  )
+}
+
+function TableNode({ data }: NodeProps<Node<TableData>>) {
+  const { entity, width } = data
+  return (
+    <div className="relative" style={{ width }}>
+      <Handle type="target" position={Position.Left} id="l" style={{ opacity: 0, left: 0 }} />
+      <Handle type="source" position={Position.Right} id="r" style={{ opacity: 0, right: 0 }} />
+      <EntityCard entity={entity} width={width} />
     </div>
   )
 }
@@ -309,13 +319,47 @@ function buildGraph(entities: Entity[], rels: Rel[]): { nodes: Node<TableData>[]
   return { nodes, edges, bounds, center }
 }
 
+// 인쇄(PDF): React Flow 캔버스는 고정높이·팬줌이라 인쇄에 부적합 → 테이블 카드를
+// 그리드로 펼치고 관계는 목록으로 표기해 "렌더된 이미지"처럼 전체를 담는다.
+function ErdPrintStatic({ code, className = '' }: { code: string; className?: string }) {
+  const { entities, rels } = useMemo(() => parseErDiagram(code || ''), [code])
+  if (entities.length === 0) return null
+  return (
+    <div className={`rounded-[16px] border border-white/[0.06] bg-[#131313] p-4 ${className}`}>
+      <div className="flex flex-wrap items-start justify-center gap-4">
+        {entities.map((e) => (
+          <EntityCard key={e.name} entity={e} width={entityWidth(e)} />
+        ))}
+      </div>
+      {rels.length > 0 && (
+        <div className="mt-4 border-t border-white/[0.07] pt-3">
+          <div className="mb-2 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-[var(--pf-fg-fainter)]">관계</div>
+          <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+            {rels.map((r, i) => (
+              <div key={i} className="text-[12px] leading-[1.5] text-[var(--pf-fg-muted)]">
+                <span className="font-semibold text-[var(--pf-fg-dim)]">{r.from}</span>
+                <span className="mx-1.5 text-[var(--pf-ac)]">→</span>
+                <span className="font-semibold text-[var(--pf-fg-dim)]">{r.to}</span>
+                {r.label && <span className="text-[var(--pf-fg-faint)]"> · {r.label}</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function ErdDiagram({ code, className = '' }: { code: string; className?: string }) {
+  const print = usePrintMode()
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   const { nodes, edges, bounds, center } = useMemo(() => {
     const { entities, rels } = parseErDiagram(code || '')
     return buildGraph(entities, rels)
   }, [code])
+
+  if (print) return <ErdPrintStatic code={code} className={className} />
 
   // 다른 다이어그램 프레임과 동일한 높이/라운드 + 다크 캔버스(사이트 톤 일치).
   const shell = `relative w-full overflow-hidden rounded-[16px] border border-white/[0.06] bg-[#131313] ${className}`
