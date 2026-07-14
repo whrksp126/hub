@@ -55,7 +55,7 @@ export default async function NoteDetail({ params }: Params) {
   const blocks = (note.content as NoteBlock[] | null) ?? []
   const [coverUrl, mediaUrls, avatarUrl] = await Promise.all([
     getMediaUrl(note.coverId),
-    getMediaUrls(blocks.filter((b) => b.type === 'image').map((b) => (b as { mediaId: number | null }).mediaId)),
+    getMediaUrls(blocks.filter((b) => b.type === 'image' || b.type === 'video').map((b) => (b as { mediaId?: number | null }).mediaId ?? null)),
     getMediaUrl(profile.avatarId),
   ])
 

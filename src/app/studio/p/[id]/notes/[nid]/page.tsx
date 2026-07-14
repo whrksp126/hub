@@ -20,7 +20,7 @@ export default async function EditNotePage({ params }: Params) {
   const blocks = (note.content as NoteBlock[] | null) ?? []
   const [coverUrl, blockMediaUrls, avatarUrl] = await Promise.all([
     getMediaUrl(note.coverId),
-    getMediaUrls(blocks.filter((b) => b.type === 'image').map((b) => (b as { mediaId: number | null }).mediaId)),
+    getMediaUrls(blocks.filter((b) => b.type === 'image' || b.type === 'video').map((b) => (b as { mediaId?: number | null }).mediaId ?? null)),
     getMediaUrl(profile.avatarId),
   ])
 

@@ -196,7 +196,7 @@ export const profiles = sqliteTable(
 // ── 포트폴리오: 프로젝트(케이스 스터디) ───────────────────────────────
 export type ProjectMetric = { value: string; label: string }
 // 섹션/경력에 첨부하는 미디어 — image/video는 media 테이블 id, embed는 외부 URL(YouTube/Vimeo).
-export type SectionMedia = { kind: 'image' | 'video' | 'embed'; mediaId?: number | null; url?: string; caption?: string }
+export type SectionMedia = { kind: 'image' | 'video' | 'embed'; mediaId?: number | null; url?: string; caption?: string; poster?: string }
 // 케이스 스터디 섹션 시각 유형 — 같은 데이터(제목/본문/불릿)를 종류별로 다르게 렌더.
 // diagram=flowchart/sequence(mermaid) / erd=Workbench ERD(React Flow) / gallery=미디어 / specs=스펙 태그.
 export type ProjectSectionKind = 'default' | 'lead' | 'features' | 'challenge' | 'timeline' | 'steps' | 'diagram' | 'erd' | 'gallery' | 'specs'
@@ -257,8 +257,11 @@ export const experiences = sqliteTable('experiences', {
 // 블록 기반 본문(가벼운 인라인 에디터). 편집/공개가 같은 블록 컴포넌트를 공유.
 export type NoteBlock =
   | { type: 'h2' | 'h3' | 'p' | 'quote' | 'callout'; text: string }
+  | { type: 'code'; text: string; lang?: string }
+  | { type: 'list'; items: string[]; ordered?: boolean }
+  | { type: 'table'; header?: string[]; rows: string[][] }
   | { type: 'image'; mediaId: number | null; caption?: string }
-  | { type: 'video'; mediaId?: number | null; url?: string; caption?: string }
+  | { type: 'video'; mediaId?: number | null; url?: string; caption?: string; poster?: string }
   | { type: 'divider' }
 
 export const notes = sqliteTable(

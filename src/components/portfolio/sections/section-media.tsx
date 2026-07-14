@@ -30,10 +30,10 @@ function MediaFrame({ m, urls }: { m: SectionMedia; urls: Record<number, string>
   }
   if (m.kind === 'video') {
     // eslint-disable-next-line jsx-a11y/media-has-caption
-    return <video src={src} controls playsInline className="w-full rounded-[14px] border border-white/[0.08] bg-black" />
+    return <video src={src} poster={m.poster || undefined} controls autoPlay muted loop playsInline preload="metadata" className="mx-auto block max-h-[82vh] w-full rounded-[14px] border border-white/[0.08] bg-black object-contain" />
   }
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={m.caption ?? ''} className="w-full rounded-[14px] border border-white/[0.07] object-cover" />
+  return <img src={src} alt={m.caption ?? ''} className="mx-auto block max-h-[82vh] w-full rounded-[14px] border border-white/[0.07] bg-white/[0.02] object-contain" />
 }
 
 // 공개: 미디어 그리드(1장=가로 꽉, 2장 이상=2열).

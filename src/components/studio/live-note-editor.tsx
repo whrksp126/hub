@@ -4,7 +4,7 @@ import { ArrowLeft, Check, ChevronDown, ChevronUp, Film, ImagePlus, Lightbulb, L
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import { useRef, useState } from 'react'
-import { NOTE_BODY_GAP, noteBlockClass } from '@/components/portfolio/note-blocks'
+import { CodeBlock, NoteList, NoteTable, NOTE_BODY_GAP, noteBlockClass } from '@/components/portfolio/note-blocks'
 import { PortfolioColumns } from '@/components/portfolio/portfolio-columns'
 import { InlineText } from '@/components/studio/inline-text'
 import type { Note, NoteBlock, Profile } from '@/db/schema'
@@ -247,6 +247,17 @@ function BlockEditor({
     )
   }
   if (block.type === 'divider') return <hr className="my-2 border-0 border-t border-white/[0.1]" />
+  // 코드/표/리스트: 이 인라인 편집기에선 읽기전용 프리뷰(값 보존). 편집은 원본 발행 파이프라인에서.
+  if (block.type === 'code' || block.type === 'list' || block.type === 'table') {
+    return (
+      <div className="relative">
+        <span className="absolute -top-2 right-2 z-10 rounded bg-black/60 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--pf-fg-faint)]">{block.type} · 읽기전용</span>
+        {block.type === 'code' && <CodeBlock text={block.text} lang={block.lang} />}
+        {block.type === 'list' && <NoteList items={block.items} ordered={block.ordered} />}
+        {block.type === 'table' && <NoteTable header={block.header} rows={block.rows} />}
+      </div>
+    )
+  }
   // 공개와 동일한 요소로 감싸고(스타일=결과), 편집 chrome은 안쪽 텍스트에만.
   const ph = block.type === 'h2' ? '소제목' : block.type === 'h3' ? '작은 제목' : block.type === 'quote' ? '인용문' : '문단을 입력하세요…'
   const cls = noteBlockClass(block.type)
