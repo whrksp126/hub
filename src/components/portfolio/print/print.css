@@ -1,47 +1,92 @@
-/* 포트폴리오 PDF(브라우저 인쇄) — 실제 다크 디자인 그대로. iframe 미리보기=출력 일치. */
+/* 포트폴리오 PDF(브라우저 인쇄) — 실제 다크 디자인 그대로. 화면 미리보기=실제 출력 일치. */
 
 /* ── 외곽 셸(화면) ─────────────────────────────────────────────── */
 .pfp-shell {
+  --pfw: 1080px;
   min-height: 100dvh;
-  background: #33363d;
-}
-.pfp-shell-scroll {
-  overflow: auto;
-  padding: 0 16px 48px;
-  text-align: center;
-}
-.pfp-iframe {
-  display: inline-block;
-  border: 0;
-  margin: 0 auto;
-  background: var(--pf-bg, #0e0e0e);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
-  vertical-align: top;
-}
-
-/* ── 프레임 문서(iframe 내부 = 실제 인쇄 대상) ─────────────────── */
-.pfp-frame-doc {
-  min-height: 100vh;
-  background: var(--pf-bg, #0e0e0e);
+  background: #33363d; /* 종이 바깥 회색 */
   color: var(--pf-fg, #f4f4f2);
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
-/* pf-reveal 진입 애니메이션은 인쇄/미리보기에서 항상 펼친 상태로(빈 페이지 방지). */
-.pfp-frame-doc .pf-reveal {
+/* 종이(paper) — 설정 폭. 화면의 이 폭이 곧 PDF 출력 폭. */
+.pfp-paper {
+  width: var(--pfw, 1080px);
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--pf-bg, #0e0e0e);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* pf-reveal 진입 애니메이션은 항상 펼친 상태로(빈 페이지 방지). */
+.pfp-shell .pf-reveal {
   animation: none !important;
   opacity: 1 !important;
   transform: none !important;
 }
-/* 다이어그램: 줌 프레임 제거된 자리에 자연 크기로 가운데 정렬. SVG는 폭 맞춤. */
-.pfp-frame-doc .pfp-diagram :where(svg) {
+/* 다이어그램: 줌 프레임 제거 자리에 자연 크기. SVG는 폭 맞춤. */
+.pfp-shell .pfp-diagram :where(svg) {
   max-width: 100%;
   height: auto;
 }
-/* 각 상세 블록은 새 페이지에서 시작. */
 .pfp-pagebreak {
   break-before: page;
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   레이아웃을 뷰포트 미디어쿼리가 아니라 폭 클래스로 강제한다.
+   Chrome 인쇄는 min-[1080px] 미디어쿼리를 매칭하지 않으므로(원인),
+   실제 사이트가 ≥1080에서 쓰는 유틸을 pfp-wide에서 강제로 켠다 → 인쇄에서도 2단.
+   pfp-narrow는 그 유틸을 꺼 1단(모바일 배치)으로 → 좁은 폭에서 화면=인쇄 일치.
+   ───────────────────────────────────────────────────────────────── */
+
+/* ▷ 2단(데스크톱) 강제 — 실제 사이트 ≥1080 레이아웃과 동일 */
+.pfp-wide [class*="min-[1080px]:grid"] { display: grid !important; }
+.pfp-wide [class*="min-[1080px]:grid-cols-[320px"] {
+  grid-template-columns: 320px minmax(0, 1fr) !important;
+}
+.pfp-wide [class*="min-[1080px]:max-w-[1280px]"] { max-width: 1280px !important; }
+.pfp-wide [class*="min-[1080px]:px-[clamp(18px"] {
+  padding-left: clamp(18px, 5vw, 64px) !important;
+  padding-right: clamp(18px, 5vw, 64px) !important;
+}
+.pfp-wide [class*="min-[1080px]:gap-[clamp(40px"] { gap: clamp(40px, 4vw, 72px) !important; }
+.pfp-wide [class*="min-[1080px]:items-start"] { align-items: flex-start !important; }
+.pfp-wide [class*="min-[1080px]:items-end"] { align-items: flex-end !important; }
+.pfp-wide [class*="min-[1080px]:self-start"] { align-self: flex-start !important; }
+.pfp-wide [class*="min-[1080px]:flex-row"] { flex-direction: row !important; }
+.pfp-wide [class*="min-[1080px]:justify-start"] { justify-content: flex-start !important; }
+.pfp-wide [class*="min-[1080px]:justify-between"] { justify-content: space-between !important; }
+.pfp-wide [class*="min-[1080px]:text-left"] { text-align: left !important; }
+.pfp-wide [class*="min-[1080px]:mx-0"] { margin-left: 0 !important; margin-right: 0 !important; }
+.pfp-wide [class*="min-[1080px]:mb-0"] { margin-bottom: 0 !important; }
+.pfp-wide [class*="min-[1080px]:sticky"] { position: static !important; } /* 인쇄에선 sticky 불필요 */
+.pfp-wide [class*="min-[1080px]:top-24"] { top: auto !important; }
+
+/* ▷ 1단(모바일) 강제 — 넓은 창에서 미리보기가 2단으로 새지 않게 유틸을 되돌림 */
+.pfp-narrow [class*="min-[1080px]:grid"] { display: block !important; }
+.pfp-narrow [class*="min-[1080px]:max-w-[1280px]"] { max-width: 800px !important; }
+.pfp-narrow [class*="min-[1080px]:flex-row"] { flex-direction: column !important; }
+.pfp-narrow [class*="min-[1080px]:sticky"] { position: static !important; }
+.pfp-narrow [class*="min-[1080px]:text-left"] { text-align: center !important; }
+.pfp-narrow [class*="min-[1080px]:mx-0"] { margin-left: auto !important; margin-right: auto !important; }
+.pfp-narrow [class*="min-[1080px]:justify-start"] { justify-content: center !important; }
+.pfp-narrow [class*="lg:flex-row"] { flex-direction: column !important; }
+
+/* ▷ sm: 브레이크포인트(카드·기능·경력 2단 그리드 등)는 두 폭 모두 강제 — 실제 태블릿+ 배치 */
+.pfp-shell [class*="sm:grid-cols-2"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.pfp-shell [class*="sm:grid-cols-[112px"] { grid-template-columns: 112px minmax(0, 1fr) 24px !important; }
+.pfp-shell [class*="sm:grid-cols-[minmax(0,180px)"] { grid-template-columns: minmax(0, 180px) minmax(0, 1fr) !important; }
+.pfp-shell [class*="sm:grid-cols-[minmax(0,210px)"] { grid-template-columns: minmax(0, 210px) minmax(0, 1fr) !important; }
+.pfp-shell [class*="sm:flex-row"] { flex-direction: row !important; }
+/* lg: 브레이크포인트(1024)는 넓은 폭에서만 */
+.pfp-wide [class*="lg:flex-row"] { flex-direction: row !important; }
+
+/* min-[810px]: 서비스 카드 2단 — 넓은 폭만 켜고 좁은 폭은 1단(세로)로 되돌림 */
+.pfp-wide [class*="min-[810px]:grid-cols-2"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.pfp-wide [class*="min-[810px]:max-w-none"] { max-width: none !important; }
+.pfp-narrow [class*="min-[810px]:grid-cols-2"] { grid-template-columns: minmax(0, 1fr) !important; }
+.pfp-narrow [class*="min-[810px]:max-w-none"] { max-width: 360px !important; }
 
 @media print {
   html,
@@ -51,9 +96,15 @@
   .no-print {
     display: none !important;
   }
-  /* @page 크기는 폭에 맞춰 동적 주입(#pfp-page). */
-  .pfp-frame-doc {
+  .pfp-shell {
     min-height: 0;
+    background: var(--pf-bg, #0e0e0e) !important;
+  }
+  .pfp-paper {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    box-shadow: none;
   }
 }
 
