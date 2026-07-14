@@ -28,12 +28,18 @@ RUN corepack enable && mkdir -p data && pnpm exec drizzle-kit migrate \
 FROM base AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+# 포트폴리오 PDF(서버 브라우저 렌더)용 시스템 Chromium + 한글/이모지 폰트.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      chromium fonts-noto-cjk fonts-noto-color-emoji ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+ENV CHROMIUM_PATH=/usr/bin/chromium
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-# 마이그레이션 폴더 + 네이티브 모듈(standalone 트레이스 누락 대비)
+# 마이그레이션 폴더 + 네이티브/특수 모듈(standalone 트레이스 누락 대비)
 COPY --from=builder /app/drizzle ./drizzle
 COPY --from=builder /app/node_modules/better-sqlite3 ./node_modules/better-sqlite3
+COPY --from=builder /app/node_modules/playwright-core ./node_modules/playwright-core
 RUN mkdir -p /app/data
 EXPOSE 3000
 ENV PORT=3000 HOSTNAME=0.0.0.0

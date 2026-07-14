@@ -16,6 +16,13 @@ type Options = {
 
 type HomeKey = 'hero' | 'stats' | 'services' | 'projects' | 'experience' | 'skills' | 'notes' | 'cta'
 
+const WIDTHS = [
+  { label: '세로 1단', px: 800 },
+  { label: '기본 (2단)', px: 1080 },
+  { label: '넓게', px: 1280 },
+  { label: '더 넓게', px: 1440 },
+]
+
 // 실제 화면의 다크 디자인 그대로 담는 PDF 내보내기.
 // 화면의 섹션(홈 요소별 + 프로젝트/경력/글 상세)을 체크박스로 골라 print 라우트를 새 탭에서 연다.
 export function PdfExportButton({
@@ -41,6 +48,8 @@ export function PdfExportButton({
   const [expDetail, setExpDetail] = useState(true)
   const [projSel, setProjSel] = useState<Set<string>>(new Set())
   const [noteSel, setNoteSel] = useState<Set<string>>(new Set())
+  const [width, setWidth] = useState(1080)
+  const [busy, setBusy] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -80,7 +89,9 @@ export function PdfExportButton({
   const generate = () => {
     if (!opts) return
     const params = new URLSearchParams()
-    // 홈 섹션 — 존재하며 켠 것만. 항상 명시(빈 값이어도 direct-visit과 구분).
+    params.set('u', username)
+    params.set('w', String(width))
+    // 홈 섹션 — 존재하며 켠 것만. 항상 명시(빈 값이어도 전체포함과 구분).
     const avail: Record<HomeKey, boolean> = {
       hero: true,
       stats: opts.hasStats,
@@ -102,8 +113,13 @@ export function PdfExportButton({
     // 경력 상세 페이지
     if (opts.hasExperience && expDetail) params.set('exp', '1')
 
-    window.open(`/p/${encodeURIComponent(username)}/print?${params.toString()}`, '_blank', 'noopener')
-    setOpen(false)
+    // 서버가 실제 브라우저로 렌더 → 픽셀 퍼펙트 PDF. 새 탭에서 열림(생성에 몇 초 소요).
+    setBusy(true)
+    window.open(`/api/portfolio-pdf?${params.toString()}`, '_blank', 'noopener')
+    setTimeout(() => {
+      setBusy(false)
+      setOpen(false)
+    }, 1200)
   }
 
   const trigger =
@@ -191,17 +207,39 @@ export function PdfExportButton({
             </div>
 
             <div className="border-t border-white/10 px-5 py-4">
+              {/* 가로 폭 — 1080 이상이면 2단 데스크톱 레이아웃 */}
+              <div className="mb-3">
+                <div className="mb-1.5 text-[11px] font-bold uppercase tracking-wider text-white/40">가로 폭</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {WIDTHS.map((wd) => (
+                    <button
+                      key={wd.px}
+                      type="button"
+                      onClick={() => setWidth(wd.px)}
+                      className={[
+                        'rounded-md border px-2.5 py-1.5 text-[12px] font-semibold transition-colors',
+                        width === wd.px
+                          ? 'border-[var(--pf-ac,#f1531b)] bg-[var(--pf-ac,#f1531b)] text-white'
+                          : 'border-white/12 bg-white/[0.04] text-white/70 hover:bg-white/[0.08]',
+                      ].join(' ')}
+                    >
+                      {wd.label}
+                      <span className="ml-1 text-[10px] opacity-60">{wd.px}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
               <p className="mb-3 text-[11.5px] leading-relaxed text-white/40">
-                새 탭에서 인쇄 창이 열립니다. <b className="text-white/70">대상 → PDF로 저장</b>을 선택하고, 옵션에서
-                <b className="text-white/70"> 배경 그래픽</b>을 켜야 다크 디자인이 그대로 나옵니다.
+                서버가 실제 화면 그대로 렌더한 <b className="text-white/70">PDF</b>를 새 탭에 엽니다. 생성에 몇 초 걸릴 수 있어요.
               </p>
               <button
                 type="button"
                 onClick={generate}
-                disabled={loading || !opts}
+                disabled={loading || !opts || busy}
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--pf-ac,#f1531b)] py-2.5 text-[14px] font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-40"
               >
-                <FileDown size={17} /> PDF 만들기
+                {busy ? <Loader2 size={17} className="animate-spin" /> : <FileDown size={17} />}
+                {busy ? 'PDF 생성 중…' : 'PDF 만들기'}
               </button>
             </div>
           </div>

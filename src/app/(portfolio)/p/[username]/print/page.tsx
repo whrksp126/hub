@@ -5,7 +5,6 @@ import { NoteBody } from '@/components/portfolio/note-blocks'
 import { PortfolioColumns } from '@/components/portfolio/portfolio-columns'
 import '@/components/portfolio/print/print.css'
 import { PrintModeProvider } from '@/components/portfolio/print/print-context'
-import { PrintToolbar } from '@/components/portfolio/print/print-toolbar'
 import { CtaSection, Hero, SkillGrid, StatList } from '@/components/portfolio/sections/home-sections'
 import { ExperienceCardView } from '@/components/portfolio/sections/experience-card-view'
 import {
@@ -41,9 +40,6 @@ export default async function PortfolioPrint({ params, searchParams }: Params) {
   const sp = await searchParams
   const profile = await getProfileByUsername(username)
   if (!profile) notFound()
-
-  // 가로 폭(사용자 설정, 기본 1080). 1080 이상이면 실제 사이트의 2단 데스크톱 레이아웃 그대로.
-  const w = Math.min(2400, Math.max(600, Math.round(Number(sp.w) || 1080)))
 
   // ── 선택 상태 파싱 ────────────────────────────────────────────────
   // 파라미터가 하나도 없으면(직접 방문) 전부 포함. (다이얼로그는 항상 home을 명시 → 빈 선택 구분)
@@ -169,23 +165,14 @@ export default async function PortfolioPrint({ params, searchParams }: Params) {
   )
 
   const awards = profile.awards ?? []
+  const style = { '--pf-ac': profile.accent } as CSSProperties
 
-  // PDF 페이지 크기를 콘텐츠 폭(w)에 맞춤 → 좁은 A4로 안 줄고, iframe 뷰포트=w라 레이아웃 정확.
-  const wmm = Math.ceil((w / 96) * 25.4 * 10) / 10
-  const hmm = Math.ceil(wmm * 1.4142 * 10) / 10
-  const pageRule = `@page{size:${wmm}mm ${hmm}mm;margin:0}`
-  const style = { '--pf-ac': profile.accent, '--pfw': `${w}px` } as CSSProperties
-
-  // 레이아웃은 뷰포트 미디어쿼리가 아니라 pfp-wide/narrow 클래스로 강제 → 화면=인쇄 일치.
-  // (Chrome 인쇄는 @page/창 크기와 무관하게 min-[1080px] 미디어쿼리를 매칭하지 않으므로 강제 필요.)
+  // 순수 콘텐츠 문서. 서버(/api/portfolio-pdf)가 실제 브라우저로 뷰포트=설정폭에서 렌더 → PDF.
+  // screen 미디어 + 실제 뷰포트라 반응형/vw가 실제 화면과 100% 동일하게 동작한다(강제 CSS 불필요).
   return (
-    <div className={`pfp-shell pf ${w >= 1080 ? 'pfp-wide' : 'pfp-narrow'}`} style={style}>
-      {/* PDF 페이지 크기를 콘텐츠 폭(w)에 맞춰 주입 → 좁은 A4로 안 줄고 미리보기=출력. */}
-      <style id="pfp-page" dangerouslySetInnerHTML={{ __html: pageRule }} />
-      <PrintToolbar initialWidth={w} auto={sp.preview === undefined} />
-      <div className="pfp-paper">
-        <PrintModeProvider>
-          <PortfolioColumns profile={profile} avatarUrl={avatarUrl}>
+    <div className="pf pfp-raw" style={style}>
+      <PrintModeProvider>
+        <PortfolioColumns profile={profile} avatarUrl={avatarUrl}>
           {/* ── 홈 화면 섹션 ── */}
           {anyHome && (
             <div className="pfp-block flex flex-col">
@@ -290,9 +277,8 @@ export default async function PortfolioPrint({ params, searchParams }: Params) {
               </div>
             )
           })}
-          </PortfolioColumns>
-        </PrintModeProvider>
-      </div>
+        </PortfolioColumns>
+      </PrintModeProvider>
     </div>
   )
 }
