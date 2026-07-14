@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { PdfExportButton } from '@/components/portfolio/pdf-export'
 import { LiveProfileEditor } from '@/components/studio/live-profile-editor'
 import { getMediaUrl, getMediaUrls } from '@/db/queries'
 import { requireUser } from '@/lib/auth'
@@ -61,6 +62,9 @@ export default async function EditProfilePage({ params }: Params) {
         experiences={experiences}
         notes={notes}
       />
+      <div className="fixed bottom-5 right-5 z-50" style={{ ['--pf-ac' as string]: profile.accent }}>
+        <PdfExportButton username={profile.username} variant="inline" />
+      </div>
     </div>
   )
 }

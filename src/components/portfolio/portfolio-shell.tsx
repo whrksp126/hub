@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import type { Profile } from '@/db/schema'
+import { PdfExportButton } from './pdf-export'
 import { PortfolioFooter } from './portfolio-footer'
 import { PortfolioNav } from './portfolio-nav'
 
@@ -9,6 +10,7 @@ export function PortfolioShell({ profile, children }: { profile: Profile; childr
   return (
     <div className="pf relative min-h-dvh overflow-x-clip" style={style}>
       <PortfolioNav username={profile.username} />
+      <PdfExportButton username={profile.username} />
       <main className="pt-24">{children}</main>
       <PortfolioFooter profile={profile} />
     </div>
