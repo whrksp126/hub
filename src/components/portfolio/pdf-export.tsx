@@ -86,6 +86,31 @@ export function PdfExportButton({
     setSet(next)
   }
 
+  // 그룹별 전체 선택/해제
+  const homeKeys = (): HomeKey[] => {
+    if (!opts) return []
+    const a: HomeKey[] = ['hero']
+    if (opts.hasStats) a.push('stats')
+    if (opts.hasCards) a.push('services')
+    if (opts.hasHomeProjects) a.push('projects')
+    if (opts.hasExperience) a.push('experience')
+    if (opts.hasSkills) a.push('skills')
+    if (opts.hasHomeNotes) a.push('notes')
+    a.push('cta')
+    return a
+  }
+  const allHomeOn = homeKeys().every((k) => home[k])
+  const toggleAllHome = () =>
+    setHome((s) => {
+      const next = { ...s }
+      for (const k of homeKeys()) next[k] = !allHomeOn
+      return next
+    })
+  const allProjOn = !!opts && opts.projects.length > 0 && projSel.size === opts.projects.length
+  const toggleAllProj = () => setProjSel(allProjOn ? new Set() : new Set(opts?.projects.map((p) => p.slug)))
+  const allNoteOn = !!opts && opts.notes.length > 0 && noteSel.size === opts.notes.length
+  const toggleAllNote = () => setNoteSel(allNoteOn ? new Set() : new Set(opts?.notes.map((n) => n.slug)))
+
   const generate = () => {
     if (!opts) return
     const params = new URLSearchParams()
@@ -170,7 +195,7 @@ export function PdfExportButton({
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
-                  <Group title="홈 화면">
+                  <Group title="홈 화면" all={{ checked: allHomeOn, onToggle: toggleAllHome }}>
                     <Row label="소개 (히어로)" checked={home.hero} onClick={() => toggleHome('hero')} />
                     {opts.hasStats && <Row label="핵심 지표" checked={home.stats} onClick={() => toggleHome('stats')} />}
                     {opts.hasCards && <Row label="서비스 카드" checked={home.services} onClick={() => toggleHome('services')} />}
@@ -182,7 +207,7 @@ export function PdfExportButton({
                   </Group>
 
                   {opts.projects.length > 0 && (
-                    <Group title="프로젝트 상세" hint="케이스 스터디 전체">
+                    <Group title="프로젝트 상세" hint="케이스 스터디 전체" all={{ checked: allProjOn, onToggle: toggleAllProj }}>
                       {opts.projects.map((p) => (
                         <Row key={p.slug} label={p.title} sub checked={projSel.has(p.slug)} onClick={() => toggleIn(projSel, setProjSel, p.slug)} />
                       ))}
@@ -196,7 +221,7 @@ export function PdfExportButton({
                   )}
 
                   {opts.notes.length > 0 && (
-                    <Group title="딥다이브 · 글 상세" hint="본문 전체">
+                    <Group title="딥다이브 · 글 상세" hint="본문 전체" all={{ checked: allNoteOn, onToggle: toggleAllNote }}>
                       {opts.notes.map((n) => (
                         <Row key={n.slug} label={n.title} sub checked={noteSel.has(n.slug)} onClick={() => toggleIn(noteSel, setNoteSel, n.slug)} />
                       ))}
@@ -249,12 +274,33 @@ export function PdfExportButton({
   )
 }
 
-function Group({ title, hint, children }: { title: string; hint?: string; children: React.ReactNode }) {
+function Group({
+  title,
+  hint,
+  all,
+  children,
+}: {
+  title: string
+  hint?: string
+  all?: { checked: boolean; onToggle: () => void }
+  children: React.ReactNode
+}) {
   return (
     <div>
-      <div className="mb-1.5 flex items-baseline gap-2">
-        <span className="text-[11px] font-bold uppercase tracking-wider text-white/40">{title}</span>
-        {hint && <span className="text-[10.5px] text-white/25">{hint}</span>}
+      <div className="mb-1.5 flex items-center justify-between gap-2">
+        <div className="flex items-baseline gap-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-white/40">{title}</span>
+          {hint && <span className="text-[10.5px] text-white/25">{hint}</span>}
+        </div>
+        {all && (
+          <button
+            type="button"
+            onClick={all.onToggle}
+            className="rounded px-1.5 py-0.5 text-[11px] font-semibold text-[var(--pf-ac,#f1531b)] transition-colors hover:bg-white/[0.06]"
+          >
+            {all.checked ? '전체 해제' : '전체 선택'}
+          </button>
+        )}
       </div>
       {children}
     </div>

@@ -1,5 +1,11 @@
 /* 포트폴리오 PDF용 순수 콘텐츠 문서(/api/portfolio-pdf가 서버 브라우저로 렌더). */
 
+/* 페이지에 콘텐츠가 안 찬 여백(마지막 페이지 등)도 다크로 — html/body까지 배경 지정. */
+html:has(.pfp-raw),
+body:has(.pfp-raw) {
+  background: var(--pf-bg, #0e0e0e) !important;
+}
+
 .pfp-raw {
   background: var(--pf-bg, #0e0e0e);
   color: var(--pf-fg, #f4f4f2);
