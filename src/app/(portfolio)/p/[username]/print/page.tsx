@@ -3,9 +3,9 @@ import { notFound } from 'next/navigation'
 import { DEFAULT_CARDS } from '@/components/portfolio/card-kit'
 import { NoteBody } from '@/components/portfolio/note-blocks'
 import { PortfolioColumns } from '@/components/portfolio/portfolio-columns'
-import { AutoPrint } from '@/components/portfolio/print/auto-print'
 import '@/components/portfolio/print/print.css'
 import { PrintModeProvider } from '@/components/portfolio/print/print-context'
+import { PrintShell } from '@/components/portfolio/print/print-shell'
 import { CtaSection, Hero, SkillGrid, StatList } from '@/components/portfolio/sections/home-sections'
 import { ExperienceCardView } from '@/components/portfolio/sections/experience-card-view'
 import {
@@ -41,6 +41,26 @@ export default async function PortfolioPrint({ params, searchParams }: Params) {
   const sp = await searchParams
   const profile = await getProfileByUsername(username)
   if (!profile) notFound()
+
+  // 가로 폭(사용자 설정, 기본 1080). 1080 이상이면 실제 사이트의 2단 데스크톱 레이아웃 그대로.
+  const w = Math.min(2400, Math.max(600, Math.round(Number(sp.w) || 1080)))
+
+  // frame 파라미터가 없으면 = 외곽 셸: 툴바 + iframe(설정폭) 미리보기.
+  // iframe은 자체 뷰포트=설정폭이라 화면 미리보기와 실제 PDF 출력이 항상 일치한다.
+  if (sp.frame === undefined) {
+    const pass = new URLSearchParams()
+    for (const k of ['home', 'pd', 'nd', 'exp'] as const) if (sp[k] !== undefined) pass.set(k, sp[k] as string)
+    pass.set('frame', '1')
+    return (
+      <PrintShell
+        frameBase={`${pfPath(username)}/print`}
+        baseParams={pass.toString()}
+        initialWidth={w}
+        auto={sp.preview === undefined}
+        accent={profile.accent}
+      />
+    )
+  }
 
   // ── 선택 상태 파싱 ────────────────────────────────────────────────
   // 파라미터가 하나도 없으면(직접 방문) 전부 포함. (다이얼로그는 항상 home을 명시 → 빈 선택 구분)
@@ -166,11 +186,18 @@ export default async function PortfolioPrint({ params, searchParams }: Params) {
   )
 
   const awards = profile.awards ?? []
-  const style = { '--pf-ac': profile.accent } as CSSProperties
 
+  // PDF 페이지 크기를 콘텐츠 폭(w)에 맞춤 → 좁은 A4로 안 줄고, iframe 뷰포트=w라 레이아웃 정확.
+  const wmm = Math.ceil((w / 96) * 25.4 * 10) / 10
+  const hmm = Math.ceil(wmm * 1.4142 * 10) / 10
+  const pageRule = `@page{size:${wmm}mm ${hmm}mm;margin:0}`
+  const style = { '--pf-ac': profile.accent, '--pfw': `${w}px` } as CSSProperties
+
+  // frame=1: 인쇄 대상 문서(툴바 없음). iframe 안에서 렌더 → 뷰포트=설정폭이라 레이아웃 정확.
   return (
-    <div className="pfp-root pf" style={style}>
-      <AutoPrint auto={sp.preview == null} />
+    <div className="pfp-frame-doc pf" style={style}>
+      {/* PDF 페이지 크기를 콘텐츠 폭(w)에 맞춰 주입 → 좁은 A4로 안 줄고 미리보기=출력. */}
+      <style id="pfp-page" dangerouslySetInnerHTML={{ __html: pageRule }} />
       <PrintModeProvider>
         <PortfolioColumns profile={profile} avatarUrl={avatarUrl}>
           {/* ── 홈 화면 섹션 ── */}

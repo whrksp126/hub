@@ -1,32 +1,46 @@
-/* 포트폴리오 PDF(브라우저 인쇄) — 실제 다크 디자인 그대로. */
+/* 포트폴리오 PDF(브라우저 인쇄) — 실제 다크 디자인 그대로. iframe 미리보기=출력 일치. */
 
-.pfp-root {
+/* ── 외곽 셸(화면) ─────────────────────────────────────────────── */
+.pfp-shell {
   min-height: 100dvh;
+  background: #33363d;
+}
+.pfp-shell-scroll {
+  overflow: auto;
+  padding: 0 16px 48px;
+  text-align: center;
+}
+.pfp-iframe {
+  display: inline-block;
+  border: 0;
+  margin: 0 auto;
+  background: var(--pf-bg, #0e0e0e);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  vertical-align: top;
+}
+
+/* ── 프레임 문서(iframe 내부 = 실제 인쇄 대상) ─────────────────── */
+.pfp-frame-doc {
+  min-height: 100vh;
   background: var(--pf-bg, #0e0e0e);
   color: var(--pf-fg, #f4f4f2);
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
-
 /* pf-reveal 진입 애니메이션은 인쇄/미리보기에서 항상 펼친 상태로(빈 페이지 방지). */
-.pfp-root .pf-reveal {
+.pfp-frame-doc .pf-reveal {
   animation: none !important;
   opacity: 1 !important;
   transform: none !important;
 }
-
-/* 다이어그램: 인쇄 시 자연 크기로 가운데 정렬(줌 프레임 제거됨). SVG는 폭 맞춤. */
-.pfp-root .pfp-diagram :where(svg) {
+/* 다이어그램: 줌 프레임 제거된 자리에 자연 크기로 가운데 정렬. SVG는 폭 맞춤. */
+.pfp-frame-doc .pfp-diagram :where(svg) {
   max-width: 100%;
   height: auto;
 }
-
-/* 인쇄 시 각 상세 블록은 새 페이지에서 시작 + 내부에서 최대한 안 끊기게. */
+/* 각 상세 블록은 새 페이지에서 시작. */
 .pfp-pagebreak {
   break-before: page;
-}
-.pfp-block {
-  break-inside: auto;
 }
 
 @media print {
@@ -37,17 +51,13 @@
   .no-print {
     display: none !important;
   }
-  /* 인쇄 여백 0 → 다크 배경이 가장자리까지(배경 그래픽 켜기 필요). 내부 패딩은 컴포넌트가 가짐. */
-  @page {
-    size: A4;
-    margin: 0;
-  }
-  .pfp-root {
+  /* @page 크기는 폭에 맞춰 동적 주입(#pfp-page). */
+  .pfp-frame-doc {
     min-height: 0;
   }
 }
 
-/* ── 화면 미리보기(툴바 + 중앙 정렬) ─────────────────────────── */
+/* ── 툴바 ──────────────────────────────────────────────────────── */
 .pfp-toolbar {
   position: sticky;
   top: 0;
@@ -61,6 +71,12 @@
   background: #17181c;
   color: #e8e8ea;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.pfp-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 .pfp-toolbar-hint {
   font-size: 12.5px;
@@ -90,4 +106,51 @@
   background: var(--pf-ac, #f1531b);
   border-color: var(--pf-ac, #f1531b);
   color: #fff;
+}
+
+/* ── 가로 폭 컨트롤 ────────────────────────────────────────────── */
+.pfp-width {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.pfp-width-label {
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8b8f98;
+}
+.pfp-width-btn {
+  padding: 5px 10px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #c7cad1;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pfp-width-btn.is-on {
+  border-color: var(--pf-ac, #f1531b);
+  background: var(--pf-ac, #f1531b);
+  color: #fff;
+}
+.pfp-width-input {
+  width: 62px;
+  margin-left: 4px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e8e8ea;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: right;
+}
+.pfp-width-input.is-on {
+  border-color: var(--pf-ac, #f1531b);
+}
+.pfp-width-unit {
+  font-size: 11px;
+  color: #7c8088;
 }
