@@ -4,7 +4,7 @@ import { ProjectRow } from '@/components/portfolio/pieces'
 import { PortfolioColumns } from '@/components/portfolio/portfolio-columns'
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell'
 import { getMediaUrl, getMediaUrls, getProfileByUsername, getProjectsByProfile } from '@/db/queries'
-import { pfPath, pfUrl } from '@/lib/seo'
+import { pfPageMetadata, pfPath } from '@/lib/seo'
 
 export const revalidate = 3600
 
@@ -14,12 +14,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { username } = await params
   const profile = await getProfileByUsername(username)
   if (!profile) return {}
-  const title = `프로젝트 — ${profile.name}`
-  return {
-    title,
+  return pfPageMetadata({
+    username,
+    sub: '/projects',
+    title: `프로젝트 — ${profile.name}`,
     description: `${profile.name}의 프로젝트와 케이스 스터디`,
-    alternates: { canonical: pfUrl(username, '/projects') },
-  }
+  })
 }
 
 export default async function ProjectsPage({ params }: Params) {

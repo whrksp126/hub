@@ -15,7 +15,7 @@ import {
   getProjectsByProfile,
 } from '@/db/queries'
 import { creativeWorkJsonLd } from '@/lib/jsonld'
-import { pfPath, pfUrl } from '@/lib/seo'
+import { pfPageMetadata, pfPath } from '@/lib/seo'
 
 export const revalidate = 3600
 
@@ -37,20 +37,15 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   if (!profile) return {}
   const project = await getProjectBySlug(profile.id, slug)
   if (!project) return {}
-  const title = `${project.title} — ${profile.name}`
   const image = (await getMediaUrl(project.coverId)) ?? undefined
-  return {
-    title,
+  return pfPageMetadata({
+    username,
+    sub: `/projects/${slug}`,
+    title: `${project.title} — ${profile.name}`,
     description: project.summary ?? undefined,
-    alternates: { canonical: pfUrl(username, `/projects/${slug}`) },
-    openGraph: {
-      title,
-      description: project.summary ?? undefined,
-      url: pfUrl(username, `/projects/${slug}`),
-      type: 'article',
-      images: image ? [{ url: image }] : undefined,
-    },
-  }
+    image,
+    type: 'article',
+  })
 }
 
 export default async function ProjectDetail({ params }: Params) {

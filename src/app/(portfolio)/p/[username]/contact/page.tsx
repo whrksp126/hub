@@ -4,7 +4,7 @@ import { ContactForm } from '@/components/portfolio/contact-form'
 import { PortfolioColumns } from '@/components/portfolio/portfolio-columns'
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell'
 import { getMediaUrl, getProfileByUsername } from '@/db/queries'
-import { pfUrl } from '@/lib/seo'
+import { pfPageMetadata } from '@/lib/seo'
 
 export const revalidate = 3600
 
@@ -14,11 +14,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { username } = await params
   const profile = await getProfileByUsername(username)
   if (!profile) return {}
-  return {
+  return pfPageMetadata({
+    username,
+    sub: '/contact',
     title: `연락하기 — ${profile.name}`,
     description: `${profile.name}에게 채용·협업·외주 문의하기`,
-    alternates: { canonical: pfUrl(username, '/contact') },
-  }
+    type: 'profile',
+  })
 }
 
 const cardCls =

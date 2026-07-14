@@ -20,7 +20,7 @@ import {
   getProfileByUsername,
 } from '@/db/queries'
 import { profilePageJsonLd } from '@/lib/jsonld'
-import { pfPath, pfUrl } from '@/lib/seo'
+import { pfPageMetadata, pfPath } from '@/lib/seo'
 
 export const revalidate = 3600
 
@@ -30,17 +30,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { username } = await params
   const profile = await getProfileByUsername(username)
   if (!profile) return {}
-  const title = `${profile.name} — ${profile.title ?? '포트폴리오'}`
-  const desc = profile.tagline ?? undefined
-  const url = pfUrl(username)
   const image = (await getMediaUrl(profile.avatarId)) ?? undefined
-  return {
-    title,
-    description: desc,
-    alternates: { canonical: url },
-    openGraph: { title, description: desc, url, type: 'profile', images: image ? [{ url: image }] : undefined },
-    twitter: { card: 'summary_large_image', title, description: desc, images: image ? [image] : undefined },
-  }
+  return pfPageMetadata({
+    username,
+    title: `${profile.name} — ${profile.title ?? '포트폴리오'}`,
+    description: profile.tagline ?? undefined,
+    image,
+    type: 'profile',
+  })
 }
 
 export default async function PortfolioHome({ params }: Params) {

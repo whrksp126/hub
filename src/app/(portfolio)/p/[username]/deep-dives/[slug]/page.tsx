@@ -9,7 +9,7 @@ import { PortfolioShell } from '@/components/portfolio/portfolio-shell'
 import { getMediaUrl, getMediaUrls, getNoteBySlug, getProfileByUsername } from '@/db/queries'
 import type { NoteBlock } from '@/db/schema'
 import { blogPostingJsonLd } from '@/lib/jsonld'
-import { pfPath, pfUrl } from '@/lib/seo'
+import { pfPageMetadata, pfPath } from '@/lib/seo'
 
 export const revalidate = 3600
 
@@ -32,18 +32,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const note = await getNoteBySlug(profile.id, slug)
   if (!note) return {}
   const image = (await getMediaUrl(note.coverId)) ?? undefined
-  return {
+  return pfPageMetadata({
+    username,
+    sub: `/deep-dives/${slug}`,
     title: `${note.title} — ${profile.name}`,
     description: note.excerpt ?? undefined,
-    alternates: { canonical: pfUrl(username, `/deep-dives/${slug}`) },
-    openGraph: {
-      title: note.title,
-      description: note.excerpt ?? undefined,
-      url: pfUrl(username, `/deep-dives/${slug}`),
-      type: 'article',
-      images: image ? [{ url: image }] : undefined,
-    },
-  }
+    image,
+    type: 'article',
+  })
 }
 
 export default async function NoteDetail({ params }: Params) {

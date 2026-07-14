@@ -21,6 +21,26 @@ export function websiteJsonLd() {
   }
 }
 
+// 기술 문서 페이지 = TechArticle.
+export function techArticleJsonLd({
+  headline,
+  description,
+  path,
+}: {
+  headline: string
+  description?: string
+  path: string
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'TechArticle',
+    headline,
+    url: `${SITE_URL}${path}`,
+    ...(description ? { description } : {}),
+    publisher: { '@type': 'Organization', name: SITE_NAME, url: SITE_URL },
+  }
+}
+
 // 서비스(SaaS) 엔티티 — 랜딩에서 WebSite와 함께 삽입해 엔티티 인식 강화.
 export function softwareApplicationJsonLd() {
   return {

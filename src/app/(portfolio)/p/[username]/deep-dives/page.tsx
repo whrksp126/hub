@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { PortfolioColumns } from '@/components/portfolio/portfolio-columns'
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell'
 import { getMediaUrl, getNotesByProfile, getProfileByUsername } from '@/db/queries'
-import { pfPath, pfUrl } from '@/lib/seo'
+import { pfPageMetadata, pfPath } from '@/lib/seo'
 
 export const revalidate = 3600
 
@@ -15,11 +15,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { username } = await params
   const profile = await getProfileByUsername(username)
   if (!profile) return {}
-  return {
+  return pfPageMetadata({
+    username,
+    sub: '/deep-dives',
     title: `글 — ${profile.name}`,
     description: `${profile.name}의 기록과 글`,
-    alternates: { canonical: pfUrl(username, '/deep-dives') },
-  }
+  })
 }
 
 export default async function NotesPage({ params }: Params) {

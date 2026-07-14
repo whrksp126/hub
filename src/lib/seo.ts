@@ -68,3 +68,45 @@ export function buildMetadata({
     },
   }
 }
+
+// 포트폴리오 하위 페이지(목록/상세) 공용 메타 헬퍼.
+// title은 루트 title.template로 ' — HubGmate'가 자동 접미된다.
+// image 미지정 시 openGraph.images를 비워 기본 OG 카드가 주입되게 한다.
+export function pfPageMetadata({
+  username,
+  sub = '',
+  title,
+  description,
+  image,
+  type = 'website',
+}: {
+  username: string
+  sub?: string
+  title: string
+  description?: string
+  image?: string
+  type?: 'website' | 'article' | 'profile'
+}): Metadata {
+  const url = pfUrl(username, sub)
+  const desc = description || SITE_DESCRIPTION
+  return {
+    title,
+    description: desc,
+    alternates: { canonical: url },
+    openGraph: {
+      title,
+      description: desc,
+      url,
+      siteName: SITE_NAME,
+      type,
+      locale: SITE_LOCALE,
+      ...(image ? { images: [{ url: image }] } : {}),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description: desc,
+      ...(image ? { images: [image] } : {}),
+    },
+  }
+}

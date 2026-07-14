@@ -4,7 +4,7 @@ import { PortfolioColumns } from '@/components/portfolio/portfolio-columns'
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell'
 import { ExperienceCardView } from '@/components/portfolio/sections/experience-card-view'
 import { getExperiencesByProfile, getMediaUrl, getMediaUrls, getProfileByUsername } from '@/db/queries'
-import { pfUrl } from '@/lib/seo'
+import { pfPageMetadata } from '@/lib/seo'
 
 export const revalidate = 3600
 
@@ -14,11 +14,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { username } = await params
   const profile = await getProfileByUsername(username)
   if (!profile) return {}
-  return {
+  return pfPageMetadata({
+    username,
+    sub: '/experience',
     title: `경력 — ${profile.name}`,
     description: `${profile.name}의 경력과 이력`,
-    alternates: { canonical: pfUrl(username, '/experience') },
-  }
+  })
 }
 
 export default async function ExperiencePage({ params }: Params) {

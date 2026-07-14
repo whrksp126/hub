@@ -3,6 +3,8 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import { Logo } from '@/components/brand/logo'
+import { JsonLd } from '@/components/json-ld'
+import { techArticleJsonLd } from '@/lib/jsonld'
 import { SITE_URL } from '@/lib/seo'
 
 export const revalidate = 3600
@@ -72,6 +74,14 @@ const Inline = ({ children }: { children: ReactNode }) => (
 export default function DocsPage() {
   return (
     <div className="pf relative min-h-dvh overflow-x-hidden">
+      <JsonLd
+        data={techArticleJsonLd({
+          headline: 'Folio SDK 문서',
+          description:
+            '저장소를 읽어 포트폴리오 케이스 스터디 초안을 만들고, REST·SDK·CLI·MCP로 발행하는 HubGmate 에이전트 발행 문서.',
+          path: '/docs',
+        })}
+      />
       {/* 상단 바 (랜딩과 동일한 플로팅 pill) */}
       <header className="pointer-events-none fixed inset-x-0 top-0 z-60 flex justify-center px-4 pt-[22px]">
         <nav className="pointer-events-auto flex items-center gap-2 rounded-full border border-white/10 bg-[rgba(22,22,22,0.86)] py-2 pl-5 pr-2 shadow-[0_16px_50px_rgba(0,0,0,0.45)] backdrop-blur-[16px]">
