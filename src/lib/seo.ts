@@ -17,8 +17,9 @@ export function pfUrl(username: string, sub = ''): string {
   return `${SITE_URL}${PF_PREFIX}/${username}${sub}`
 }
 
-export const SITE_NAME = 'GhMate'
-export const SITE_DESCRIPTION = 'GhMate의 개발 기록 — 뉴스 · 버그 해결 · 기술 노트'
+export const SITE_NAME = 'HubGmate'
+export const SITE_DESCRIPTION =
+  'AI 에이전트가 저장소를 읽어 케이스 스터디를 쓰고 완성된 테마로 발행하는 개발자 포트폴리오 빌더 — REST·SDK·CLI·MCP 자동 발행.'
 export const SITE_AUTHOR = '건호'
 export const SITE_BUSINESS = '슬기로운 사업'
 export const SITE_LOCALE = 'ko_KR'
@@ -42,8 +43,9 @@ export function buildMetadata({
   const url = `${SITE_URL}${path}`
   const fullTitle = title ? `${title} — ${SITE_NAME}` : SITE_NAME
   const desc = description || SITE_DESCRIPTION
-  const images = image ? [{ url: image }] : undefined
 
+  // image를 명시하지 않으면 images 키 자체를 넣지 않는다 →
+  // Next의 파일 규약(app/opengraph-image.tsx) 기본 카드가 자동 주입되도록.
   return {
     metadataBase: new URL(SITE_URL),
     title: fullTitle,
@@ -56,13 +58,13 @@ export function buildMetadata({
       siteName: SITE_NAME,
       type,
       locale: SITE_LOCALE,
-      images,
+      ...(image ? { images: [{ url: image }] } : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title: fullTitle,
       description: desc,
-      images: image ? [image] : undefined,
+      ...(image ? { images: [image] } : {}),
     },
   }
 }

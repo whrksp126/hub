@@ -1,6 +1,7 @@
 import { ArrowRight, ArrowUpRight, Bot, GitBranch, Palette, Sparkles } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Logo } from '@/components/brand/logo'
 import { JsonLd } from '@/components/json-ld'
 import { Thumb } from '@/components/portfolio/pieces'
 import { getMediaUrls, getPublishedProfiles } from '@/db/queries'
@@ -10,7 +11,7 @@ import { SITE_NAME, SITE_URL, pfPath } from '@/lib/seo'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'GhMate — AI로 완성하는 개발자 포트폴리오',
+  title: 'HubGmate — AI로 완성하는 개발자 포트폴리오',
   description:
     'AI 에이전트가 저장소를 읽어 케이스 스터디 초안을 만들고, 워드프레스식 테마로 발행까지. REST·SDK·CLI·MCP로 프로그램 발행하는 개발자 포트폴리오 빌더.',
   alternates: { canonical: SITE_URL },
@@ -48,8 +49,8 @@ export default async function LandingPage() {
       {/* 상단 바 */}
       <header className="pointer-events-none fixed inset-x-0 top-0 z-60 flex justify-center px-4 pt-[22px]">
         <nav className="pointer-events-auto flex items-center gap-2 rounded-full border border-white/10 bg-[rgba(22,22,22,0.86)] py-2 pl-5 pr-2 shadow-[0_16px_50px_rgba(0,0,0,0.45)] backdrop-blur-[16px]">
-          <Link href="/" className="pf-mono text-[14px] font-semibold tracking-tight text-[var(--pf-fg)]">
-            {SITE_NAME}
+          <Link href="/" aria-label="HubGmate" className="px-1 text-[var(--pf-fg)]">
+            <Logo size={22} withBead={false} />
           </Link>
           <span className="mx-1 h-5 w-px bg-white/10" />
           <Link
@@ -129,8 +130,8 @@ export default async function LandingPage() {
           <section className="mx-auto w-full max-w-[1280px] px-[clamp(18px,5vw,64px)] py-[clamp(48px,7vw,96px)]">
             <div className="pf-reveal mb-[clamp(28px,4vw,48px)] flex flex-wrap items-end justify-between gap-5">
               <h2 className="pf-display m-0 text-[clamp(40px,7vw,104px)]">
-                <span className="block text-[var(--pf-fg)]">MADE</span>
-                <span className="block text-[var(--pf-headline-dim)]">WITH GHMATE</span>
+                <span className="block text-[var(--pf-fg)]">MADE WITH</span>
+                <span className="block text-[var(--pf-headline-dim)]">HUBGMATE</span>
               </h2>
             </div>
             <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4">

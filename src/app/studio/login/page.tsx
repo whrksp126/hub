@@ -11,7 +11,7 @@ export default async function LoginPage() {
   return (
     <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-5 py-16">
       <div className="mb-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">
-        GHMATE STUDIO
+        HUBGMATE STUDIO
       </div>
       <h1 className="pf-display m-0 mb-3 text-[clamp(32px,6vw,52px)] !leading-[0.95] text-[var(--pf-fg)]">
         다시 오셨네요

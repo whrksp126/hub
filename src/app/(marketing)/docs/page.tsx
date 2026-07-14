@@ -2,14 +2,15 @@ import { ArrowRight } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
-import { SITE_NAME, SITE_URL } from '@/lib/seo'
+import { Logo } from '@/components/brand/logo'
+import { SITE_URL } from '@/lib/seo'
 
 export const revalidate = 3600
 
 export const metadata: Metadata = {
   title: 'Folio SDK 문서',
   description:
-    '저장소를 읽어 포트폴리오 케이스 스터디 초안을 만들고, REST·SDK·CLI·MCP로 발행하는 GhMate 에이전트 발행 문서.',
+    '저장소를 읽어 포트폴리오 케이스 스터디 초안을 만들고, REST·SDK·CLI·MCP로 발행하는 HubGmate 에이전트 발행 문서.',
   alternates: { canonical: `${SITE_URL}/docs` },
 }
 
@@ -74,8 +75,8 @@ export default function DocsPage() {
       {/* 상단 바 (랜딩과 동일한 플로팅 pill) */}
       <header className="pointer-events-none fixed inset-x-0 top-0 z-60 flex justify-center px-4 pt-[22px]">
         <nav className="pointer-events-auto flex items-center gap-2 rounded-full border border-white/10 bg-[rgba(22,22,22,0.86)] py-2 pl-5 pr-2 shadow-[0_16px_50px_rgba(0,0,0,0.45)] backdrop-blur-[16px]">
-          <Link href="/" className="pf-mono text-[14px] font-semibold tracking-tight text-[var(--pf-fg)]">
-            {SITE_NAME}
+          <Link href="/" aria-label="HubGmate" className="px-1 text-[var(--pf-fg)]">
+            <Logo size={22} withBead={false} />
           </Link>
           <span className="mx-1 h-5 w-px bg-white/10" />
           <Link
@@ -123,7 +124,7 @@ export default function DocsPage() {
             </h1>
             <p className="pf-reveal m-0 mb-[18px] max-w-[680px] text-[clamp(15px,1.5vw,17px)] leading-[1.75] text-[var(--pf-fg-dim)]">
               개발자가 자신의 저장소·커밋·README를 입력하면, AI가 이를 읽어 포트폴리오용 케이스 스터디 초안을 만들어
-              주는 SDK입니다. GhMate에서 만든 포트폴리오가 Folio SDK로 렌더링되는 레퍼런스 구현입니다.
+              주는 SDK입니다. HubGmate에서 만든 포트폴리오가 Folio SDK로 렌더링되는 레퍼런스 구현입니다.
             </p>
             <p className="pf-reveal m-0 mb-[clamp(40px,5vw,56px)] max-w-[680px] text-[15px] leading-[1.7] text-[var(--pf-fg-muted)]">
               아래 문서는 SDK가 안정화되기 전 초안입니다. 인터페이스는 변경될 수 있습니다. 발급한 API 키는{' '}
@@ -226,7 +227,7 @@ export default function DocsPage() {
             <H2 id="themes">테마 · 렌더링</H2>
             <p className="pf-reveal m-0 mb-[18px] text-[15.5px] leading-[1.7] text-[var(--pf-fg-muted)]">
               <Inline>render()</Inline> 는 정의된 리소스를 정적 사이트로 출력합니다. <Inline>editorial-dark</Inline> 가
-              기본 테마이며, GhMate 포트폴리오가 그 예시입니다.
+              기본 테마이며, HubGmate 포트폴리오가 그 예시입니다.
             </p>
             <Pre>
               <C>$</C> folio build --theme editorial-dark --out ./site

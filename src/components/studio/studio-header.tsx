@@ -3,7 +3,7 @@
 import { Briefcase, FolderOpen, KeyRound, LayoutDashboard, LogOut, PenLine, UserRound } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { SITE_NAME } from '@/lib/seo'
+import { Logo } from '@/components/brand/logo'
 import { logoutAction } from '@/lib/studio-actions'
 
 type Item = { title: string; href: string; icon: typeof LayoutDashboard; match: (p: string) => boolean }
@@ -67,10 +67,10 @@ export function StudioHeader({ username, isAdmin }: { username?: string | null; 
         <Link
           href="/"
           title="사이트 보기"
-          aria-label="사이트 보기"
-          className="pf-mono px-3 text-[14px] font-semibold tracking-tight text-[var(--pf-fg)] transition-colors hover:text-[var(--pf-ac)]"
+          aria-label="HubGmate — 사이트 보기"
+          className="px-2 text-[var(--pf-fg)] transition-opacity hover:opacity-80"
         >
-          {SITE_NAME}
+          <Logo size={22} short withBead={false} />
         </Link>
         {divider}
         {items.map(renderItem)}

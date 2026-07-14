@@ -79,7 +79,7 @@ export function PortfolioFooter({ profile }: { profile: Profile }) {
             href="/"
             className="text-[11px] font-semibold tracking-[0.06em] text-[var(--pf-fg-fainter)] hover:text-[var(--pf-ac)]"
           >
-            POWERED BY GHMATE
+            POWERED BY HUBGMATE
           </Link>
         </div>
       </div>
