@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { db } from '@/db'
 import { experiences, media, notes, profiles, projects } from '@/db/schema'
 import { verifyApiKey } from '@/lib/auth'
+import { CONTENT_GUIDE, GUIDES } from '@/lib/mcp/guides'
 import { uploadMedia } from '@/lib/s3'
 import { safeRevalidate } from '@/lib/revalidate'
 import { pfPath, pfUrl, SITE_URL } from '@/lib/seo'
@@ -167,12 +168,31 @@ const handler = createMcpHandler(
         intro: z.string().optional().describe('히어로 본문 단락'),
         email: z.string().optional(),
         github: z.string().optional(),
+        phone: z.string().optional(),
         location: z.string().optional(),
+        nameEn: z.string().optional().describe('영문 이름(대문자 디스플레이용)'),
+        education: z.string().optional(),
+        business: z.string().optional().describe('운영 사업체'),
+        ctaTitle: z.string().optional().describe('하단 CTA 헤드라인'),
+        ctaText: z.string().optional().describe('하단 CTA 설명'),
         accent: z.string().optional().describe('테마 강조색 hex (기본 #F1531B)'),
+        avatarId: z.number().optional().describe('upload_media가 반환한 프로필 이미지 id'),
         skills: z
           .array(z.object({ area: z.string(), items: z.array(z.string()) }))
           .optional()
           .describe('스킬 그룹 [{area, items[]}]'),
+        stats: z
+          .array(z.object({ value: z.string(), label: z.string() }))
+          .optional()
+          .describe('하이라이트 지표 [{value, label}]'),
+        awards: z
+          .array(z.object({ title: z.string(), kind: z.string() }))
+          .optional()
+          .describe('수상/성과 [{title, kind}]'),
+        social: z
+          .array(z.object({ kind: z.string(), label: z.string(), url: z.string() }))
+          .optional()
+          .describe('연락처/소셜 [{kind, label, url}]'),
       },
       async (args, extra) => {
         const userId = userIdOf(extra)
@@ -188,9 +208,19 @@ const handler = createMcpHandler(
           intro: args.intro,
           email: args.email,
           github: args.github,
+          phone: args.phone,
           location: args.location,
+          nameEn: args.nameEn,
+          education: args.education,
+          business: args.business,
+          ctaTitle: args.ctaTitle,
+          ctaText: args.ctaText,
           accent: args.accent || undefined,
+          avatarId: args.avatarId,
           skills: args.skills,
+          stats: args.stats,
+          awards: args.awards,
+          social: args.social,
         }
         // undefined 필드는 제외(부분 갱신).
         const set = Object.fromEntries(Object.entries(fields).filter(([, v]) => v !== undefined))
@@ -265,7 +295,9 @@ const handler = createMcpHandler(
           )
           .optional(),
         stack: z.array(z.string()).optional(),
-        coverId: z.number().optional().describe('upload_media가 반환한 커버 id'),
+        coverId: z.number().optional().describe('upload_media가 반환한 커버(썸네일 겸용) id'),
+        logoId: z.number().optional().describe('upload_media가 반환한 브랜드 로고 id'),
+        relatedNoteIds: z.array(z.number()).optional().describe('연결할 딥다이브 note id 배열'),
         featured: z.boolean().optional(),
       },
       async (args, extra) => {
@@ -288,6 +320,8 @@ const handler = createMcpHandler(
           sections: args.sections,
           stack: args.stack,
           coverId: args.coverId,
+          logoId: args.logoId,
+          relatedNoteIds: args.relatedNoteIds,
           featured: args.featured ?? false,
           status: 'draft' as const,
         }
@@ -324,6 +358,9 @@ const handler = createMcpHandler(
         current: z.boolean().optional(),
         points: z.array(z.string()).optional().describe('핵심 성과 불릿'),
         stack: z.array(z.string()).optional(),
+        media: z.array(z.any()).optional().describe('갤러리 [{kind:image|video|embed, mediaId?|url?, caption?}]'),
+        logoId: z.number().optional().describe('회사 로고 media id'),
+        coverId: z.number().optional().describe('카드 상단 커버 media id'),
       },
       async (args, extra) => {
         const userId = userIdOf(extra)
@@ -340,6 +377,9 @@ const handler = createMcpHandler(
           current: args.current ?? false,
           points: args.points,
           stack: args.stack,
+          media: args.media,
+          logoId: args.logoId,
+          coverId: args.coverId,
         }
         let id: number
         if (args.id) {
@@ -416,9 +456,20 @@ const handler = createMcpHandler(
     )
 
     // 콘텐츠 구성 가이드 (프롬프트) — 비-Claude 에이전트도 서버에서 규칙을 받는다.
+    // 공식 저작 스펙을 MCP 리소스로 배포 — 에이전트가 우리 규칙(다이어그램/ERD/블록/스타일)을
+    // 참고해 완성도 높은 콘텐츠를 만든다. 비-Claude 클라이언트도 리소스로 읽을 수 있다.
+    for (const g of GUIDES) {
+      server.resource(
+        g.slug,
+        g.uri,
+        { title: g.title, description: g.title, mimeType: 'text/markdown' },
+        async () => ({ contents: [{ uri: g.uri, mimeType: 'text/markdown', text: g.body }] }),
+      )
+    }
+
     server.prompt(
       'hubgmate_content_guide',
-      'HubGmate 포트폴리오 품질 규칙 — 레포 분석부터 케이스 스터디/딥다이브 구조까지. 발행 전에 이 프롬프트를 먼저 읽어라.',
+      'HubGmate 저작 개요 — 발행 순서 + 스펙 리소스(hubgmate://guide/*) 안내. 작성 전 먼저 읽고, 다이어그램/ERD/딥다이브는 해당 리소스를 열어라.',
       async () => ({
         messages: [
           {
@@ -434,45 +485,6 @@ const handler = createMcpHandler(
   },
   { basePath: '/api', disableSse: true, maxDuration: 60 },
 )
-
-// ── 콘텐츠 구성 가이드 본문 ─────────────────────────────────────────────────
-const CONTENT_GUIDE = `당신은 이 저장소를 담당하는 에이전트다. HubGmate(hub.ghmate.com)에 이 프로젝트의 포트폴리오를 자율 발행한다. 아래 규칙을 지켜라.
-
-## 발행 순서
-1. whoami로 프로필 존재 확인.
-2. ensure_profile로 프로필 생성/갱신 (username=프로젝트 slug, name, title, tagline, skills).
-3. 이미지/스크린샷은 upload_media로 먼저 올려 id 확보 → cover/섹션 media에 연결.
-4. upsert_project로 케이스 스터디, upsert_experience로 경력, upsert_deep_dive로 기술 글 발행.
-5. 전부 draft로 등록된다. 사용자가 /studio에서 검토 후 공개한다.
-
-## 정직성 (최우선)
-- 실제 커밋/코드/README에서 확인되는 사실만 쓴다. 역할·성과·기술스택을 추정하거나 부풀리지 마라.
-- 수치(metrics)는 근거가 있을 때만. 없으면 생략.
-- 확인 불가한 내용은 넣지 않는다.
-
-## 케이스 스터디(upsert_project) 구조 — "문제 → 해결 → 결과"
-- title/titleKr, tag(분류), year(기간/상태), role(실제 역할), url(라이브), summary(2~3문장).
-- metrics: 임팩트 지표 [{value:"40%", label:"응답시간 단축"}].
-- sections: kind로 시각 유형 지정:
-  - lead: 도입/개요 (큰 문단)
-  - challenge: 문제/제약
-  - features: 핵심 기능 (bullets)
-  - steps / timeline: 진행 흐름
-  - diagram: mermaid flowchart/sequence (body에 mermaid 코드) — 아키텍처/흐름
-  - erd: 데이터 모델 (body에 erDiagram 텍스트) — MySQL Workbench 스타일로 렌더됨
-  - gallery: 스크린샷/영상 (media 배열)
-  - specs: 스펙 태그
-- stack: 실제 사용 기술만.
-
-## 딥다이브(upsert_deep_dive) — 기술 글
-- content = NoteBlock[]. 블록 타입: h2, h3, p, quote, callout, code({text,lang}), list({items,ordered?}), table({header,rows}), image({mediaId,caption}), video, divider.
-- 문제 정의 → 접근 → 트레이드오프 → 결과 흐름. 코드 블록·다이어그램 적극 활용.
-
-## 미디어
-- 스크린샷은 실제 화면을 담아라(가짜 목업 금지). upload_media(dataBase64=로컬파일 base64) 후 반환 id 사용.
-- 모든 이미지에 alt(설명) 필수.
-
-멱등: 같은 slug로 다시 upsert하면 갱신된다. list_content로 기존 항목을 먼저 확인하라.`
 
 // ── 인증: 프로젝트별 API Key(Bearer) 검증 → userId를 authInfo.extra에 실음 ──────
 const authed = withMcpAuth(

@@ -58,7 +58,23 @@ HUBGMATE_API_KEY=hub_xxxxxxxxxxxxxxxxxxxxxxxx
 | `upsert_experience` | 경력 항목 |
 | `upsert_deep_dive` | 기술 글 (slug 멱등, draft) |
 
-프롬프트 `hubgmate_content_guide` = 케이스 스터디 구조·섹션 kind·딥다이브 포맷·정직성 규칙. 발행 전 필독.
+## 공식 저작 스펙 (MCP 리소스)
+
+에이전트가 **우리 규칙대로** 완성도 높은 콘텐츠를 만들도록, 스펙을 리소스로 배포한다. 작성 전 읽어라:
+
+| 리소스 URI | 내용 |
+|---|---|
+| `hubgmate://guide/overview` | 발행 순서·원칙 |
+| `hubgmate://guide/case-study` | 프로젝트 구조·섹션 kind |
+| `hubgmate://guide/diagrams` | mermaid + `@accent`/`@icon` 규칙(아이콘 11종) |
+| `hubgmate://guide/erd` | erDiagram(Workbench 룩) 카디널리티·KEY·TYPE |
+| `hubgmate://guide/deep-dive` | NoteBlock 블록 타입·예시 |
+| `hubgmate://guide/media` | 이미지/영상/썸네일/로고/아바타 연결 규칙 |
+| `hubgmate://guide/style` | 디자인 토큰·톤·정직성 |
+
+프롬프트 `hubgmate_content_guide` = 개요 + 위 리소스 안내(진입점). 다이어그램/ERD/딥다이브는 해당 리소스를 열어 정확한 문법으로 작성한다.
+
+> 미디어 **생성**(스크린샷·영상·로고 아트)은 프로젝트 에이전트의 몫이다. MCP는 `upload_media`로 저장·연결만 한다. 다이어그램·ERD는 텍스트라 어떤 에이전트든 우리 스펙대로 바로 그릴 수 있다.
 
 ## 멱등성
 
