@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core'
+import { type AnySQLiteColumn, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core'
 
 // Plate 본문(에디터 문서) JSON 타입. 구체 타입은 에디터 단계에서 좁힌다.
 export type PlateValue = unknown
@@ -30,6 +30,8 @@ export const users = sqliteTable('users', {
 export const apiKeys = sqliteTable('api_keys', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }), // 키 소유자(사용자별)
+  // 프로필 스코프(선택). 설정 시 이 키는 해당 프로필에만 발행 가능(하드 격리). null=계정 전체.
+  profileId: integer('profile_id').references((): AnySQLiteColumn => profiles.id, { onDelete: 'set null' }),
   name: text('name').notNull(),
   prefix: text('prefix').notNull(), // 키 식별용 앞자리(평문)
   keyHash: text('key_hash').notNull(), // sha-256(전체 키)
@@ -39,6 +41,20 @@ export const apiKeys = sqliteTable('api_keys', {
     .default(sql`'[]'`),
   lastUsedAt: integer('last_used_at', { mode: 'timestamp' }),
   revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
+})
+
+// ── 알림 (에이전트 자율 발행 등) ─────────────────────────────────────
+// MCP로 draft가 등록되면 프로필 소유자에게 알림을 남긴다 → /studio에서 검토.
+export const notifications = sqliteTable('notifications', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  kind: text('kind').notNull().default('agent_publish'), // agent_publish 등
+  message: text('message').notNull(),
+  href: text('href'), // 클릭 시 이동(예: /studio/p/<id>)
+  readAt: integer('read_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' })
     .notNull()
     .default(sql`(unixepoch())`),
@@ -291,6 +307,7 @@ export const notes = sqliteTable(
 // 타입 추론 export
 export type User = typeof users.$inferSelect
 export type ApiKey = typeof apiKeys.$inferSelect
+export type Notification = typeof notifications.$inferSelect
 export type Media = typeof media.$inferSelect
 export type Post = typeof posts.$inferSelect
 export type Doc = typeof docs.$inferSelect

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ApiKeyForm } from '@/components/studio/api-key-form'
 import { requireUser } from '@/lib/auth'
+import { getMyProfiles } from '@/lib/portfolio-studio'
 import { listMyApiKeys } from '@/lib/studio'
 import { revokeApiKeyAction } from '@/lib/studio-actions'
 
@@ -12,7 +13,8 @@ function fmt(d?: Date | null) {
 
 export default async function ApiKeysPage() {
   const user = await requireUser()
-  const keys = await listMyApiKeys(user.id)
+  const [keys, profiles] = await Promise.all([listMyApiKeys(user.id), getMyProfiles(user.id)])
+  const profileName = new Map(profiles.map((p) => [p.id, p.name]))
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-8">
@@ -26,7 +28,7 @@ export default async function ApiKeysPage() {
       </p>
 
       <div className="mt-6">
-        <ApiKeyForm />
+        <ApiKeyForm profiles={profiles.map((p) => ({ id: p.id, name: p.name, username: p.username }))} />
       </div>
 
       <div className="mt-10">
@@ -39,6 +41,9 @@ export default async function ApiKeysPage() {
               <li key={k.id} className="flex items-center gap-3 px-4 py-3 text-sm">
                 <code className="pf-mono text-xs text-[var(--pf-fg-faint)]">{k.prefix}…</code>
                 <span className="flex-1 font-medium text-[var(--pf-fg)]">{k.name}</span>
+                <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-xs text-[var(--pf-fg-faint)]">
+                  {k.profileId ? `🔒 ${profileName.get(k.profileId) ?? '프로필'}` : '계정 전체'}
+                </span>
                 <span className="text-xs text-[var(--pf-fg-faint)]">생성 {fmt(k.createdAt)}</span>
                 {k.revokedAt ? (
                   <span className="rounded-full bg-white/[0.08] px-2 py-0.5 text-xs text-[var(--pf-fg-faint)]">폐기됨</span>

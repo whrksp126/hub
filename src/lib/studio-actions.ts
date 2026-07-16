@@ -3,7 +3,7 @@
 import { and, eq, isNull } from 'drizzle-orm'
 import { redirect } from 'next/navigation'
 import { db } from '@/db'
-import { apiKeys, profiles, users } from '@/db/schema'
+import { apiKeys, notifications, profiles, users } from '@/db/schema'
 import {
   createSession,
   destroySession,
@@ -125,9 +125,26 @@ export async function createApiKeyAction(
   const user = await getCurrentUser()
   if (!user) return { error: '로그인이 필요합니다.' }
   const name = String(formData.get('name') || '').trim() || '에이전트 키'
+  // 프로필 바인딩(선택): 내 소유 프로필에만 묶을 수 있다. 묶으면 그 키는 해당 프로필에만 발행 가능.
+  let profileId: number | null = Number(formData.get('profileId') || 0) || null
+  if (profileId) {
+    const rows = await db.select().from(profiles).where(eq(profiles.id, profileId)).limit(1)
+    const p = rows[0]
+    if (!p || (p.userId !== user.id && user.role !== 'admin')) profileId = null
+  }
   const { key, prefix, keyHash } = generateApiKey()
-  await db.insert(apiKeys).values({ userId: user.id, name, prefix, keyHash })
+  await db.insert(apiKeys).values({ userId: user.id, profileId, name, prefix, keyHash })
   return { key } // 평문은 이때 1회만 노출
+}
+
+export async function markNotificationsReadAction() {
+  const user = await getCurrentUser()
+  if (!user) redirect('/studio/login')
+  await db
+    .update(notifications)
+    .set({ readAt: new Date() })
+    .where(and(eq(notifications.userId, user.id), isNull(notifications.readAt)))
+  redirect('/studio')
 }
 
 export async function revokeApiKeyAction(formData: FormData) {

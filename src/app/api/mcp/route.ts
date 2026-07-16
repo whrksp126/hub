@@ -3,7 +3,7 @@ import { createMcpHandler, withMcpAuth } from 'mcp-handler'
 import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
 import { db } from '@/db'
-import { experiences, media, notes, profiles, projects } from '@/db/schema'
+import { experiences, media, notes, notifications, profiles, projects } from '@/db/schema'
 import { verifyApiKey } from '@/lib/auth'
 import { CONTENT_GUIDE, GUIDES } from '@/lib/mcp/guides'
 import { uploadMedia } from '@/lib/s3'
@@ -36,10 +36,24 @@ function slugify(input: string): string {
   )
 }
 
-// 인증 컨텍스트에서 userId 추출 (withMcpAuth가 authInfo.extra에 심어둠).
+// 인증 컨텍스트에서 userId/boundProfileId 추출 (withMcpAuth가 authInfo.extra에 심어둠).
+type AuthExtra = { authInfo?: { extra?: { userId?: number | null; profileId?: number | null } } }
 function userIdOf(extra: unknown): number | null {
-  const info = (extra as { authInfo?: { extra?: { userId?: number | null } } })?.authInfo
-  return info?.extra?.userId ?? null
+  return (extra as AuthExtra)?.authInfo?.extra?.userId ?? null
+}
+// 키가 특정 프로필에 묶여 있으면 그 id (하드 격리). null=계정 전체 키.
+function boundIdOf(extra: unknown): number | null {
+  return (extra as AuthExtra)?.authInfo?.extra?.profileId ?? null
+}
+
+// 프로필 소유자에게 알림(에이전트 자율 발행 검토용). 실패해도 발행은 막지 않음.
+async function notify(userId: number | null | undefined, message: string, href: string) {
+  if (userId == null) return
+  try {
+    await db.insert(notifications).values({ userId, kind: 'agent_publish', message, href })
+  } catch {
+    /* 알림 실패는 무시 */
+  }
 }
 
 function ok(payload: unknown) {
@@ -59,10 +73,17 @@ function fail(message: string) {
   return { content: [{ type: 'text' as const, text: `⚠️ ${message}` }], isError: true }
 }
 
-// username 프로필을 찾아 소유권 확인. 없으면 null.
-async function findOwnedProfile(userId: number | null, username: string) {
+// username 프로필을 찾아 접근권 확인.
+// boundId가 있으면(프로필-스코프 키) 그 프로필이 아니면 거부(하드 격리).
+async function findOwnedProfile(userId: number | null, boundId: number | null, username: string) {
   const rows = await db.select().from(profiles).where(eq(profiles.username, username)).limit(1)
   const p = rows[0]
+  if (boundId != null) {
+    if (!p || p.id !== boundId) {
+      return { profile: null, error: `이 API 키는 지정된 프로필에만 발행할 수 있습니다(요청 username='${username}').` }
+    }
+    return { profile: p, error: null as string | null }
+  }
   if (!p) return { profile: null, error: null as string | null }
   // 소유자 불일치(다른 사용자 프로필)면 거부. 시드(userId=null)는 이 키 소유자가 클레임 가능.
   if (p.userId != null && userId != null && p.userId !== userId) {
@@ -115,8 +136,12 @@ const handler = createMcpHandler(
       {},
       async (_args, extra) => {
         const userId = userIdOf(extra)
+        const boundId = boundIdOf(extra)
         const rows = await db.select().from(profiles)
-        const mine = rows.filter((p) => p.userId == null || p.userId === userId)
+        const mine =
+          boundId != null
+            ? rows.filter((p) => p.id === boundId)
+            : rows.filter((p) => p.userId == null || p.userId === userId)
         return ok({
           hub: HUB,
           profiles: mine.map((p) => ({
@@ -136,8 +161,7 @@ const handler = createMcpHandler(
       '한 프로필의 기존 프로젝트·경력·딥다이브를 나열한다(멱등 발행: 있으면 갱신, 없으면 생성 판단용).',
       { username: z.string().describe('대상 프로필 username') },
       async ({ username }, extra) => {
-        const userId = userIdOf(extra)
-        const { profile, error } = await findOwnedProfile(userId, username)
+        const { profile, error } = await findOwnedProfile(userIdOf(extra), boundIdOf(extra), username)
         if (error) return fail(error)
         if (!profile) return fail(`프로필 '${username}' 없음. 먼저 ensure_profile 호출.`)
         const [prjs, exps, nts] = await Promise.all([
@@ -197,7 +221,7 @@ const handler = createMcpHandler(
       async (args, extra) => {
         const userId = userIdOf(extra)
         const username = slugify(args.username)
-        const { profile, error } = await findOwnedProfile(userId, username)
+        const { profile, error } = await findOwnedProfile(userId, boundIdOf(extra), username)
         if (error) return fail(error)
         const fields = {
           name: args.name,
@@ -235,6 +259,7 @@ const handler = createMcpHandler(
           .insert(profiles)
           .values({ username, name: args.name, userId: userId ?? undefined, status: 'draft', ...set })
           .returning()
+        await notify(userId, `🤖 에이전트가 포트폴리오 '${args.name}'를 생성했습니다 (draft)`, `/studio/p/${row.id}`)
         return ok({
           username,
           url: pfUrl(username),
@@ -301,8 +326,7 @@ const handler = createMcpHandler(
         featured: z.boolean().optional(),
       },
       async (args, extra) => {
-        const userId = userIdOf(extra)
-        const { profile, error } = await findOwnedProfile(userId, args.username)
+        const { profile, error } = await findOwnedProfile(userIdOf(extra), boundIdOf(extra), args.username)
         if (error) return fail(error)
         if (!profile) return fail(`프로필 '${args.username}' 없음. 먼저 ensure_profile.`)
         const slug = slugify(args.slug)
@@ -339,6 +363,7 @@ const handler = createMcpHandler(
           id = row.id
         }
         revalidateProfile(args.username)
+        await notify(profile.userId, `🤖 에이전트가 프로젝트 '${args.title}'를 발행했습니다 (draft)`, `/studio/p/${profile.id}`)
         return ok({ id, slug, url: pfUrl(args.username, `/projects/${slug}`), status: 'draft', updated: !!existing[0] })
       },
     )
@@ -363,8 +388,7 @@ const handler = createMcpHandler(
         coverId: z.number().optional().describe('카드 상단 커버 media id'),
       },
       async (args, extra) => {
-        const userId = userIdOf(extra)
-        const { profile, error } = await findOwnedProfile(userId, args.username)
+        const { profile, error } = await findOwnedProfile(userIdOf(extra), boundIdOf(extra), args.username)
         if (error) return fail(error)
         if (!profile) return fail(`프로필 '${args.username}' 없음. 먼저 ensure_profile.`)
         const values = {
@@ -396,6 +420,7 @@ const handler = createMcpHandler(
           id = row.id
         }
         revalidateProfile(args.username)
+        await notify(profile.userId, `🤖 에이전트가 경력 '${args.company}'를 등록했습니다`, `/studio/p/${profile.id}`)
         return ok({ id, company: args.company, updated: !!args.id })
       },
     )
@@ -419,8 +444,7 @@ const handler = createMcpHandler(
         featured: z.boolean().optional(),
       },
       async (args, extra) => {
-        const userId = userIdOf(extra)
-        const { profile, error } = await findOwnedProfile(userId, args.username)
+        const { profile, error } = await findOwnedProfile(userIdOf(extra), boundIdOf(extra), args.username)
         if (error) return fail(error)
         if (!profile) return fail(`프로필 '${args.username}' 없음. 먼저 ensure_profile.`)
         const slug = slugify(args.slug)
@@ -451,6 +475,7 @@ const handler = createMcpHandler(
           id = row.id
         }
         revalidateProfile(args.username)
+        await notify(profile.userId, `🤖 에이전트가 글 '${args.title}'를 발행했습니다 (draft)`, `/studio/p/${profile.id}`)
         return ok({ id, slug, url: pfUrl(args.username, `/deep-dives/${slug}`), status: 'draft', updated: !!existing[0] })
       },
     )
@@ -496,7 +521,7 @@ const authed = withMcpAuth(
       token: bearer ?? '',
       clientId: String(row.userId ?? 'hubgmate'),
       scopes: (row.scopes as string[]) ?? [],
-      extra: { userId: row.userId ?? null, keyId: row.id },
+      extra: { userId: row.userId ?? null, keyId: row.id, profileId: row.profileId ?? null },
     }
   },
   { required: true },

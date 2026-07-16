@@ -4,16 +4,26 @@ import { AlertTriangle } from 'lucide-react'
 import { useActionState } from 'react'
 import { createApiKeyAction } from '@/lib/studio-actions'
 
-export function ApiKeyForm() {
+type ProfileOpt = { id: number; name: string; username: string }
+
+export function ApiKeyForm({ profiles = [] }: { profiles?: ProfileOpt[] }) {
   const [state, action, pending] = useActionState(createApiKeyAction, null)
+  const fieldCls =
+    'rounded-xl border border-white/10 bg-[var(--pf-surface)] px-3.5 py-2.5 text-sm text-[var(--pf-fg)] outline-none transition-colors focus:border-[var(--pf-ac)] placeholder:text-[var(--pf-fg-faint)]'
   return (
     <div>
       <form action={action} className="flex flex-wrap gap-2">
-        <input
-          name="name"
-          placeholder="키 이름 (예: portfolio-agent)"
-          className="flex-1 rounded-xl border border-white/10 bg-[var(--pf-surface)] px-3.5 py-2.5 text-sm text-[var(--pf-fg)] outline-none transition-colors focus:border-[var(--pf-ac)] placeholder:text-[var(--pf-fg-faint)]"
-        />
+        <input name="name" placeholder="키 이름 (예: portfolio-agent)" className={`flex-1 ${fieldCls}`} />
+        {profiles.length > 0 && (
+          <select name="profileId" defaultValue="" className={fieldCls} title="이 키를 특정 포트폴리오에만 묶기(하드 격리)">
+            <option value="">계정 전체</option>
+            {profiles.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name} (/{p.username})
+              </option>
+            ))}
+          </select>
+        )}
         <button
           type="submit"
           disabled={pending}

@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { requireUser } from '@/lib/auth'
 import { createProfileAction, deleteProfileAction } from '@/lib/portfolio-actions'
-import { deleteUserAction, setUserRoleAction } from '@/lib/studio-actions'
+import { deleteUserAction, markNotificationsReadAction, setUserRoleAction } from '@/lib/studio-actions'
 import { countAll, getAdminOverview, getMyProfiles } from '@/lib/portfolio-studio'
+import { getMyNotifications } from '@/lib/studio'
 import { pfPath } from '@/lib/seo'
 
 const cardCls = 'rounded-2xl border border-white/[0.07] bg-[var(--pf-surface)] p-4 transition-colors hover:border-[var(--pf-ac)]'
@@ -24,6 +25,53 @@ function StatusBadge({ published }: { published: boolean }) {
 
 function fmtDate(d?: Date | null) {
   return d ? d.toISOString().slice(0, 10) : '—'
+}
+
+// 알림: 에이전트 자율 발행 등. 안 읽은 건 강조.
+function NotificationsPanel({ items }: { items: Awaited<ReturnType<typeof getMyNotifications>> }) {
+  if (items.length === 0) return null
+  const unread = items.filter((n) => !n.readAt).length
+  return (
+    <div className="mt-6 rounded-2xl border border-white/[0.07] bg-[var(--pf-surface)] p-4">
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="flex items-center gap-2 text-sm font-semibold text-[var(--pf-fg-faint)]">
+          알림
+          {unread > 0 && (
+            <span className="rounded-full bg-[var(--pf-ac)] px-1.5 py-0.5 text-[11px] font-bold text-white">{unread}</span>
+          )}
+        </h2>
+        {unread > 0 && (
+          <form action={markNotificationsReadAction}>
+            <button type="submit" className="text-xs text-[var(--pf-fg-faint)] hover:text-[var(--pf-fg)]">
+              모두 읽음
+            </button>
+          </form>
+        )}
+      </div>
+      <ul className="flex flex-col gap-1">
+        {items.map((n) => {
+          const body = (
+            <span className="flex items-center gap-2">
+              {!n.readAt && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--pf-ac)]" />}
+              <span className={n.readAt ? 'text-[var(--pf-fg-muted)]' : 'text-[var(--pf-fg)]'}>{n.message}</span>
+              <span className="ml-auto shrink-0 text-[11px] text-[var(--pf-fg-fainter)]">{fmtDate(n.createdAt)}</span>
+            </span>
+          )
+          return (
+            <li key={n.id} className="rounded-lg px-2 py-1.5 text-sm hover:bg-white/[0.03]">
+              {n.href ? (
+                <Link href={n.href} className="block">
+                  {body}
+                </Link>
+              ) : (
+                body
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
 }
 
 // 내 포트폴리오 카드(여러 개 관리).
@@ -76,7 +124,7 @@ function MyPortfolios({ profiles }: { profiles: Awaited<ReturnType<typeof getMyP
 
 export default async function StudioDashboard() {
   const user = await requireUser()
-  const myProfiles = await getMyProfiles(user.id)
+  const [myProfiles, notifs] = await Promise.all([getMyProfiles(user.id), getMyNotifications(user.id)])
   const isAdmin = user.role === 'admin'
 
   // ── 운영자: 관리 대시보드 ──────────────────────────────────────────
@@ -89,6 +137,8 @@ export default async function StudioDashboard() {
         <div className="mb-1 text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">ADMIN</div>
         <h1 className="text-2xl font-bold text-[var(--pf-fg)]">관리자 대시보드</h1>
         <p className="mt-1 text-sm text-[var(--pf-fg-muted)]">{user.username} · 플랫폼 전체를 관리합니다.</p>
+
+        <NotificationsPanel items={notifs} />
 
         <div className="mt-6 grid grid-cols-2 gap-3">
           {[
@@ -163,6 +213,7 @@ export default async function StudioDashboard() {
     <div className="mx-auto max-w-4xl px-5 py-8">
       <h1 className="text-2xl font-bold text-[var(--pf-fg)]">내 스튜디오</h1>
       <p className="mt-1 text-sm text-[var(--pf-fg-muted)]">{user.username} · 포트폴리오를 만들고 관리하세요.</p>
+      <NotificationsPanel items={notifs} />
       <MyPortfolios profiles={myProfiles} />
       <ToolLinks />
     </div>

@@ -71,6 +71,13 @@
       "when": 1782723395134,
       "tag": "0009_mute_the_hunter",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1784237967344,
+      "tag": "0010_spotty_apocalypse",
+      "breakpoints": true
     }
   ]
 }
