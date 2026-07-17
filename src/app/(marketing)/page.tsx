@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, Bot, GitBranch, Palette, Sparkles } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, BarChart3, Bot, Cable, Code, Database, Eye, FileText, Sparkles, UserRound, Workflow } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Logo } from '@/components/brand/logo'
@@ -12,32 +12,56 @@ export const revalidate = 3600
 
 export const metadata: Metadata = {
   // 이미 사이트명을 포함하므로 template( — HubGmate) 우회.
-  title: { absolute: 'HubGmate — AI로 완성하는 개발자 포트폴리오' },
+  title: { absolute: 'HubGmate — 에이전트가 발행하는 개발자 포트폴리오' },
   description:
-    'AI 에이전트가 저장소를 읽어 케이스 스터디 초안을 만들고, 워드프레스식 테마로 발행까지. REST·SDK·CLI·MCP로 프로그램 발행하는 개발자 포트폴리오 빌더.',
+    '프로젝트의 AI 에이전트에 MCP만 연결하면, 저장소를 읽어 케이스 스터디·아키텍처 다이어그램·ERD·기술 글까지 초안으로 만듭니다. 검토 후 공개하는 셀프호스팅 개발자 포트폴리오.',
   alternates: { canonical: SITE_URL },
 }
 
+// 실제 흐름: MCP 연결 → 에이전트가 레포 분석·생성 → 검토·공개.
 const STEPS = [
   {
+    icon: Cable,
+    kicker: '01 · CONNECT',
+    title: 'MCP를 연결합니다',
+    body: '프로젝트 레포에 .mcp.json과 API 키만 넣으면 끝. Claude Code·Cursor 등 MCP를 지원하는 어떤 에이전트든 연결됩니다.',
+  },
+  {
     icon: Bot,
-    kicker: '01 · INGEST',
-    title: 'AI가 저장소를 읽습니다',
-    body: '커밋 히스토리·README·디렉터리 구조를 분석해 문제 → 해결 → 결과 구조의 케이스 스터디 초안을 자동 생성합니다.',
+    kicker: '02 · GENERATE',
+    title: '에이전트가 레포를 읽고 만듭니다',
+    body: '커밋·README·코드 구조를 분석해 케이스 스터디, 아키텍처 다이어그램, ERD, 기술 글을 HubGmate 스펙대로 초안 생성합니다. 사람이 복붙할 필요 없이.',
   },
   {
-    icon: Palette,
-    kicker: '02 · THEME',
-    title: '테마를 고릅니다',
-    body: '워드프레스처럼 완성된 룩앤필을 갤러리에서 선택. 편집 화면과 결과 화면이 완전히 동일한 노션식 편집 경험.',
-  },
-  {
-    icon: GitBranch,
-    kicker: '03 · PUBLISH',
-    title: '프로그램으로 발행합니다',
-    body: 'REST · SDK · CLI · MCP로 조사부터 발행까지 자동화. 사람은 검토·수정만, 반복 작업은 에이전트가.',
+    icon: Eye,
+    kicker: '03 · REVIEW & PUBLISH',
+    title: '검토하고 공개합니다',
+    body: '발행물은 모두 초안(draft)으로 들어옵니다. 결과 화면 그대로 인라인 편집(편집=결과)하고, 준비되면 공개하세요.',
   },
 ]
+
+// 에이전트가 실제로 만들어내는 콘텐츠(전부 렌더러가 구현되어 있음).
+const PRODUCES = [
+  { icon: FileText, title: '케이스 스터디', body: '문제 → 해결 → 결과 서사, 임팩트 지표, 스택.' },
+  { icon: Workflow, title: '아키텍처 다이어그램', body: 'mermaid 흐름도·시퀀스. 다크 테마 + 라인 아이콘.' },
+  { icon: Database, title: 'ERD', body: '텍스트 한 벌로 MySQL Workbench 스타일 데이터 모델.' },
+  { icon: BarChart3, title: '차트', body: '비율(파이)·추세(막대) 그래프도 텍스트로.' },
+  { icon: Code, title: '기술 딥다이브', body: '코드 블록·표·콜아웃을 가진 상세 기술 글.' },
+  { icon: UserRound, title: '경력 · 프로필', body: '경력, 스킬, 연락처까지 프로필 전체 구성.' },
+]
+
+const MCP_SNIPPET = `// .mcp.json — 프로젝트 레포에 추가
+{
+  "mcpServers": {
+    "hubgmate": {
+      "type": "http",
+      "url": "https://hub.ghmate.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer \${HUBGMATE_API_KEY}"
+      }
+    }
+  }
+}`
 
 export default async function LandingPage() {
   const profiles = await getPublishedProfiles()
@@ -70,22 +94,22 @@ export default async function LandingPage() {
         <section className="mx-auto w-full max-w-[1280px] px-[clamp(18px,5vw,64px)] pb-[clamp(48px,7vw,96px)] pt-[clamp(24px,5vw,72px)]">
           <div className="pf-reveal inline-flex items-center gap-2 rounded-full border border-white/[0.12] px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--pf-fg-dim)]">
             <Sparkles size={14} className="text-[var(--pf-ac)]" />
-            AI 포트폴리오 빌더
+            MCP · 에이전트 자율 발행
           </div>
           <h1 className="pf-display pf-reveal m-0 mt-7 text-[clamp(44px,9vw,150px)] leading-[0.9]">
             <span className="block text-[var(--pf-fg)]">PORTFOLIO,</span>
             <span className="block text-[var(--pf-headline-dim)]">ON AUTOPILOT</span>
           </h1>
-          <p className="pf-reveal mt-[clamp(20px,3vw,32px)] max-w-[600px] text-[clamp(16px,1.4vw,19px)] leading-[1.7] text-[var(--pf-fg-muted)]">
-            저장소만 연결하면 AI 에이전트가 케이스 스터디를 쓰고, 완성된 테마로 발행합니다. 개발자가 코드를
-            짜듯, 포트폴리오도 프로그램으로 관리하세요.
+          <p className="pf-reveal mt-[clamp(20px,3vw,32px)] max-w-[620px] text-[clamp(16px,1.4vw,19px)] leading-[1.7] text-[var(--pf-fg-muted)]">
+            당신 프로젝트의 AI 에이전트에 <span className="text-[var(--pf-fg-dim)]">MCP</span>만 연결하세요. 레포를 읽어
+            케이스 스터디·아키텍처 다이어그램·ERD·기술 글까지 초안으로 만들어 올립니다. 당신은 검토하고 공개만 하면 됩니다.
           </p>
           <div className="pf-reveal mt-[clamp(28px,4vw,40px)] flex flex-wrap gap-3">
             <Link
               href="/studio/signup"
               className="inline-flex items-center gap-2.5 rounded-full bg-[var(--pf-ac)] px-7 py-4 text-[14px] font-semibold text-[#141414] transition hover:brightness-110"
             >
-              내 포트폴리오 만들기
+              시작하기
               <ArrowRight size={16} strokeWidth={2} />
             </Link>
             {profiles[0] && (
@@ -124,6 +148,54 @@ export default async function LandingPage() {
                 </div>
               )
             })}
+          </div>
+        </section>
+
+        {/* ── WHAT IT PRODUCES ── */}
+        <section className="mx-auto w-full max-w-[1280px] px-[clamp(18px,5vw,64px)] py-[clamp(48px,7vw,96px)]">
+          <div className="pf-reveal mb-[clamp(24px,3vw,40px)] text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">
+            에이전트가 만드는 것 · OUTPUT
+          </div>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3">
+            {PRODUCES.map((p) => {
+              const Icon = p.icon
+              return (
+                <div
+                  key={p.title}
+                  className="pf-reveal flex flex-col gap-3 rounded-[18px] border border-white/[0.07] bg-[var(--pf-surface)] p-6"
+                >
+                  <Icon size={24} strokeWidth={1.8} className="text-[var(--pf-ac)]" />
+                  <h3 className="m-0 text-[17px] font-bold tracking-[-0.01em] text-[var(--pf-fg)]">{p.title}</h3>
+                  <p className="m-0 text-[13.5px] leading-[1.6] text-[var(--pf-fg-muted)]">{p.body}</p>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+
+        {/* ── MCP SETUP ── */}
+        <section className="mx-auto w-full max-w-[1280px] px-[clamp(18px,5vw,64px)] py-[clamp(48px,7vw,96px)]">
+          <div className="grid items-center gap-[clamp(24px,4vw,56px)] lg:grid-cols-[0.85fr_1.15fr]">
+            <div>
+              <div className="pf-reveal mb-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">
+                연결 · SETUP
+              </div>
+              <h2 className="pf-reveal m-0 text-[clamp(26px,3.5vw,44px)] font-extrabold leading-[1.1] tracking-[-0.02em] text-[var(--pf-fg)]">
+                파일 하나면
+                <br />
+                에이전트가 붙습니다
+              </h2>
+              <p className="pf-reveal mt-5 max-w-[420px] text-[15px] leading-[1.7] text-[var(--pf-fg-muted)]">
+                레포에 <code className="pf-mono text-[var(--pf-fg-dim)]">.mcp.json</code>을 넣고 키를 환경변수로 두면 끝.
+                그다음 에이전트에게 이렇게만 말하면 됩니다.
+              </p>
+              <p className="pf-reveal mt-4 rounded-xl border border-[var(--pf-ac)]/30 bg-[var(--pf-ac)]/[0.08] px-4 py-3 text-[14px] text-[var(--pf-fg-dim)]">
+                “이 레포를 HubGmate에 포트폴리오로 발행해줘”
+              </p>
+            </div>
+            <div className="pf-reveal overflow-x-auto rounded-[18px] border border-white/[0.09] bg-[#0E0E0E] p-[clamp(18px,2.5vw,28px)]">
+              <pre className="pf-mono m-0 text-[12.5px] leading-[1.75] text-[var(--pf-fg-dim)]">{MCP_SNIPPET}</pre>
+            </div>
           </div>
         </section>
 
@@ -169,9 +241,9 @@ export default async function LandingPage() {
             <h2 className="pf-display m-0 !leading-[0.9] text-[clamp(36px,7vw,96px)] text-[var(--pf-fg)]">
               지금 시작하세요
             </h2>
-            <p className="mt-6 max-w-[520px] text-[16px] leading-[1.65] text-[var(--pf-fg-muted)]">
-              관리자 계정으로 로그인하면 테마를 고르고, AI로 글을 쓰고, API 키로 자동 발행까지 — 모든 흐름이
-              하나로 연결됩니다.
+            <p className="mt-6 max-w-[540px] text-[16px] leading-[1.65] text-[var(--pf-fg-muted)]">
+              스튜디오에서 포트폴리오를 만들고 API 키를 발급하세요. 프로젝트 에이전트에 MCP를 연결하면, 나머지는
+              에이전트가 초안으로 채웁니다.
             </p>
             <Link
               href="/studio"
@@ -183,10 +255,7 @@ export default async function LandingPage() {
           </div>
           <div className="mt-10 flex flex-wrap items-center justify-between gap-4 text-[12px] text-[var(--pf-fg-fainter)]">
             <span>© {new Date().getFullYear()} {SITE_NAME} · 슬기로운 사업</span>
-            <div className="flex items-center gap-4">
-              <Link href="/docs" className="hover:text-[var(--pf-ac)]">문서</Link>
-              <span>hub.ghmate.com</span>
-            </div>
+            <span>hub.ghmate.com</span>
           </div>
         </section>
       </main>
