@@ -37,16 +37,6 @@ const STEPS = [
   },
 ]
 
-// 에이전트가 실제로 만들어내는 콘텐츠(전부 렌더러가 구현되어 있음).
-const PRODUCES = [
-  { title: '케이스 스터디', body: '문제 → 해결 → 결과 서사, 임팩트 지표, 기술 스택.' },
-  { title: '아키텍처 다이어그램', body: 'mermaid 흐름도·시퀀스. 다크 테마 + 라인 아이콘.' },
-  { title: 'ERD', body: '텍스트 한 벌로 MySQL Workbench 스타일 데이터 모델.' },
-  { title: '차트', body: '비율(파이)·추세(막대) 그래프도 텍스트로.' },
-  { title: '기술 딥다이브', body: '코드 블록·표·콜아웃을 가진 상세 기술 글.' },
-  { title: '경력 · 프로필', body: '경력, 스킬, 연락처까지 프로필 전체 구성.' },
-]
-
 const MCP_SNIPPET = `// .mcp.json — 프로젝트 레포에 추가
 {
   "mcpServers": {
@@ -153,33 +143,17 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* ── OUTPUT — 인덱스/스펙 리스트 ── */}
-        <section className="mx-auto w-full max-w-[1280px] px-[clamp(18px,5vw,64px)] py-[clamp(48px,7vw,96px)]">
-          <div className="pf-reveal mb-[clamp(20px,3vw,36px)] flex flex-wrap items-end justify-between gap-4">
-            <h2 className="pf-display m-0 text-[clamp(30px,5vw,72px)] leading-[0.9]">
-              <span className="text-[var(--pf-fg)]">에이전트가 </span>
-              <span className="text-[var(--pf-headline-dim)]">만드는 것</span>
-            </h2>
-            <span className="pf-mono text-[11px] uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">Output</span>
-          </div>
-          <div className="pf-reveal border-t border-white/[0.09]">
-            {PRODUCES.map((p, i) => (
-              <div
-                key={p.title}
-                className="flex flex-col gap-1.5 border-b border-white/[0.09] py-[clamp(18px,2.4vw,26px)] transition-colors hover:bg-white/[0.015] sm:flex-row sm:items-baseline sm:gap-6"
-              >
-                <div className="flex items-baseline gap-4 sm:w-[clamp(200px,26vw,320px)] sm:shrink-0">
-                  <span className="pf-mono text-[13px] text-[var(--pf-ac)]">{String(i + 1).padStart(2, '0')}</span>
-                  <h3 className="m-0 text-[clamp(18px,2vw,24px)] font-bold tracking-[-0.01em] text-[var(--pf-fg)]">
-                    {p.title}
-                  </h3>
-                </div>
-                <p className="m-0 pl-[calc(13px+1rem)] text-[14.5px] leading-[1.6] text-[var(--pf-fg-muted)] sm:pl-0">
-                  {p.body}
-                </p>
-              </div>
-            ))}
-          </div>
+        {/* ── VALUE STATEMENT — 핵심 한 줄 ── */}
+        <section className="mx-auto w-full max-w-[1280px] px-[clamp(18px,5vw,64px)] py-[clamp(56px,9vw,120px)]">
+          <h2 className="pf-reveal m-0 max-w-[18ch] break-keep text-[clamp(30px,5.4vw,68px)] font-extrabold leading-[1.12] tracking-[-0.03em] text-balance">
+            <span className="text-[var(--pf-fg)]">포트폴리오도, 프로젝트도, 기술 글도.</span>{' '}
+            <span className="text-[var(--pf-fg-faint)]">명령 한 줄이면 </span>
+            <span className="text-[var(--pf-ac)]">끝.</span>
+          </h2>
+          <p className="pf-reveal mt-7 max-w-[560px] text-[clamp(15px,1.4vw,18px)] leading-[1.75] text-[var(--pf-fg-muted)]">
+            MCP를 연결하고 “이 레포 발행해줘” 한마디면, 에이전트가 케이스 스터디·아키텍처 다이어그램·ERD·기술 글까지
+            알아서 채웁니다. 당신은 검토하고 공개만 하세요.
+          </p>
         </section>
 
         {/* ── MCP SETUP ── */}
