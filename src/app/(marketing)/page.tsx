@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, BarChart3, Bot, Cable, Code, Database, Eye, FileText, Sparkles, UserRound, Workflow } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Logo } from '@/components/brand/logo'
@@ -21,20 +21,17 @@ export const metadata: Metadata = {
 // 실제 흐름: MCP 연결 → 에이전트가 레포 분석·생성 → 검토·공개.
 const STEPS = [
   {
-    icon: Cable,
-    kicker: '01 · CONNECT',
+    label: 'CONNECT',
     title: 'MCP를 연결합니다',
     body: '프로젝트 레포에 .mcp.json과 API 키만 넣으면 끝. Claude Code·Cursor 등 MCP를 지원하는 어떤 에이전트든 연결됩니다.',
   },
   {
-    icon: Bot,
-    kicker: '02 · GENERATE',
+    label: 'GENERATE',
     title: '에이전트가 레포를 읽고 만듭니다',
     body: '커밋·README·코드 구조를 분석해 케이스 스터디, 아키텍처 다이어그램, ERD, 기술 글을 HubGmate 스펙대로 초안 생성합니다. 사람이 복붙할 필요 없이.',
   },
   {
-    icon: Eye,
-    kicker: '03 · REVIEW & PUBLISH',
+    label: 'REVIEW & PUBLISH',
     title: '검토하고 공개합니다',
     body: '발행물은 모두 초안(draft)으로 들어옵니다. 결과 화면 그대로 인라인 편집(편집=결과)하고, 준비되면 공개하세요.',
   },
@@ -42,12 +39,12 @@ const STEPS = [
 
 // 에이전트가 실제로 만들어내는 콘텐츠(전부 렌더러가 구현되어 있음).
 const PRODUCES = [
-  { icon: FileText, title: '케이스 스터디', body: '문제 → 해결 → 결과 서사, 임팩트 지표, 스택.' },
-  { icon: Workflow, title: '아키텍처 다이어그램', body: 'mermaid 흐름도·시퀀스. 다크 테마 + 라인 아이콘.' },
-  { icon: Database, title: 'ERD', body: '텍스트 한 벌로 MySQL Workbench 스타일 데이터 모델.' },
-  { icon: BarChart3, title: '차트', body: '비율(파이)·추세(막대) 그래프도 텍스트로.' },
-  { icon: Code, title: '기술 딥다이브', body: '코드 블록·표·콜아웃을 가진 상세 기술 글.' },
-  { icon: UserRound, title: '경력 · 프로필', body: '경력, 스킬, 연락처까지 프로필 전체 구성.' },
+  { title: '케이스 스터디', body: '문제 → 해결 → 결과 서사, 임팩트 지표, 기술 스택.' },
+  { title: '아키텍처 다이어그램', body: 'mermaid 흐름도·시퀀스. 다크 테마 + 라인 아이콘.' },
+  { title: 'ERD', body: '텍스트 한 벌로 MySQL Workbench 스타일 데이터 모델.' },
+  { title: '차트', body: '비율(파이)·추세(막대) 그래프도 텍스트로.' },
+  { title: '기술 딥다이브', body: '코드 블록·표·콜아웃을 가진 상세 기술 글.' },
+  { title: '경력 · 프로필', body: '경력, 스킬, 연락처까지 프로필 전체 구성.' },
 ]
 
 const MCP_SNIPPET = `// .mcp.json — 프로젝트 레포에 추가
@@ -92,11 +89,8 @@ export default async function LandingPage() {
       <main className="pt-24">
         {/* ── HERO ── */}
         <section className="mx-auto w-full max-w-[1280px] px-[clamp(18px,5vw,64px)] pb-[clamp(48px,7vw,96px)] pt-[clamp(24px,5vw,72px)]">
-          <div className="pf-reveal inline-flex items-center gap-2 rounded-full border border-white/[0.12] px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--pf-fg-dim)]">
-            <Sparkles size={14} className="text-[var(--pf-ac)]" />
-            MCP · 에이전트 자율 발행
-          </div>
-          <h1 className="pf-display pf-reveal m-0 mt-7 text-[clamp(44px,9vw,150px)] leading-[0.9]">
+          <div className="kicker pf-reveal">MCP · 에이전트 자율 발행</div>
+          <h1 className="pf-display pf-reveal m-0 mt-6 text-[clamp(44px,9vw,150px)] leading-[0.9]">
             <span className="block text-[var(--pf-fg)]">PORTFOLIO,</span>
             <span className="block text-[var(--pf-headline-dim)]">ON AUTOPILOT</span>
           </h1>
@@ -124,52 +118,67 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* ── HOW IT WORKS ── */}
+        {/* ── HOW IT WORKS — 넘버 시퀀스(에디토리얼) ── */}
         <section className="mx-auto w-full max-w-[1280px] px-[clamp(18px,5vw,64px)] py-[clamp(48px,7vw,96px)]">
-          <div className="pf-reveal mb-[clamp(24px,3vw,40px)] text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">
+          <div className="pf-reveal mb-[clamp(20px,3vw,36px)] text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">
             작동 방식 · HOW IT WORKS
           </div>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-4">
-            {STEPS.map((s) => {
-              const Icon = s.icon
-              return (
-                <div
-                  key={s.kicker}
-                  className="pf-reveal flex flex-col gap-4 rounded-[22px] border border-white/[0.07] bg-[var(--pf-surface)] p-[clamp(24px,3vw,32px)]"
-                >
-                  <Icon size={30} strokeWidth={1.7} className="text-[var(--pf-ac)]" />
-                  <div className="text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--pf-fg-faint)]">
-                    {s.kicker}
+          <div className="border-t border-white/[0.09]">
+            {STEPS.map((s, i) => (
+              <div
+                key={s.label}
+                className="pf-reveal grid grid-cols-1 gap-x-[clamp(24px,5vw,80px)] gap-y-3 border-b border-white/[0.09] py-[clamp(28px,4vw,52px)] md:grid-cols-[auto_1fr] md:items-baseline"
+              >
+                <div className="flex items-baseline gap-4">
+                  <span className="pf-display text-[clamp(40px,6vw,92px)] leading-[0.8] text-[var(--pf-fg-fainter)]">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="pf-mono text-[11px] uppercase tracking-[0.16em] text-[var(--pf-ac)] md:hidden">
+                    {s.label}
+                  </span>
+                </div>
+                <div className="max-w-[620px]">
+                  <div className="pf-mono hidden text-[11px] uppercase tracking-[0.16em] text-[var(--pf-ac)] md:block">
+                    {s.label}
                   </div>
-                  <h3 className="m-0 text-[clamp(19px,2vw,24px)] font-bold tracking-[-0.01em] text-[var(--pf-fg)]">
+                  <h3 className="m-0 mt-2 text-[clamp(22px,2.8vw,34px)] font-bold tracking-[-0.02em] text-[var(--pf-fg)]">
                     {s.title}
                   </h3>
-                  <p className="m-0 text-[14.5px] leading-[1.65] text-[var(--pf-fg-muted)]">{s.body}</p>
+                  <p className="m-0 mt-3 text-[clamp(14px,1.3vw,16px)] leading-[1.7] text-[var(--pf-fg-muted)]">
+                    {s.body}
+                  </p>
                 </div>
-              )
-            })}
+              </div>
+            ))}
           </div>
         </section>
 
-        {/* ── WHAT IT PRODUCES ── */}
+        {/* ── OUTPUT — 인덱스/스펙 리스트 ── */}
         <section className="mx-auto w-full max-w-[1280px] px-[clamp(18px,5vw,64px)] py-[clamp(48px,7vw,96px)]">
-          <div className="pf-reveal mb-[clamp(24px,3vw,40px)] text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">
-            에이전트가 만드는 것 · OUTPUT
+          <div className="pf-reveal mb-[clamp(20px,3vw,36px)] flex flex-wrap items-end justify-between gap-4">
+            <h2 className="pf-display m-0 text-[clamp(30px,5vw,72px)] leading-[0.9]">
+              <span className="text-[var(--pf-fg)]">에이전트가 </span>
+              <span className="text-[var(--pf-headline-dim)]">만드는 것</span>
+            </h2>
+            <span className="pf-mono text-[11px] uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">Output</span>
           </div>
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-3">
-            {PRODUCES.map((p) => {
-              const Icon = p.icon
-              return (
-                <div
-                  key={p.title}
-                  className="pf-reveal flex flex-col gap-3 rounded-[18px] border border-white/[0.07] bg-[var(--pf-surface)] p-6"
-                >
-                  <Icon size={24} strokeWidth={1.8} className="text-[var(--pf-ac)]" />
-                  <h3 className="m-0 text-[17px] font-bold tracking-[-0.01em] text-[var(--pf-fg)]">{p.title}</h3>
-                  <p className="m-0 text-[13.5px] leading-[1.6] text-[var(--pf-fg-muted)]">{p.body}</p>
+          <div className="pf-reveal border-t border-white/[0.09]">
+            {PRODUCES.map((p, i) => (
+              <div
+                key={p.title}
+                className="flex flex-col gap-1.5 border-b border-white/[0.09] py-[clamp(18px,2.4vw,26px)] transition-colors hover:bg-white/[0.015] sm:flex-row sm:items-baseline sm:gap-6"
+              >
+                <div className="flex items-baseline gap-4 sm:w-[clamp(200px,26vw,320px)] sm:shrink-0">
+                  <span className="pf-mono text-[13px] text-[var(--pf-ac)]">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="m-0 text-[clamp(18px,2vw,24px)] font-bold tracking-[-0.01em] text-[var(--pf-fg)]">
+                    {p.title}
+                  </h3>
                 </div>
-              )
-            })}
+                <p className="m-0 pl-[calc(13px+1rem)] text-[14.5px] leading-[1.6] text-[var(--pf-fg-muted)] sm:pl-0">
+                  {p.body}
+                </p>
+              </div>
+            ))}
           </div>
         </section>
 
