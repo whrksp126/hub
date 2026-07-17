@@ -116,7 +116,10 @@
 }
 
 html {
-  color-scheme: light dark;
+  color-scheme: dark;
+  /* 오버스크롤(러버밴드)·콘텐츠 밖 영역에 흰 배경이 비치지 않도록 루트를 다크 그라운드로.
+     모든 공개/스튜디오 화면이 다크(.pf)이므로 루트도 동일 톤으로 고정. */
+  background-color: #0e0e0e;
 }
 
 body {

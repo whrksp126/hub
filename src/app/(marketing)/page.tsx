@@ -238,7 +238,12 @@ export default async function LandingPage() {
           </div>
           <div className="mt-10 flex flex-wrap items-center justify-between gap-4 text-[12px] text-[var(--pf-fg-fainter)]">
             <span>© {new Date().getFullYear()} {SITE_NAME} · 슬기로운 사업</span>
-            <span>hub.ghmate.com</span>
+            <div className="flex items-center gap-4">
+              <Link href="/docs" className="transition-colors hover:text-[var(--pf-ac)]">
+                문서
+              </Link>
+              <span>hub.ghmate.com</span>
+            </div>
           </div>
         </section>
       </main>
