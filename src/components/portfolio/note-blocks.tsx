@@ -137,6 +137,7 @@ export function NoteBody({ blocks, mediaUrls }: { blocks: NoteBlock[]; mediaUrls
           )
         }
         if (b.type === 'divider') return <hr key={i} className="my-[clamp(8px,1.5vw,18px)] border-0 border-t border-white/[0.1]" />
+        if (b.type === 'p') return <p key={i} className={noteBlockClass('p')}>{parseInline(b.text)}</p>
         return null
       })}
     </div>
