@@ -65,9 +65,14 @@ async function putMedia(key: string, file: string, alt: string, width: number, h
 type Up = { name: string; key: string; file: string; alt: string; w: number; h: number }
 const UPLOADS: Up[] = [
   // 스크린샷 (빈 영역·자동화 배너를 잘라낸 크롭본)
-  { name: 'shotWorkspace', key: 'codingpt-pc-terminal-ide.png', file: `${CROPPED}/pc-terminal-ide.png`, alt: 'PC 데스크톱 앱 — 터미널과 코드 에디터를 나란히 띄운 워크스페이스', w: 3200, h: 880 },
-  { name: 'shotAgent', key: 'codingpt-pc-agent-select.png', file: `${CROPPED}/pc-agent-select.png`, alt: '이 PC에서 발견된 AI 에이전트(Claude Code · Codex CLI) 선택 화면', w: 1760, h: 800 },
+  { name: 'shotWorkspace', key: 'codingpt-pc-terminal-ide-2.png', file: `${CROPPED}/pc-terminal-ide.png`, alt: 'PC 데스크톱 앱 — 터미널과 코드 에디터를 나란히 띄운 워크스페이스', w: 3200, h: 1240 },
+  { name: 'shotAgent', key: 'codingpt-pc-agent-select-2.png', file: `${CROPPED}/pc-agent-select.png`, alt: '이 PC에서 발견된 AI 에이전트(Claude Code · Codex CLI · Cursor CLI) 연동 화면', w: 1760, h: 1240 },
   { name: 'shotDocs', key: 'codingpt-web-docs.png', file: `${CROPPED}/web-docs.png`, alt: '공개 웹 문서 — 설치·페어링·BYO AI·보안 가이드', w: 3200, h: 1700 },
+  { name: 'shotLanding', key: 'codingpt-web-landing.png', file: `${CROPPED}/web-landing.png`, alt: '공개 랜딩 — 내 PC의 코딩 에이전트를 폰에서 이어서', w: 3200, h: 1712 },
+  // 모바일 (실제 데모 계정 로그인 상태)
+  { name: 'shotMobileTerm', key: 'codingpt-mobile-terminal-2.png', file: `${CROPPED}/mobile-terminal.png`, alt: '폰에서 PC의 tmux 세션에 그대로 붙은 터미널 라이브 미러', w: 1080, h: 1800 },
+  { name: 'shotMobileIde', key: 'codingpt-mobile-ide-2.png', file: `${CROPPED}/mobile-ide.png`, alt: '폰에서 PC의 파일 트리를 열어 코드를 편집하는 화면', w: 1080, h: 1800 },
+  { name: 'shotMobilePreview', key: 'codingpt-mobile-preview-2.png', file: `${CROPPED}/mobile-preview.png`, alt: 'PC에서 돌고 있는 dev 서버를 폰 화면에서 그대로 여는 실시간 미리보기', w: 1080, h: 1800 },
   // 딥다이브 다이어그램
   { name: 'dgRelay', key: 'codingpt-dd-outbound-relay.png', file: `${ASSETS}/deepdives/01-outbound-relay/diagram/relay.png`, alt: '아웃바운드 전용 릴레이와 dial-back 스트림 구조', w: 1702, h: 2430 },
   { name: 'dgApproval', key: 'codingpt-dd-byo-approval.png', file: `${ASSETS}/deepdives/02-byo-agent-approval/diagram/approval.png`, alt: 'BYO 실행과 원격 승인 경로', w: 1574, h: 1978 },
@@ -271,10 +276,20 @@ const sections = [
   },
   {
     kind: 'gallery',
-    heading: '화면 · SCREENS',
+    heading: '폰에서 · ON MOBILE',
+    media: [
+      { kind: 'image', mediaId: M.shotMobileTerm, caption: '터미널 라이브 미러 — PC의 tmux 세션에 그대로 붙어 테스트 결과와 git 로그가 흐릅니다' },
+      { kind: 'image', mediaId: M.shotMobileIde, caption: '코드 에디터 — PC의 파일 트리를 열어 폰에서 편집합니다' },
+      { kind: 'image', mediaId: M.shotMobilePreview, caption: '실시간 미리보기 — PC에서 도는 dev 서버를 폰 화면에서 그대로 엽니다' },
+    ],
+  },
+  {
+    kind: 'gallery',
+    heading: 'PC에서 · ON DESKTOP',
     media: [
       { kind: 'image', mediaId: M.shotWorkspace, caption: 'PC 데스크톱 앱 — 터미널과 코드 에디터를 나란히 둔 워크스페이스' },
       { kind: 'image', mediaId: M.shotAgent, caption: '이 PC에서 발견된 AI 에이전트를 골라 연동 — 자격증명은 PC 밖으로 나가지 않습니다' },
+      { kind: 'image', mediaId: M.shotLanding, caption: '공개 랜딩 — codingpt.ghmate.com' },
       { kind: 'image', mediaId: M.shotDocs, caption: '공개 웹 문서 — 설치·기기 연결·BYO AI·보안까지' },
     ],
   },
