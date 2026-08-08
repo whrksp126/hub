@@ -61,9 +61,20 @@ async function putMedia(key: string, file: string, alt: string, width: number, h
   return Number(r.lastInsertRowid)
 }
 
+/** 포스터 등 media 행이 필요 없는 오브젝트는 URL만 반환 */
+async function putObject(key: string, file: string): Promise<string> {
+  await s3.send(
+    new PutObjectCommand({ Bucket: bucket, Key: `media/${key}`, Body: fs.readFileSync(file), ContentType: mime(key) }),
+  )
+  return publicUrl(`media/${key}`)
+}
+
 // ── 1. 자산 업로드 ────────────────────────────────────────────────────
 type Up = { name: string; key: string; file: string; alt: string; w: number; h: number }
 const UPLOADS: Up[] = [
+  // 시연 영상 (분할 멀티화면 — 폰 조작과 PC 반응이 같은 프레임 안에)
+  { name: 'videoPhoneToPc', key: 'codingpt-phone-to-pc.mp4', file: `${ASSETS}/videos/phone-to-pc.mp4`, alt: '폰에서 지시하면 PC가 실행하고 결과가 폰에 반영되는 시연', w: 1920, h: 1080 },
+  { name: 'videoApproval', key: 'codingpt-remote-approval.mp4', file: `${ASSETS}/videos/remote-approval.mp4`, alt: 'PC의 위험한 명령을 폰의 승인 카드에서 허용해 작업이 이어지는 시연', w: 1920, h: 1080 },
   // 스크린샷 (빈 영역·자동화 배너를 잘라낸 크롭본)
   { name: 'shotWorkspace', key: 'codingpt-pc-terminal-ide-2.png', file: `${CROPPED}/pc-terminal-ide.png`, alt: 'PC 데스크톱 앱 — 터미널과 코드 에디터를 나란히 띄운 워크스페이스', w: 3200, h: 1240 },
   { name: 'shotAgent', key: 'codingpt-pc-agent-select-2.png', file: `${CROPPED}/pc-agent-select.png`, alt: '이 PC에서 발견된 AI 에이전트(Claude Code · Codex CLI · Cursor CLI) 연동 화면', w: 1760, h: 1240 },
@@ -85,6 +96,9 @@ for (const u of UPLOADS) {
   M[u.name] = await putMedia(u.key, u.file, u.alt, u.w, u.h)
   console.log(`[media] ${u.key} → #${M[u.name]}`)
 }
+const posterPhoneToPc = await putObject('codingpt-phone-to-pc-poster.jpg', `${ASSETS}/videos/phone-to-pc.poster.jpg`)
+const posterApproval = await putObject('codingpt-remote-approval-poster.jpg', `${ASSETS}/videos/remote-approval.poster.jpg`)
+console.log('[media] 포스터 2개 업로드 완료')
 
 // ── 2. 프로필/프로젝트 조회 ───────────────────────────────────────────
 const profile = sqlite.prepare('select id from profiles where username=?').get(USERNAME) as { id: number }
@@ -273,6 +287,30 @@ const sections = [
     kind: 'default',
     heading: '방향을 바꾼 이유 · PIVOT',
     body: '처음의 CodingPT는 모바일 코딩 교육 앱이었습니다. 레슨을 읽고 코드를 제출하면 서버의 도커 실행기가 채점하는 구조였고, 그 실행기를 빠르게 만드는 캐싱이 기술적 자랑거리였습니다. 2026년 상반기 AI 코딩 도구가 실무를 바꾸면서 그 전제가 흔들렸습니다. 사람들은 코딩을 배우려고 에디터를 여는 게 아니라 에이전트에게 시키고 결과를 승인하려고 열기 시작했고, 그때 병목은 지식이 아니라 자리였습니다. 잘 만들어 둔 “서버에서 코드를 대신 실행해 주는 엔진”은 사용자의 진짜 환경도 진짜 AI 구독도 없는, 틀린 위치의 실행기였습니다. 2026년 7월 9일 가설을 갈아치웠습니다 — 실행을 우리 쪽으로 가져오는 대신, 조작을 사용자 쪽으로 보낸다. 같은 날 클라우드 AI 엔진 경로를 걷어내고 구독 신규 판매를 껐으며, 레슨은 지우지 않고 얼려 두었습니다.',
+  },
+  {
+    kind: 'gallery',
+    heading: '시연 · 폰에서 지시하면 내 PC가 실행합니다',
+    media: [
+      {
+        kind: 'video',
+        mediaId: M.videoPhoneToPc,
+        caption: '폰에서 명령을 보내면 PC 터미널에서 실제로 돌고, 바뀐 결과가 폰 미리보기에 그대로 반영됩니다',
+        poster: posterPhoneToPc,
+      },
+    ],
+  },
+  {
+    kind: 'gallery',
+    heading: '시연 · 위험한 명령은 폰에서 승인해야 진행됩니다',
+    media: [
+      {
+        kind: 'video',
+        mediaId: M.videoApproval,
+        caption: 'PC의 에이전트가 승인을 요구하면 폰에 카드가 도착하고, 허용하는 순간 PC에서 작업이 이어집니다',
+        poster: posterApproval,
+      },
+    ],
   },
   {
     kind: 'gallery',
