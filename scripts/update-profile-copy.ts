@@ -22,12 +22,12 @@ const sqlite = new Database(process.env.DATABASE_PATH || './data/hub.db')
 const USERNAME = 'geonho'
 
 const copy = {
-  headline: 'AI-NATIVE\nPRODUCT BUILDER',
-  title: 'AI 프로덕트 빌더 · 예비창업가',
-  tagline: '아이디어와 사업성 판단부터 런칭·운영까지, 제품을 끝까지 만들어 냅니다.',
+  headline: 'AI-NATIVE\nPRODUCT LEADER',
+  title: '프로덕트 리더 · 풀스택 개발자',
+  tagline: '기획부터 런칭·운영까지, 제품 전 과정을 맡아 왔습니다.',
   intro:
-    'AI를 도구가 아니라 개발 방식으로 씁니다. 아이디어 발굴과 사업성 판단, 팀을 이끄는 일에서 시작해 프론트엔드·백엔드·앱·인프라까지 직접 만들고, 여러 실서비스를 런칭해 운영해 왔습니다.',
-  bio: '사업 판단과 팀 리드부터 프론트엔드·백엔드·앱·인프라까지, AI로 제품을 끝까지 만들어 내는 빌더.',
+    '프론트엔드에서 백엔드·앱·인프라까지, 아이디어 발굴부터 사업화까지. 팀을 이끌며 여러 실서비스를 설계하고 런칭해 운영해 왔습니다.',
+  bio: '기획부터 런칭·운영까지, 프론트엔드·백엔드·앱·인프라를 모두 다루는 개발자.',
 }
 
 const before = sqlite.prepare('select headline,title,tagline,intro,bio,cards from profiles where username=?').get(USERNAME) as
