@@ -41,7 +41,7 @@ export function HomeProjectRow({ item, href }: { item: HomeProjectItem; href: st
           {item.titleKr && <span className="text-[13px] text-[var(--pf-fg-faint)]">{item.titleKr}</span>}
         </span>
         {item.summary && (
-          <span className="max-w-[520px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">{item.summary}</span>
+          <span className="max-w-[820px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">{item.summary}</span>
         )}
       </span>
       <ArrowUpRight size={22} strokeWidth={1.9} className="mt-1 text-[var(--pf-ac)]" />
@@ -61,7 +61,7 @@ export function HomeExperienceRow({ item, href }: { item: HomeExperienceItem; hr
           {item.role && <span className="text-[13px] text-[var(--pf-fg-faint)]">{item.role}</span>}
         </span>
         {item.context && (
-          <span className="max-w-[640px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">{item.context}</span>
+          <span className="max-w-[900px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">{item.context}</span>
         )}
         {item.period && (
           <span className="mt-1 text-[12.5px] text-[var(--pf-fg-faint)]">

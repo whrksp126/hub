@@ -76,7 +76,7 @@ export function ProjectRow({
           {project.titleKr && <span className="text-[13px] text-[var(--pf-fg-faint)]">{project.titleKr}</span>}
         </span>
         {project.summary && (
-          <span className="max-w-[520px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">
+          <span className="max-w-[820px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">
             {project.summary}
           </span>
         )}

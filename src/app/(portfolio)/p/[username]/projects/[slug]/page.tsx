@@ -99,7 +99,7 @@ export default async function ProjectDetail({ params }: Params) {
           url: project.url,
         })}
       />
-      <PortfolioColumns profile={profile} avatarUrl={avatarUrl} align="left">
+      <PortfolioColumns profile={profile} avatarUrl={avatarUrl} align="left" sidebar={false}>
         <Link
           href={`${base}/projects`}
           className="mb-[clamp(28px,4vw,48px)] inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-[var(--pf-surface)] px-[18px] py-2.5 text-[13px] font-semibold text-[var(--pf-fg-dim)] hover:border-[var(--pf-fg)] hover:text-[var(--pf-fg)]"

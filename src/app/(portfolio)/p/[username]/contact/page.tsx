@@ -36,7 +36,7 @@ export default async function ContactPage({ params }: Params) {
 
   return (
     <PortfolioShell profile={profile}>
-      <PortfolioColumns profile={profile} avatarUrl={avatarUrl}>
+      <PortfolioColumns profile={profile} avatarUrl={avatarUrl} sidebar={false}>
         <div className="pf-reveal mb-4 text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--pf-fg-faint)]">
           연락 · GET IN TOUCH
         </div>

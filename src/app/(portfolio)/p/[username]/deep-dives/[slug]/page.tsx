@@ -72,7 +72,7 @@ export default async function NoteDetail({ params }: Params) {
           category: note.category,
         })}
       />
-      <PortfolioColumns profile={profile} avatarUrl={avatarUrl} align="left">
+      <PortfolioColumns profile={profile} avatarUrl={avatarUrl} align="left" sidebar={false}>
         <article className="max-w-[760px]">
           <Link href={pfPath(username, '/deep-dives')} className="mb-8 inline-flex items-center gap-1.5 text-sm text-[var(--pf-fg-muted)] transition-colors hover:text-[var(--pf-fg)]">
             <ArrowLeft size={15} /> 글 목록

@@ -11,6 +11,7 @@ export function PortfolioColumns({
   avatarUrl,
   align = 'center',
   card,
+  sidebar = true,
   children,
 }: {
   profile: Profile
@@ -19,11 +20,24 @@ export function PortfolioColumns({
   align?: 'center' | 'left'
   // 사이드바 카드 override(편집기에서 편집형 ProfileCard 주입). 없으면 정적 ProfileCard.
   card?: ReactNode
+  // 홈 외 페이지는 프로필 카드를 숨기고 콘텐츠가 폭을 다 쓰게 한다.
+  sidebar?: boolean
   children: ReactNode
 }) {
   const content = align === 'left' ? 'min-w-0 text-left' : 'min-w-0 text-center min-[1080px]:text-left'
+  const shell =
+    'mx-auto w-full max-w-[800px] px-[clamp(18px,5vw,40px)] pb-[clamp(72px,10vw,140px)] pt-[clamp(8px,2vw,24px)] min-[1080px]:max-w-[1280px] min-[1080px]:px-[clamp(18px,5vw,64px)]'
+  if (!sidebar) {
+    return (
+      <div className={shell}>
+        <div className={align === 'left' ? 'min-w-0 text-left' : 'min-w-0 text-left'}>{children}</div>
+      </div>
+    )
+  }
   return (
-    <div className="mx-auto w-full max-w-[800px] px-[clamp(18px,5vw,40px)] pb-[clamp(72px,10vw,140px)] pt-[clamp(8px,2vw,24px)] min-[1080px]:max-w-[1280px] min-[1080px]:grid min-[1080px]:grid-cols-[320px_minmax(0,1fr)] min-[1080px]:items-start min-[1080px]:gap-[clamp(40px,4vw,72px)] min-[1080px]:px-[clamp(18px,5vw,64px)]">
+    <div
+      className={`${shell} min-[1080px]:grid min-[1080px]:grid-cols-[320px_minmax(0,1fr)] min-[1080px]:items-start min-[1080px]:gap-[clamp(40px,4vw,72px)]`}
+    >
       {card ?? <ProfileCard profile={profile} avatarUrl={avatarUrl} />}
       <div className={content}>{children}</div>
     </div>
