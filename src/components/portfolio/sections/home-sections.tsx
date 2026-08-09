@@ -40,9 +40,17 @@ export function Hero({
   intro: string
   edit?: { headTop: EditableField; headBottom: EditableField; intro: EditableField }
 }) {
+  // 긴 문구(예: "PRODUCT BUILDER")가 넘치지 않게 가장 긴 줄 길이로 크기를 낮춘다.
+  const longest = Math.max(headTop.length, headBottom.length)
+  const size =
+    longest <= 10
+      ? 'text-[clamp(46px,8.5vw,140px)]'
+      : longest <= 13
+        ? 'text-[clamp(38px,6.6vw,108px)]'
+        : 'text-[clamp(32px,5.6vw,92px)]'
   return (
     <>
-      <h1 className="pf-display m-0 text-[clamp(46px,8.5vw,140px)] leading-[0.9]">
+      <h1 className={`pf-display m-0 leading-[0.9] ${size}`}>
         <EditableText value={headTop} edit={edit?.headTop} className="block text-[var(--pf-fg)]" />
         <EditableText value={headBottom} edit={edit?.headBottom} className="block text-[var(--pf-headline-dim)]" />
       </h1>
