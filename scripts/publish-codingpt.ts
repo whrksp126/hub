@@ -73,17 +73,25 @@ async function putObject(key: string, file: string): Promise<string> {
 type Up = { name: string; key: string; file: string; alt: string; w: number; h: number }
 const UPLOADS: Up[] = [
   // 시연 영상 (분할 멀티화면 — 폰 조작과 PC 반응이 같은 프레임 안에)
-  { name: 'videoPhoneToPc', key: 'codingpt-phone-to-pc.mp4', file: `${ASSETS}/videos/phone-to-pc.mp4`, alt: '폰에서 지시하면 PC가 실행하고 결과가 폰에 반영되는 시연', w: 1920, h: 1080 },
-  { name: 'videoApproval', key: 'codingpt-remote-approval.mp4', file: `${ASSETS}/videos/remote-approval.mp4`, alt: 'PC의 위험한 명령을 폰의 승인 카드에서 허용해 작업이 이어지는 시연', w: 1920, h: 1080 },
+  { name: 'videoPhoneToPc', key: 'codingpt-phone-to-pc-2.mp4', file: `${ASSETS}/videos/phone-to-pc.mp4`, alt: '폰에서 친 명령이 PC에서 실행되고 편집기·미리보기·폰에 결과가 반영되는 시연', w: 1920, h: 1080 },
+  { name: 'videoApproval', key: 'codingpt-remote-approval-2.mp4', file: `${ASSETS}/videos/remote-approval.mp4`, alt: 'PC의 에이전트가 올린 승인 요청을 폰 카드에서 허용해 작업이 이어지는 시연', w: 1920, h: 1080 },
   // 스크린샷 (빈 영역·자동화 배너를 잘라낸 크롭본)
   { name: 'shotWorkspace', key: 'codingpt-pc-terminal-ide-2.png', file: `${CROPPED}/pc-terminal-ide.png`, alt: 'PC 데스크톱 앱 — 터미널과 코드 에디터를 나란히 띄운 워크스페이스', w: 3200, h: 1240 },
   { name: 'shotAgent', key: 'codingpt-pc-agent-select-2.png', file: `${CROPPED}/pc-agent-select.png`, alt: '이 PC에서 발견된 AI 에이전트(Claude Code · Codex CLI · Cursor CLI) 연동 화면', w: 1760, h: 1240 },
   { name: 'shotDocs', key: 'codingpt-web-docs.png', file: `${CROPPED}/web-docs.png`, alt: '공개 웹 문서 — 설치·페어링·BYO AI·보안 가이드', w: 3200, h: 1700 },
   { name: 'shotLanding', key: 'codingpt-web-landing.png', file: `${CROPPED}/web-landing.png`, alt: '공개 랜딩 — 내 PC의 코딩 에이전트를 폰에서 이어서', w: 3200, h: 1712 },
-  // 모바일 (실제 데모 계정 로그인 상태)
-  { name: 'shotMobileTerm', key: 'codingpt-mobile-terminal-2.png', file: `${CROPPED}/mobile-terminal.png`, alt: '폰에서 PC의 tmux 세션에 그대로 붙은 터미널 라이브 미러', w: 1080, h: 1800 },
-  { name: 'shotMobileIde', key: 'codingpt-mobile-ide-2.png', file: `${CROPPED}/mobile-ide.png`, alt: '폰에서 PC의 파일 트리를 열어 코드를 편집하는 화면', w: 1080, h: 1800 },
-  { name: 'shotMobilePreview', key: 'codingpt-mobile-preview-2.png', file: `${CROPPED}/mobile-preview.png`, alt: 'PC에서 돌고 있는 dev 서버를 폰 화면에서 그대로 여는 실시간 미리보기', w: 1080, h: 1800 },
+  // 모바일 (실제 데모 계정 로그인 상태 · 전부 다크 · 원본 비율 그대로)
+  { name: 'shotMobileApproval', key: 'codingpt-mobile-approval-3.png', file: `${ASSETS}/screenshots/mobile-03-approval-inbox.png`, alt: '폰에 도착한 원격 승인 카드 — 에이전트의 명령 실행 요청을 허용/거절', w: 1080, h: 2424 },
+  { name: 'shotMobileTerm', key: 'codingpt-mobile-terminal-3.png', file: `${ASSETS}/screenshots/mobile-02-terminal-mirror.png`, alt: '폰에서 PC의 tmux 세션에 그대로 붙은 터미널 라이브 미러', w: 1080, h: 2424 },
+  { name: 'shotMobileIde', key: 'codingpt-mobile-ide-3.png', file: `${ASSETS}/screenshots/mobile-04-ide-editing.png`, alt: '폰에서 PC의 파일 트리를 열어 코드를 편집하는 화면', w: 1080, h: 2424 },
+  { name: 'shotMobilePreview', key: 'codingpt-mobile-preview-3.png', file: `${ASSETS}/screenshots/mobile-05-preview.png`, alt: 'PC에서 돌고 있는 dev 서버를 폰 화면에서 그대로 여는 실시간 미리보기', w: 1080, h: 2424 },
+  // 딥다이브 본문 이미지
+  // (01-outbound-relay/img/pc-project-groups.png 은 미사용 — 화면 95%가 빈 데다 실제 호스트명이 노출됨)
+  { name: 'ddSidebarHosts', key: 'codingpt-dd01-sidebar-hosts.png', file: `${ASSETS}/deepdives/01-outbound-relay/img/sidebar-hosts-online.png`, alt: '여러 프로젝트가 각각 호스트 PC와 온라인으로 연결된 모바일 사이드바', w: 1080, h: 2424 },
+  { name: 'ddAgentSelect', key: 'codingpt-dd02-agent-select.png', file: `${ASSETS}/deepdives/02-byo-agent-approval/img/agent-select.png`, alt: 'PC 앱이 이 머신에서 찾아낸 AI CLI 목록과 버전', w: 3200, h: 2068 },
+  { name: 'ddApprovalCard', key: 'codingpt-dd02-approval-card.png', file: `${ASSETS}/deepdives/02-byo-agent-approval/img/approval-card.png`, alt: '폰에 뜬 원격 승인 카드 — 위쪽은 에이전트와의 실제 대화, 아래쪽은 실행하려는 명령과 선택지', w: 1080, h: 2424 },
+  { name: 'ddOnboarding', key: 'codingpt-dd03-onboarding.png', file: `${ASSETS}/deepdives/03-daemon-sidecar/img/onboarding-permissions.png`, alt: 'PC 앱 최초 설정 위저드 — 권한을 하나씩 안내하고 승인 전에는 다음 단계로 가지 않는다', w: 3200, h: 2000 },
+  { name: 'ddAdminEmpty', key: 'codingpt-dd04-admin-empty.png', file: `${ASSETS}/deepdives/04-pivot-gating/img/admin-usage-empty.png`, alt: '어드민의 사용량 분석 화면이 데이터 없이 빈 상태로 렌더된 모습', w: 3200, h: 1752 },
   // 딥다이브 다이어그램
   { name: 'dgRelay', key: 'codingpt-dd-outbound-relay.png', file: `${ASSETS}/deepdives/01-outbound-relay/diagram/relay.png`, alt: '아웃바운드 전용 릴레이와 dial-back 스트림 구조', w: 1702, h: 2430 },
   { name: 'dgApproval', key: 'codingpt-dd-byo-approval.png', file: `${ASSETS}/deepdives/02-byo-agent-approval/diagram/approval.png`, alt: 'BYO 실행과 원격 승인 경로', w: 1574, h: 1978 },
@@ -96,8 +104,8 @@ for (const u of UPLOADS) {
   M[u.name] = await putMedia(u.key, u.file, u.alt, u.w, u.h)
   console.log(`[media] ${u.key} → #${M[u.name]}`)
 }
-const posterPhoneToPc = await putObject('codingpt-phone-to-pc-poster.jpg', `${ASSETS}/videos/phone-to-pc.poster.jpg`)
-const posterApproval = await putObject('codingpt-remote-approval-poster.jpg', `${ASSETS}/videos/remote-approval.poster.jpg`)
+const posterPhoneToPc = await putObject('codingpt-phone-to-pc-poster-2.jpg', `${ASSETS}/videos/phone-to-pc.poster.jpg`)
+const posterApproval = await putObject('codingpt-remote-approval-poster-2.jpg', `${ASSETS}/videos/remote-approval.poster.jpg`)
 console.log('[media] 포스터 2개 업로드 완료')
 
 // ── 2. 프로필/프로젝트 조회 ───────────────────────────────────────────
@@ -205,10 +213,40 @@ function parseDeepdive(md: string, assetMap: Record<string, { mediaId: number; p
 }
 
 const DEEPDIVES = [
-  { dir: '01-outbound-relay', slug: 'codingpt-outbound-relay', assets: { 'diagram/relay.png': { mediaId: M.dgRelay } } },
-  { dir: '02-byo-agent-approval', slug: 'codingpt-byo-agent-approval', assets: { 'diagram/approval.png': { mediaId: M.dgApproval } } },
-  { dir: '03-daemon-sidecar', slug: 'codingpt-daemon-sidecar', assets: { 'diagram/sidecar.png': { mediaId: M.dgSidecar } } },
-  { dir: '04-pivot-gating', slug: 'codingpt-pivot-gating', assets: { 'diagram/gating.png': { mediaId: M.dgGating } } },
+  {
+    dir: '01-outbound-relay',
+    slug: 'codingpt-outbound-relay',
+    assets: {
+      'diagram/relay.png': { mediaId: M.dgRelay },
+      'img/sidebar-hosts-online.png': { mediaId: M.ddSidebarHosts },
+    },
+  },
+  {
+    dir: '02-byo-agent-approval',
+    slug: 'codingpt-byo-agent-approval',
+    assets: {
+      'diagram/approval.png': { mediaId: M.dgApproval },
+      'img/agent-select.png': { mediaId: M.ddAgentSelect },
+      'img/approval-card.png': { mediaId: M.ddApprovalCard },
+      'video/remote-approval.mp4': { mediaId: M.videoApproval, poster: posterApproval },
+    },
+  },
+  {
+    dir: '03-daemon-sidecar',
+    slug: 'codingpt-daemon-sidecar',
+    assets: {
+      'diagram/sidecar.png': { mediaId: M.dgSidecar },
+      'img/onboarding-permissions.png': { mediaId: M.ddOnboarding },
+    },
+  },
+  {
+    dir: '04-pivot-gating',
+    slug: 'codingpt-pivot-gating',
+    assets: {
+      'diagram/gating.png': { mediaId: M.dgGating },
+      'img/admin-usage-empty.png': { mediaId: M.ddAdminEmpty },
+    },
+  },
 ]
 
 const noteIds: number[] = []
@@ -316,7 +354,8 @@ const sections = [
     kind: 'gallery',
     heading: '폰에서 · ON MOBILE',
     media: [
-      { kind: 'image', mediaId: M.shotMobileTerm, caption: '터미널 라이브 미러 — PC의 tmux 세션에 그대로 붙어 테스트 결과와 git 로그가 흐릅니다' },
+      { kind: 'image', mediaId: M.shotMobileApproval, caption: '원격 승인 — 에이전트의 실행 요청이 폰에 카드로 도착합니다' },
+      { kind: 'image', mediaId: M.shotMobileTerm, caption: '터미널 라이브 미러 — PC의 tmux 세션에 그대로 붙어 테스트 결과와 빌드 로그가 흐릅니다' },
       { kind: 'image', mediaId: M.shotMobileIde, caption: '코드 에디터 — PC의 파일 트리를 열어 폰에서 편집합니다' },
       { kind: 'image', mediaId: M.shotMobilePreview, caption: '실시간 미리보기 — PC에서 도는 dev 서버를 폰 화면에서 그대로 엽니다' },
     ],
