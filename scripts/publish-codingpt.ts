@@ -460,7 +460,7 @@ sqlite
     '2025 — 현재',
     '팀 협업 후 단독',
     'codingpt.ghmate.com',
-    '내 PC에서 돌고 있는 AI 코딩 에이전트(Claude Code·Codex CLI)와 터미널·에디터·브라우저·시뮬레이터를 안드로이드·iOS·macOS 어디서든 그대로 이어서 쓰는 원격 작업 도구. 모바일 코딩 교육 앱으로 시작해 2026년 7월 ADE(에이전트 개발 환경)로 피벗했고, AI 바이브 코딩에 최적화된 도구를 목표로 합니다.',
+    '내 PC에서 돌고 있는 AI 코딩 에이전트(Claude Code·Codex CLI)와 터미널·에디터·브라우저·시뮬레이터를 안드로이드·iOS·macOS 어디서든 그대로 이어서 쓰는 원격 작업 도구. 모바일 코딩 교육 앱으로 시작해 2026년 7월 ADE(Agentic Development Environment)로 피벗했고, AI 바이브 코딩에 최적화된 도구를 목표로 합니다.',
     JSON.stringify(metrics),
     JSON.stringify(sections),
     JSON.stringify(stack),
