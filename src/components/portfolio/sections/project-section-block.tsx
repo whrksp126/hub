@@ -52,6 +52,15 @@ export function ProjectSectionBlock({ sec, edit, mediaUrls = {} }: { sec: Projec
       </button>
     ) : null
 
+  // "제목 — 설명" 항목을 제목/설명으로 나눈다. 대시가 본문에 그대로 노출되거나
+  // 줄 맨 앞으로 떨어지는 것을 막기 위해, 구분자는 렌더 단계에서 없앤다.
+  // (일반 공백과 non-breaking space 를 모두 허용)
+  const splitDash = (s: string): [string, string] => {
+    const m = s.match(/[\s ]+—[\s ]+/)
+    if (!m || m.index === undefined) return [s, '']
+    return [s.slice(0, m.index), s.slice(m.index + m[0].length)]
+  }
+
   // 다이어그램/ERD 하단 설명 캡션(공용).
   const DiagramCaptions = () => (
     <div className="mt-5 grid gap-x-8 gap-y-2 sm:grid-cols-2">
@@ -77,12 +86,22 @@ export function ProjectSectionBlock({ sec, edit, mediaUrls = {} }: { sec: Projec
         )}
         {(bullets.length > 0 || edit) && (
           <div className="mt-7 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-            {bullets.map((b, k) => (
-              <div key={k} className="group/i relative border-l-2 border-[var(--pf-ac)] pl-4 text-[14px] leading-[1.6] text-[var(--pf-fg-dim)]">
-                <EditableText value={b} edit={bulletField(k)} multiline className="block" />
-                {bulletX(k)}
-              </div>
-            ))}
+            {bullets.map((b, k) => {
+              const [title, desc] = splitDash(b)
+              return (
+                <div key={k} className="group/i relative border-l-2 border-[var(--pf-ac)] pl-4 text-[14px] leading-[1.6] text-[var(--pf-fg-dim)]">
+                  {edit ? (
+                    <EditableText value={b} edit={bulletField(k)} multiline className="block" />
+                  ) : (
+                    <>
+                      <span className="block font-semibold text-[var(--pf-fg)]">{title}</span>
+                      {desc && <span className="mt-0.5 block">{desc}</span>}
+                    </>
+                  )}
+                  {bulletX(k)}
+                </div>
+              )
+            })}
             {edit && <AddBtn label="항목" onClick={addBullet} className="self-start" />}
           </div>
         )}
@@ -94,8 +113,7 @@ export function ProjectSectionBlock({ sec, edit, mediaUrls = {} }: { sec: Projec
         {eyebrow}
         <div className="grid gap-4 sm:grid-cols-2">
           {bullets.map((b, k) => {
-            const [title, ...rest] = b.split(' — ')
-            const desc = rest.join(' — ')
+            const [title, desc] = splitDash(b)
             return (
               <div key={k} className="group/i relative flex flex-col gap-2 rounded-[18px] border border-white/[0.07] bg-[var(--pf-surface)] p-5">
                 <span className="pf-mono text-[12px] font-bold text-[var(--pf-ac)]">{String(k + 1).padStart(2, '0')}</span>
@@ -142,12 +160,24 @@ export function ProjectSectionBlock({ sec, edit, mediaUrls = {} }: { sec: Projec
                   <span className={`flex justify-center pt-0.5 font-bold ${isResult ? 'text-[var(--pf-lime-2)]' : 'text-[var(--pf-ac)]'}`}>
                     {isResult ? <Check size={14} strokeWidth={3} /> : '·'}
                   </span>
-                  <EditableText
-                    value={b}
-                    edit={bulletField(k)}
-                    multiline
-                    className={`block ${isResult ? 'font-semibold text-[var(--pf-lime-2)]' : 'text-[var(--pf-fg-dim)]'}`}
-                  />
+                  {edit ? (
+                    <EditableText
+                      value={b}
+                      edit={bulletField(k)}
+                      multiline
+                      className={`block ${isResult ? 'font-semibold text-[var(--pf-lime-2)]' : 'text-[var(--pf-fg-dim)]'}`}
+                    />
+                  ) : (
+                    (() => {
+                      const [title, desc] = splitDash(b)
+                      return (
+                        <span className={`block ${isResult ? 'font-semibold text-[var(--pf-lime-2)]' : 'text-[var(--pf-fg-dim)]'}`}>
+                          <span className={desc ? 'font-semibold text-[var(--pf-fg)]' : undefined}>{title}</span>
+                          {desc && <span className="mt-0.5 block text-[var(--pf-fg-muted)]">{desc}</span>}
+                        </span>
+                      )
+                    })()
+                  )}
                   {bulletX(k)}
                 </div>
               )
@@ -162,13 +192,23 @@ export function ProjectSectionBlock({ sec, edit, mediaUrls = {} }: { sec: Projec
       <>
         {eyebrow}
         <div className="flex flex-col gap-5 border-l border-white/[0.14] pl-6">
-          {bullets.map((b, k) => (
-            <div key={k} className="group/i relative">
-              <span className="absolute -left-[27px] top-[7px] h-2.5 w-2.5 rounded-full bg-[var(--pf-ac)]" />
-              <EditableText value={b} edit={bulletField(k)} multiline className="block text-[14px] leading-[1.6] text-[var(--pf-fg-dim)]" />
-              {bulletX(k)}
-            </div>
-          ))}
+          {bullets.map((b, k) => {
+            const [title, desc] = splitDash(b)
+            return (
+              <div key={k} className="group/i relative">
+                <span className="absolute -left-[27px] top-[7px] h-2.5 w-2.5 rounded-full bg-[var(--pf-ac)]" />
+                {edit ? (
+                  <EditableText value={b} edit={bulletField(k)} multiline className="block text-[14px] leading-[1.6] text-[var(--pf-fg-dim)]" />
+                ) : (
+                  <>
+                    <span className="block text-[14px] font-semibold leading-[1.5] text-[var(--pf-fg)]">{title}</span>
+                    {desc && <span className="mt-1 block text-[14px] leading-[1.6] text-[var(--pf-fg-dim)]">{desc}</span>}
+                  </>
+                )}
+                {bulletX(k)}
+              </div>
+            )
+          })}
           {edit && <AddBtn label="항목" onClick={addBullet} className="self-start" />}
         </div>
       </>
@@ -235,8 +275,7 @@ export function ProjectSectionBlock({ sec, edit, mediaUrls = {} }: { sec: Projec
         {eyebrow}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2.5">
           {bullets.map((b, k) => {
-            const [label, ...rest] = b.split(' — ')
-            const value = rest.join(' — ')
+            const [label, value] = splitDash(b)
             return (
               <div key={k} className="group/i relative rounded-[14px] border border-white/[0.07] bg-[var(--pf-surface)] px-4 py-3">
                 {edit ? (

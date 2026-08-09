@@ -294,9 +294,9 @@ for (const dd of DEEPDIVES) {
 
 // ── 4. 프로젝트 상세 ──────────────────────────────────────────────────
 const metrics = [
-  { value: '0', label: '우리 서버가 대신 부르는 AI 호출 — 사용자 PC에서 사용자 자신의 구독으로 실행' },
-  { value: '0', label: '사용자가 열어야 하는 인바운드 포트 — 데몬은 아웃바운드 연결만 사용' },
-  { value: '3', label: '동시 운영 중인 클라이언트 — iOS · Android · macOS 데스크톱 앱' },
+  { value: '0', label: '우리 서버가 대신 부르는 AI 호출' },
+  { value: '0', label: '사용자가 열어야 하는 인바운드 포트' },
+  { value: '3', label: '동시 운영 중인 클라이언트 (iOS · Android · macOS)' },
 ]
 
 const stack = [
@@ -315,7 +315,7 @@ const sections = [
   {
     kind: 'lead',
     heading: '개요 · OVERVIEW',
-    body: 'AI 코딩 에이전트를 쓰기 시작하면 작업의 무게중심이 타이핑에서 “지시하고 기다리고 승인하기”로 옮겨갑니다. 그런데 그 승인은 책상 앞에 앉아 있어야만 할 수 있습니다. CodingPT는 실행을 클라우드로 옮기는 대신 조작을 사용자 쪽으로 보냅니다 — 내 PC에 데몬 하나를 띄우면 터미널·파일·dev 서버·AI CLI는 원래 있던 그 PC에서 돌고, 안드로이드·iOS·macOS 어느 기기에서든 그 화면을 이어받아 조작합니다.',
+    body: 'AI 코딩 에이전트를 쓰기 시작하면 작업의 무게중심이 타이핑에서 “지시하고 기다리고 승인하기”로 옮겨갑니다. 그런데 그 승인은 책상 앞에 앉아 있어야만 할 수 있습니다. CodingPT는 실행을 클라우드로 옮기는 대신 조작을 사용자 쪽으로 보냅니다. 내 PC에 데몬 하나를 띄우면 터미널·파일·dev 서버·AI CLI는 원래 있던 그 PC에서 돌고, 안드로이드·iOS·macOS 어느 기기에서든 그 화면을 이어받아 조작합니다.',
     bullets: [
       '추가 AI 구독료 0 — 이미 쓰는 Claude Code·Codex CLI를 그대로(BYO). 서비스가 대신 모델을 호출하지 않습니다',
       '내 개발환경 그대로 — 도트파일·툴체인·로컬 DB·시뮬레이터가 있는 바로 그 머신에서 실행됩니다',
@@ -326,7 +326,7 @@ const sections = [
   {
     kind: 'default',
     heading: '방향을 바꾼 이유 · PIVOT',
-    body: '처음의 CodingPT는 모바일 코딩 교육 앱이었습니다. 레슨을 읽고 코드를 제출하면 서버의 도커 실행기가 채점하는 구조였고, 그 실행기를 빠르게 만드는 캐싱이 기술적 자랑거리였습니다. 2026년 상반기 AI 코딩 도구가 실무를 바꾸면서 그 전제가 흔들렸습니다. 사람들은 코딩을 배우려고 에디터를 여는 게 아니라 에이전트에게 시키고 결과를 승인하려고 열기 시작했고, 그때 병목은 지식이 아니라 자리였습니다. 잘 만들어 둔 “서버에서 코드를 대신 실행해 주는 엔진”은 사용자의 진짜 환경도 진짜 AI 구독도 없는, 틀린 위치의 실행기였습니다. 2026년 7월 9일 가설을 갈아치웠습니다 — 실행을 우리 쪽으로 가져오는 대신, 조작을 사용자 쪽으로 보낸다. 같은 날 클라우드 AI 엔진 경로를 걷어내고 구독 신규 판매를 껐으며, 레슨은 지우지 않고 얼려 두었습니다.',
+    body: '처음의 CodingPT는 모바일 코딩 교육 앱이었습니다. 레슨을 읽고 코드를 제출하면 서버의 도커 실행기가 채점하는 구조였고, 그 실행기를 빠르게 만드는 캐싱이 기술적 자랑거리였습니다. 2026년 상반기 AI 코딩 도구가 실무를 바꾸면서 그 전제가 흔들렸습니다. 사람들은 코딩을 배우려고 에디터를 여는 게 아니라 에이전트에게 시키고 결과를 승인하려고 열기 시작했고, 그때 병목은 지식이 아니라 자리였습니다. 잘 만들어 둔 “서버에서 코드를 대신 실행해 주는 엔진”은 사용자의 진짜 환경도 진짜 AI 구독도 없는, 틀린 위치의 실행기였습니다. 2026년 7월 9일 가설을 갈아치웠습니다. 실행을 우리 쪽으로 가져오는 대신, 조작을 사용자 쪽으로 보낸다는 것이었습니다. 같은 날 클라우드 AI 엔진 경로를 걷어내고 구독 신규 판매를 껐으며, 레슨은 지우지 않고 얼려 두었습니다.',
   },
   {
     kind: 'gallery',
@@ -356,20 +356,20 @@ const sections = [
     kind: 'gallery',
     heading: '폰에서 · ON MOBILE',
     media: [
-      { kind: 'image', mediaId: M.shotMobileApproval, caption: '원격 승인 — 에이전트의 실행 요청이 폰에 카드로 도착합니다' },
-      { kind: 'image', mediaId: M.shotMobileTerm, caption: '터미널 라이브 미러 — PC의 tmux 세션에 그대로 붙어 테스트 결과와 빌드 로그가 흐릅니다' },
-      { kind: 'image', mediaId: M.shotMobileIde, caption: '코드 에디터 — PC의 파일 트리를 열어 폰에서 편집합니다' },
-      { kind: 'image', mediaId: M.shotMobilePreview, caption: '실시간 미리보기 — PC에서 도는 dev 서버를 폰 화면에서 그대로 엽니다' },
+      { kind: 'image', mediaId: M.shotMobileApproval, caption: '에이전트의 실행 요청이 폰에 카드로 도착하는 원격 승인 화면' },
+      { kind: 'image', mediaId: M.shotMobileTerm, caption: 'PC의 tmux 세션에 그대로 붙어 테스트 결과와 빌드 로그가 흐르는 터미널 라이브 미러' },
+      { kind: 'image', mediaId: M.shotMobileIde, caption: 'PC의 파일 트리를 열어 폰에서 편집하는 코드 에디터' },
+      { kind: 'image', mediaId: M.shotMobilePreview, caption: 'PC에서 도는 dev 서버를 폰 화면에서 그대로 여는 실시간 미리보기' },
     ],
   },
   {
     kind: 'gallery',
     heading: 'PC에서 · ON DESKTOP',
     media: [
-      { kind: 'image', mediaId: M.shotWorkspace, caption: 'PC 데스크톱 앱 — 터미널과 코드 에디터를 나란히 둔 워크스페이스' },
-      { kind: 'image', mediaId: M.shotAgent, caption: '이 PC에서 발견된 AI 에이전트를 골라 연동 — 자격증명은 PC 밖으로 나가지 않습니다' },
-      { kind: 'image', mediaId: M.shotLanding, caption: '공개 랜딩 — codingpt.ghmate.com' },
-      { kind: 'image', mediaId: M.shotDocs, caption: '공개 웹 문서 — 설치·기기 연결·BYO AI·보안까지' },
+      { kind: 'image', mediaId: M.shotWorkspace, caption: '터미널과 코드 에디터를 나란히 둔 PC 데스크톱 앱 워크스페이스' },
+      { kind: 'image', mediaId: M.shotAgent, caption: '이 PC에서 발견된 AI 에이전트를 골라 연동합니다. 자격증명은 PC 밖으로 나가지 않습니다' },
+      { kind: 'image', mediaId: M.shotLanding, caption: '공개 랜딩 (codingpt.ghmate.com)' },
+      { kind: 'image', mediaId: M.shotDocs, caption: '설치·기기 연결·BYO AI·보안까지 다루는 공개 웹 문서' },
     ],
   },
   {
@@ -416,7 +416,7 @@ const sections = [
   classDef c fill:#141b2e,stroke:@accent,stroke-width:1.5px,color:#e9eefb;
   class P,R,D,T,C,F,A c;`,
     bullets: [
-      '데몬은 인바운드 포트를 열지 않습니다 — 제어 채널 1개를 밖으로 걸고, 스트림은 필요할 때마다 되걸어 옵니다',
+      '데몬은 인바운드 포트를 열지 않습니다. 제어 채널 1개를 밖으로 걸고, 스트림은 필요할 때마다 되걸어 옵니다',
       'AI는 사용자 PC에서 사용자 자신의 구독으로 돌고, 서버는 결과 바이트를 옮기는 교환원 역할만 합니다',
     ],
   },
@@ -436,9 +436,9 @@ const sections = [
     heading: '역할 · ROLE',
     body: '레슨 시대에는 팀으로 시작했고, 2026년 7월 피벗 이후의 제품은 단독으로 개발하고 있습니다.',
     bullets: [
-      '2025-07 — 2026-05 · 팀 협업 — 앱 아키텍처·인증·백엔드·인프라 전반을 맡았습니다. 레슨 콘텐츠와 레슨 화면 모듈은 공동 기여자 1명이 담당했습니다',
-      '2026-05 — · 제품 모노레포 신설 — 릴레이 백엔드·공개 웹·어드민 분리까지 저장소 커밋 작성자 단독으로 확인됩니다',
-      '2026-07-09 — 현재 · 피벗 이후 전 구간 단독 — 데몬·릴레이·PC 데스크톱 앱·모바일 워크스페이스 셸·원격 승인·알림·종단 간 암호화·스토어 배포',
+      '2025-07 ~ 2026-05 · 팀 협업 — 앱 아키텍처·인증·백엔드·인프라 전반을 맡았습니다. 레슨 콘텐츠와 레슨 화면 모듈은 공동 기여자 1명이 담당했습니다',
+      '2026-05 이후 · 제품 모노레포 신설 — 릴레이 백엔드·공개 웹·어드민 분리까지 저장소 커밋 작성자 단독으로 확인됩니다',
+      '2026-07-09 ~ 현재 · 피벗 이후 전 구간 단독 — 데몬·릴레이·PC 데스크톱 앱·모바일 워크스페이스 셸·원격 승인·알림·종단 간 암호화·스토어 배포',
     ],
   },
   {
