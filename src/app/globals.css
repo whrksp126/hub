@@ -290,6 +290,11 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   letter-spacing: normal;
+
+  /* 한국어는 브라우저 기본값이 음절 단위로 끊어서 "브라우저"가 "브라우/저"로 쪼개진다.
+     어절(띄어쓰기) 단위로 끊고, 한 어절이 줄보다 길 때만 예외적으로 쪼갠다. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 .pf ::selection {
   background: var(--pf-ac);
