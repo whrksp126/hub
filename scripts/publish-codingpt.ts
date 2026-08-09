@@ -75,6 +75,8 @@ const UPLOADS: Up[] = [
   // 시연 영상 (분할 멀티화면 — 폰 조작과 PC 반응이 같은 프레임 안에)
   { name: 'videoPhoneToPc', key: 'codingpt-phone-to-pc-2.mp4', file: `${ASSETS}/videos/phone-to-pc.mp4`, alt: '폰에서 친 명령이 PC에서 실행되고 편집기·미리보기·폰에 결과가 반영되는 시연', w: 1920, h: 1080 },
   { name: 'videoApproval', key: 'codingpt-remote-approval-2.mp4', file: `${ASSETS}/videos/remote-approval.mp4`, alt: 'PC의 에이전트가 올린 승인 요청을 폰 카드에서 허용해 작업이 이어지는 시연', w: 1920, h: 1080 },
+  // 커버 배너 (제품 브랜드 그래픽 — 컨테이너 비율 1024:500과 정확히 일치)
+  { name: 'cover', key: 'codingpt-cover.png', file: '/Users/whrksp126/Downloads/코딩피티 그래픽이미지.png', alt: 'CodingPT — 바이브 코딩의 시작은, 코딩PT', w: 1024, h: 500 },
   // 스크린샷 (빈 영역·자동화 배너를 잘라낸 크롭본)
   { name: 'shotWorkspace', key: 'codingpt-pc-terminal-ide-2.png', file: `${CROPPED}/pc-terminal-ide.png`, alt: 'PC 데스크톱 앱 — 터미널과 코드 에디터를 나란히 띄운 워크스페이스', w: 3200, h: 1240 },
   { name: 'shotAgent', key: 'codingpt-pc-agent-select-2.png', file: `${CROPPED}/pc-agent-select.png`, alt: '이 PC에서 발견된 AI 에이전트(Claude Code · Codex CLI · Cursor CLI) 연동 화면', w: 1760, h: 1240 },
@@ -462,7 +464,7 @@ sqlite
     JSON.stringify(metrics),
     JSON.stringify(sections),
     JSON.stringify(stack),
-    M.shotWorkspace, // 상단 배너 = 가로형 워크스페이스 화면
+    M.cover, // 상단 배너 = 제품 브랜드 그래픽
     JSON.stringify(noteIds),
     'published',
     now,
