@@ -105,7 +105,8 @@ export function NoteBody({ blocks, mediaUrls }: { blocks: NoteBlock[]; mediaUrls
           return (
             <figure key={i} className="my-[clamp(8px,1.5vw,20px)]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={url} alt={b.caption ?? ''} className="w-full rounded-[16px] border border-white/[0.06]" />
+              {/* 본문 폭이 넓어져도 세로로 긴 스크린샷이 화면을 다 잡아먹지 않게 높이를 제한한다. */}
+              <img src={url} alt={b.caption ?? ''} className="mx-auto block max-h-[80vh] w-auto max-w-full rounded-[16px] border border-white/[0.06] object-contain" />
               {b.caption && <figcaption className="mt-2.5 text-center text-[13px] text-[var(--pf-fg-faint)]">{parseInline(b.caption)}</figcaption>}
             </figure>
           )

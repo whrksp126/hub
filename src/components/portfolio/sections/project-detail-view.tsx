@@ -116,7 +116,7 @@ export function ProjectDetailView({
           value={data.summary ?? ''}
           edit={edit?.field('summary', '한 줄 요약')}
           multiline
-          className="pf-reveal m-0 mb-6 block max-w-[720px] text-[clamp(16px,1.6vw,20px)] leading-[1.65] text-[var(--pf-fg-dim)]"
+          className="pf-reveal m-0 mb-6 block max-w-[980px] text-[clamp(16px,1.6vw,20px)] leading-[1.65] text-[var(--pf-fg-dim)]"
         />
       )}
 

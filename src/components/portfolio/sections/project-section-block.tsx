@@ -82,7 +82,7 @@ export function ProjectSectionBlock({ sec, edit, mediaUrls = {} }: { sec: Projec
       <>
         {eyebrow}
         {(edit || sec.body) && (
-          <EditableText value={sec.body ?? ''} edit={bodyField} multiline className="block max-w-[760px] text-[clamp(18px,2vw,24px)] font-medium leading-[1.5] text-[var(--pf-fg)]" />
+          <EditableText value={sec.body ?? ''} edit={bodyField} multiline className="block max-w-[1000px] text-[clamp(18px,2vw,24px)] font-medium leading-[1.5] text-[var(--pf-fg)]" />
         )}
         {(bullets.length > 0 || edit) && (
           <div className="mt-7 grid gap-x-8 gap-y-4 sm:grid-cols-2">
@@ -260,7 +260,7 @@ export function ProjectSectionBlock({ sec, edit, mediaUrls = {} }: { sec: Projec
       <>
         {eyebrow}
         {(edit || sec.body) && (
-          <EditableText value={sec.body ?? ''} edit={bodyField} multiline className="mb-5 block max-w-[720px] text-[15px] leading-[1.7] text-[var(--pf-fg-dim)]" />
+          <EditableText value={sec.body ?? ''} edit={bodyField} multiline className="mb-5 block max-w-[980px] text-[15px] leading-[1.7] text-[var(--pf-fg-dim)]" />
         )}
         {edit ? (
           <SectionMediaEditor media={media} urls={mediaUrls} onChange={(next: SectionMedia[]) => set({ media: next })} />
