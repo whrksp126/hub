@@ -19,18 +19,21 @@ export function noteBlockClass(type: NoteBlock['type']): string {
   }
 }
 
-// 인라인 강조 — **볼드** 와 `인라인 코드` 를 렌더. (본문·표·리스트 공용)
+// 인라인 강조 — **볼드** · *이탤릭* · `인라인 코드` 를 렌더. (본문·표·리스트 공용)
+// 볼드/이탤릭 안쪽은 재귀로 다시 파싱한다(**`코드`가 든 볼드** 처럼 섞여 쓰이는 경우가 많다).
+// 이탤릭은 여는 * 뒤와 닫는 * 앞에 공백이 없을 때만 잡아, 곱셈 기호 등이 잘못 묶이지 않게 한다.
 export function parseInline(text: string): React.ReactNode {
   if (!text) return text
-  const re = /(\*\*([^*]+)\*\*|`([^`]+)`)/g
+  const re = /(\*\*([^*]+)\*\*|\*(?!\s)([^*\n]+?)(?<!\s)\*|`([^`]+)`)/g
   const out: React.ReactNode[] = []
   let last = 0
   let m: RegExpExecArray | null
   let k = 0
   while ((m = re.exec(text)) !== null) {
     if (m.index > last) out.push(text.slice(last, m.index))
-    if (m[2] != null) out.push(<strong key={k++} className="font-semibold text-[var(--pf-fg)]">{m[2]}</strong>)
-    else if (m[3] != null) out.push(<code key={k++} className="rounded bg-white/[0.08] px-1.5 py-0.5 font-mono text-[0.86em] text-[var(--pf-ac)]">{m[3]}</code>)
+    if (m[2] != null) out.push(<strong key={k++} className="font-semibold text-[var(--pf-fg)]">{parseInline(m[2])}</strong>)
+    else if (m[3] != null) out.push(<em key={k++} className="italic text-[var(--pf-fg-dim)]">{parseInline(m[3])}</em>)
+    else if (m[4] != null) out.push(<code key={k++} className="rounded bg-white/[0.08] px-1.5 py-0.5 font-mono text-[0.86em] text-[var(--pf-ac)]">{m[4]}</code>)
     last = m.index + m[0].length
   }
   if (last < text.length) out.push(text.slice(last))
