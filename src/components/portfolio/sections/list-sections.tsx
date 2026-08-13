@@ -40,8 +40,11 @@ export function HomeProjectRow({ item, href }: { item: HomeProjectItem; href: st
           <span className="text-[clamp(20px,2.4vw,28px)] font-bold tracking-[-0.01em] text-[var(--pf-fg)]">{item.title}</span>
           {item.titleKr && <span className="text-[13px] text-[var(--pf-fg-faint)]">{item.titleKr}</span>}
         </span>
+        {/* 요약 앞머리에 '만든 계기'가 붙어 길어졌으므로 목록에서는 3줄로 자른다(전문은 상세에서). */}
         {item.summary && (
-          <span className="max-w-[820px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">{item.summary}</span>
+          <span className="line-clamp-3 max-w-[820px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">
+            {item.summary}
+          </span>
         )}
       </span>
       <ArrowUpRight size={22} strokeWidth={1.9} className="mt-1 text-[var(--pf-ac)]" />

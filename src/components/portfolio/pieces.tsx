@@ -75,8 +75,9 @@ export function ProjectRow({
           </span>
           {project.titleKr && <span className="text-[13px] text-[var(--pf-fg-faint)]">{project.titleKr}</span>}
         </span>
+        {/* 요약 앞머리에 '만든 계기'가 붙어 길어졌으므로 목록에서는 3줄로 자른다(전문은 상세에서). */}
         {project.summary && (
-          <span className="max-w-[820px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">
+          <span className="line-clamp-3 max-w-[820px] text-[14px] leading-[1.55] text-[var(--pf-fg-muted)]">
             {project.summary}
           </span>
         )}

@@ -96,7 +96,18 @@ export default async function ExperiencePage({ params }: Params) {
             {profile.education && (
               <>
                 <div className="mb-4 text-[12px] font-bold uppercase tracking-[0.06em] text-[var(--pf-ac)]">학력</div>
-                <div className="text-[18px] text-[var(--pf-fg)]">{profile.education}</div>
+                {/* 첫 줄 = 학교/기간, 이후 줄 = 개발로 전환한 배경 서술 */}
+                {profile.education.split('\n').map((line, i) =>
+                  i === 0 ? (
+                    <div key={i} className="text-[18px] text-[var(--pf-fg)]">
+                      {line}
+                    </div>
+                  ) : (
+                    <p key={i} className="mt-3 text-[14px] leading-[1.7] text-[var(--pf-fg-dim)]">
+                      {line}
+                    </p>
+                  ),
+                )}
               </>
             )}
             <div className="mb-4 mt-9 text-[12px] font-bold uppercase tracking-[0.06em] text-[var(--pf-ac)]">
