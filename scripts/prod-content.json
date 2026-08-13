@@ -1809,6 +1809,96 @@
    "height": 1080,
    "mime": "video/mp4",
    "size": 1653763
+  },
+  {
+   "filename": "ghc-desktop-drm-comparison.png",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-desktop-drm-comparison.png",
+   "alt": "같은 DRM 스트림을 두 엔진에서 연 결과 — 앱 내장 Chromium은 검은 화면, 브라우저 라이브 헬퍼는 정상 재생",
+   "width": 2000,
+   "height": 1275,
+   "mime": "image/png",
+   "size": 627873
+  },
+  {
+   "filename": "ghc-desktop-toolbar-crop.png",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-desktop-toolbar-crop.png",
+   "alt": "헬퍼 창에는 툴바가 보이지만 시청자에게 도착한 화면에는 없다",
+   "width": 1700,
+   "height": 710,
+   "mime": "image/png",
+   "size": 198149
+  },
+  {
+   "filename": "ghc-desktop-helper-window.png",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-desktop-helper-window.png",
+   "alt": "브라우저 라이브 헬퍼 창 — 주소창과 소리 잠금, LIVE 버튼이 있는 전용 툴바",
+   "width": 3200,
+   "height": 1960,
+   "mime": "image/png",
+   "size": 1900077
+  },
+  {
+   "filename": "ghc-desktop-room-browser-live.png",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-desktop-room-browser-live.png",
+   "alt": "브라우저 라이브가 송출 중인 방 — 타일 라벨이 페이지 제목으로 붙는다",
+   "width": 2560,
+   "height": 1640,
+   "mime": "image/png",
+   "size": 1061576
+  },
+  {
+   "filename": "ghc-desktop-native-live-modal.png",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-desktop-native-live-modal.png",
+   "alt": "네이티브 라이브 모달 — 화면과 창 중에서 송출할 소스를 고른다",
+   "width": 880,
+   "height": 1180,
+   "mime": "image/png",
+   "size": 63053
+  },
+  {
+   "filename": "ghc-desktop-app-audio-mute.png",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-desktop-app-audio-mute.png",
+   "alt": "앱 오디오 캡처 — 이 기기에서는 안 들리고 라이브에는 그대로 나간다",
+   "width": 880,
+   "height": 820,
+   "mime": "image/png",
+   "size": 42830
+  },
+  {
+   "filename": "ghc-desktop-room-window-capture.png",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-desktop-room-window-capture.png",
+   "alt": "화면 공유가 아니라 앱이 직접 창을 캡처해 송출 중인 방",
+   "width": 2560,
+   "height": 1640,
+   "mime": "image/png",
+   "size": 936983
+  },
+  {
+   "filename": "ghc-desktop-app-info.png",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-desktop-app-info.png",
+   "alt": "데스크탑 전용 앱 정보 — 현재 v0.1.4, 최신 v0.1.4 (실제 배포 피드 조회)",
+   "width": 900,
+   "height": 760,
+   "mime": "image/png",
+   "size": 49201
+  },
+  {
+   "filename": "ghc-desktop-macos-menubar.png",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-desktop-macos-menubar.png",
+   "alt": "macOS 메뉴바에 GHC로 뜨는 서명·공증 패키지 빌드",
+   "width": 2400,
+   "height": 1900,
+   "mime": "image/png",
+   "size": 106739
+  },
+  {
+   "filename": "ghc-browser-live-flow.mp4",
+   "url": "https://objectstore.ghmate.com/hub/media/ghc-browser-live-flow.mp4",
+   "alt": "방 메뉴에서 브라우저 라이브를 열고 LIVE를 누르기까지, 그리고 시청자 화면에 뜨는 순간",
+   "width": 1920,
+   "height": 1080,
+   "mime": "video/mp4",
+   "size": 1874164
   }
  ],
  "profile": {
@@ -2520,7 +2610,7 @@
    "year": "2026.05 — 운영 중",
    "role": "단독 · 풀스택 + 네이티브",
    "url": "longdcam-front.ghmate.com",
-   "summary": "여러 각도를 찍으려면 장비가 각도만큼 늘고, 송출하려면 OBS를 따로 깔아야 했습니다. 갖고 있는 기기를 그대로 카메라로 쓰고, 송출도 앱 안에서 끝내고 싶어 만들었습니다. 데스크탑 앱이 화면·앱 오디오는 물론 일반 캡처로는 검게 나오는 DRM 재생 화면까지 직접 잡아 내보내고, 웹에서는 RTMP로 OBS가 그대로 합류합니다. 기기 여러 대를 독립 카메라로 등록해 멀티앵글까지 한 방에서 처리하는 셀프호스팅 라이브 서비스.",
+   "summary": "여러 각도를 찍으려면 장비가 각도만큼 늘고, 송출하려면 OBS를 따로 깔아야 했습니다. 갖고 있는 기기를 그대로 카메라로 쓰고, 송출도 앱 안에서 끝내고 싶어 만들었습니다. 데스크탑 앱이 화면·앱 오디오를 직접 잡아 내보내고, 앱 안에서는 재생조차 안 되는 DRM 스트리밍은 전용 재생 창을 띄워 송출합니다. 웹에서는 RTMP로 OBS가 그대로 합류합니다. 기기 여러 대를 독립 카메라로 등록해 멀티앵글까지 한 방에서 처리하는 셀프호스팅 라이브 서비스.",
    "order": 2,
    "featured": 1,
    "status": "published",
@@ -2542,10 +2632,10 @@
     {
      "kind": "lead",
      "heading": "개요 · OVERVIEW",
-     "body": "방송을 하려면 OBS를 깔아 씬을 잡아야 하고, 여러 각도를 찍으려면 각도만큼 장비를 사야 했습니다. GHC는 둘 다 없앴습니다. 송출은 데스크탑 앱이 직접 하고 — 화면·창·앱 오디오는 물론 일반 캡처로는 검게 나오는 DRM 재생 화면까지 앱 안에서 잡습니다. 카메라는 서랍에 있는 안 쓰는 폰이 대신합니다. 같은 계정으로 로그인만 하면 카메라 목록에 자동 등록되고, PC에서 방에 들어가면 내 기기들이 자동으로 호출되어 각자 앵글을 올립니다. 서버는 클라우드가 아니라 집에 있는 컴퓨터 한 대입니다.",
+     "body": "방송을 하려면 OBS를 깔아 씬을 잡아야 하고, 여러 각도를 찍으려면 각도만큼 장비를 사야 했습니다. GHC는 둘 다 없앴습니다. 송출은 데스크탑 앱이 직접 하고, 앱 안에서는 재생조차 되지 않는 DRM 스트리밍은 전용 재생 창을 따로 띄워 내보냅니다. 카메라는 서랍에 있는 안 쓰는 폰이 대신합니다. 같은 계정으로 로그인만 하면 카메라 목록에 자동 등록되고, PC에서 방에 들어가면 내 기기들이 자동으로 호출되어 각자 앵글을 올립니다. 서버는 클라우드가 아니라 집에 있는 컴퓨터 한 대입니다.",
      "bullets": [
       "OBS를 깔지 않는다 — 데스크탑 앱이 OS 네이티브 API로 화면·창·앱 오디오를 직접 캡처해 송출한다",
-      "DRM 화면도 방송된다 — 재생을 담당할 브라우저를 macOS·Windows 각각의 DRM 스택으로 직접 만들었다",
+      "DRM 스트리밍도 방송된다 — 앱 안에서는 재생 자체가 안 되는 콘텐츠를, OS 네이티브 웹뷰로 만든 전용 창에서 재생해 그 창을 내보낸다",
       "장비를 새로 사지 않는다 — 안 쓰는 폰이 곧 카메라. 기기 수만큼 앵글이 늘어난다",
       "클라우드 비용 0 — 외부 SFU·스토리지·CDN 없이 홈서버와 무료 티어로 운영 중"
      ]
@@ -2556,34 +2646,77 @@
      "body": "송출 경로가 두 개입니다. 웹에서는 방마다 발급되는 RTMP 주소와 스트림 키로 OBS가 그대로 합류하고, 데스크탑 앱에서는 OBS 없이 앱이 화면·창·앱 오디오를 직접 캡처해 같은 방의 트랙으로 올립니다. 어느 쪽이든 시청자에게는 앵글 하나가 늘어난 것으로 보입니다.",
      "media": [
       {
+       "kind": "image",
+       "mediaId": "@@ghc-desktop-room-window-capture.png",
+       "caption": "데스크탑 — 화면 공유가 아니라 앱이 직접 창을 캡처해 송출 중인 방"
+      },
+      {
+       "kind": "image",
+       "mediaId": "@@ghc-desktop-native-live-modal.png",
+       "caption": "송출할 소스를 화면과 창 중에서 고른다 (개인 창 제목은 가림)"
+      },
+      {
+       "kind": "image",
+       "mediaId": "@@ghc-desktop-app-audio-mute.png",
+       "caption": "앱 오디오 — 이 기기에서는 안 들리고 라이브에는 그대로 나간다"
+      },
+      {
        "kind": "video",
        "mediaId": "@@ghc-rtmp-live.mp4",
-       "caption": "좌: 방장의 송출 설정 / 우: 다른 계정 시청자 — RTMP가 Ingress를 거쳐 방 트랙이 된다",
+       "caption": "웹 — RTMP가 Ingress를 거쳐 방 트랙이 된다. 좌: 방장의 송출 설정 / 우: 다른 계정 시청자",
        "poster": "https://objectstore.ghmate.com/hub/media/ghc-rtmp-live-poster.jpg"
       },
       {
        "kind": "image",
        "mediaId": "@@ghc-live-rtmp-setup.png",
-       "caption": "웹의 라이브 송출 설정 — OBS에 넣을 주소와 키를 방마다 발급한다 (키는 마스킹)"
+       "caption": "OBS에 넣을 주소와 키를 방마다 발급한다 (키는 마스킹)"
+      }
+     ]
+    },
+    {
+     "kind": "gallery",
+     "heading": "브라우저 라이브 · 앱이 못 트는 걸 트는 창",
+     "body": "문제는 캡처가 아니라 재생이었습니다. 데스크탑 앱이 쓰는 Chromium에는 DRM 키 시스템이 하나도 없어서 (Widevine · FairPlay · PlayReady 조회가 전부 실패) 보호된 스트리밍을 열면 검은 화면에서 멈춥니다. 그래서 재생을 OS 네이티브 웹뷰에 맡겼습니다. macOS는 WKWebView(FairPlay), Windows는 WebView2(Widevine)로 재생 전용 창을 띄우고, 그 창을 캡처해 송출합니다. 같은 스트림·같은 순간에 두 엔진을 나란히 열어 확인했습니다.",
+     "media": [
+      {
+       "kind": "image",
+       "mediaId": "@@ghc-desktop-drm-comparison.png",
+       "caption": "같은 DRM 스트림 — 좌: 앱 내장 Chromium이 \"No DRM\"으로 판정하고 멈춘 검은 화면 / 우: 헬퍼 창은 \"fairplay\"로 정상 재생 (Bitmovin 공식 DRM 테스트 스트림)"
+      },
+      {
+       "kind": "video",
+       "mediaId": "@@ghc-browser-live-flow.mp4",
+       "caption": "좌: 앱에서 브라우저 라이브를 열고 LIVE를 누르기까지 / 우: 다른 계정 시청자 — LIVE 이전에는 아무것도 나가지 않는다",
+       "poster": "https://objectstore.ghmate.com/hub/media/ghc-browser-live-flow-poster.jpg"
       },
       {
        "kind": "image",
-       "mediaId": "@@ghc-room-more-menu.png",
-       "caption": "방 메뉴 — 데스크탑 앱에서는 여기에 브라우저 라이브 항목이 추가된다"
+       "mediaId": "@@ghc-desktop-helper-window.png",
+       "caption": "헬퍼 창 — 주소창·소리 잠금·LIVE 버튼만 있는 전용 툴바"
+      },
+      {
+       "kind": "image",
+       "mediaId": "@@ghc-desktop-toolbar-crop.png",
+       "caption": "툴바는 화면에는 보이되 방송 출력에서는 잘라낸다"
+      },
+      {
+       "kind": "image",
+       "mediaId": "@@ghc-desktop-room-browser-live.png",
+       "caption": "송출 중인 방 — 타일 라벨이 페이지 제목으로 붙는다"
       }
      ]
     },
     {
      "kind": "default",
-     "heading": "브라우저 라이브 · DRM까지 방송되는 전용 브라우저",
-     "body": "넷플릭스 같은 보호된 스트리밍은 일반 화면 캡처로 잡으면 검은 화면이 됩니다. 그래서 재생을 담당할 브라우저를 직접 만들었습니다. macOS는 WKWebView(FairPlay), Windows는 WebView2(Widevine)로 각각 구현해 두 OS에서 같은 기능을 제공합니다. GHC에서 가장 손이 많이 간 부분이자, 다른 도구로는 대체가 안 되는 부분입니다.",
+     "heading": "설계 · 열기와 송출을 분리했다",
+     "body": "DRM 스트리밍을 방송하려면 대개 로그인이 필요합니다. \"라이브 시작\"을 누르는 순간 송출이 시작되면 로그인 화면이 그대로 나가버립니다. 그래서 창을 여는 일과 송출을 시작하는 일을 아예 분리했습니다.",
      "bullets": [
-      "열기와 송출을 분리했다 — 창을 열어 로그인하고 원하는 페이지로 이동한 뒤, 준비되면 창 자신의 툴바에서 LIVE를 누른다. 로그인 화면이 방송되는 사고가 구조적으로 일어나지 않는다",
+      "창을 열어 로그인하고 원하는 페이지로 이동한 뒤, 준비되면 창 자신의 툴바에서 LIVE를 누른다 — 로그인 화면이 방송되는 사고가 구조적으로 일어나지 않는다",
       "헬퍼 툴바는 화면에는 보이되 방송 출력에서는 잘라낸다 — 조작은 필요하지만 시청자가 볼 이유는 없다",
       "사이트의 전체화면 요청을 가로채 같은 창 안에서 처리한다 — OS 네이티브 전체화면은 별도 Space로 빠져나가 캡처가 깨진다",
       "마지막 URL과 쿠키를 남겨, 다음에 열면 보던 페이지에서 시작한다",
-      "창 1600×980을 h264_videotoolbox 10Mbps로 인코딩해 RTMP로 넣으면 방의 트랙이 된다",
-      "Windows 설치본은 WebView2 고정 런타임·ffmpeg·.NET 브라우저 헬퍼·가상 오디오를 전부 동봉해 382MB — 사용자가 따로 설치할 게 없다는 것과 맞바꿨다 (macOS는 98MB)"
+      "실측 — 메뉴를 누르면 헬퍼 창이 220ms 만에 뜨고, LIVE를 누르면 시청자 화면에 1.99초 만에 첫 프레임이 도착한다",
+      "실측 — 창 1600×980을 29.2~29.4fps로 캡처해 h264_videotoolbox 10Mbps로 인코딩한다. 송출 파이프라인이 쓰는 자원은 16코어 기준 CPU 0.73%·메모리 42MB"
      ]
     },
     {
@@ -2637,7 +2770,7 @@
      "kind": "features",
      "heading": "핵심 기능 · FEATURES",
      "bullets": [
-      "브라우저 라이브 — DRM 재생이 되는 전용 창을 띄워 그 창을 송출. 열기와 송출이 분리돼 로그인 화면은 나가지 않는다",
+      "브라우저 라이브 — 앱 안에서는 재생이 안 되는 DRM 스트리밍을 OS 네이티브 웹뷰 전용 창에서 재생해 송출. 열기와 송출이 분리돼 로그인 화면은 나가지 않는다",
       "네이티브 캡처 — 데스크탑 앱이 창·화면을 OS 네이티브 API로 캡처해 송출한다. OBS 대체",
       "앱별 오디오 캡처 — 특정 앱 소리만 방송에 넣고 내 스피커에서는 끌 수 있다",
       "RTMP 인입 — 방마다 주소와 키를 발급해 OBS가 그대로 합류. 웹만 쓰는 사람도 송출할 수 있다",
@@ -2753,7 +2886,7 @@
       "2026.06 중 — 보안·확장성 자체 감사 11건 진단 후 수정·배포. 캐파 계산에 따라 비트레이트 하향과 동시 라이브 가드 도입",
       "2026.06 말 — Windows 포팅. C++/WinRT(WGC·WASAPI) 캡처, C#/.NET 8(WebView2) DRM 브라우저, 인코더 프로브, 원샷 빌드 스크립트",
       "2026.07 — longdcam에서 GHC로 전면 리네이밍(도메인·컨테이너·DB·버킷·네이티브 바이너리·브리지 API), 공용 홈서버 격리 하드닝",
-      "2026.07~08 — macOS 코드서명·공증, 인앱 자동 업데이트, 릴리스 배포 파이프라인. 데스크탑 0.1.4 라이브"
+      "2026.07~08 — macOS 코드서명·공증, 인앱 자동 업데이트, 릴리스 배포 파이프라인. macOS 0.1.4 라이브(Windows는 0.1.1에 머물러 있어 피드 갱신이 남았다)"
      ]
     },
     {
@@ -2766,7 +2899,7 @@
       "외부 클라우드 없이 영상 서버·중계 서버·방송 입력·DB를 홈서버 컨테이너 7개로 직접 운영 — 유휴 시 7개 합계 CPU 1.58% · 336MiB, 배포 후 9일 연속 재시작 0회",
       "기기 카메라 미리보기만 SFU를 거치지 않고 기기 간 직접 연결(P2P)로 붙였다 — 방 통화는 참가자 수와 무관하게 SFU를 지나고, 희소한 홈서버 업링크는 미리보기 트래픽에 쓰지 않는다",
       "한 계정의 여러 기기를 각각 독립 카메라로 등록해 멀티앵글로 송출하는 구조 설계 — 사용자:기기 식별자로 참가자를 나눠 기기마다 원격 제어도 가능",
-      "브라우저 캡처로는 DRM 재생 화면이 검게 나오고, 특정 앱의 오디오만 뽑을 수도 없었다 — 웹 UI는 그대로 두고 OS 능력만 브리지로 주입하는 데스크탑 셸을 만들어, macOS(ScreenCaptureKit·CoreAudio·WKWebView)와 Windows(WGC·WASAPI·WebView2)에 각각 구현. 데스크탑 전용 React 화면은 0개",
+      "앱이 쓰는 Chromium에는 DRM 키 시스템이 없어 보호된 스트리밍은 재생 자체가 안 됐고, 특정 앱의 오디오만 뽑을 수도 없었다 — 웹 UI는 그대로 두고 OS 능력만 브리지로 주입하는 데스크탑 셸을 만들어 macOS(ScreenCaptureKit·CoreAudio·WKWebView)와 Windows(WGC·WASAPI·WebView2)에 각각 구현. 데스크탑 전용 React 화면은 0개",
       "실측 체감 — 방 진입에서 내 카메라 첫 프레임까지 154ms, 참여부터 폰 2대 포함 3앵글이 붙기까지 1.87초, 앵글 전환 210ms"
      ]
     },
@@ -2787,7 +2920,8 @@
      "bullets": [
       "mediasoup → LiveKit 교체 전후 정량 비교 — 교체 당시 계측 하네스가 없었고, 끊김의 원인이 회선이라 로컬 A/B로는 원인 자체가 재현되지 않는다. 대신 검증 가능한 것만 실었다",
       "재연결 소요 시간 — 소켓을 강제로 끊는 두 방법이 모두 실패해 이벤트를 잡지 못했다. 관찰 결과만 기록",
-      "프로덕션 부하 시 리소스, 글라스-투-글라스 지연, 네이티브 캡처 fps·CPU — 실사용자 트래픽이나 물리 계측이 필요해 미측정",
+      "프로덕션 부하 시 리소스와 글라스-투-글라스 지연 — 실사용자 트래픽과 물리 계측이 필요해 미측정. 1.99초는 첫 프레임 도달 시각이지 화면 변화가 반영되는 지연이 아니다",
+      "Windows 실물 화면 — 접근 가능한 기기가 없어 소스와 배포 상태만 확인했다. 상용 스트리밍(하드웨어 보호 경로)에서의 동작도 저작권 문제로 시험하지 않았다",
       "지연·RTT 실측은 기기 3대가 전부 같은 노트북 안에서 돈 결과라 실사용을 대표하지 않는다"
      ]
     },
@@ -2798,6 +2932,7 @@
       "미디어 오프로드 — 동시 라이브 8개 상한을 넘으려면 미디어만 기가비트 호스트로 분리해야 한다. \"클라우드 비용 0\" 원칙과 충돌해 트레이드오프를 다시 정하는 결정이 필요하다",
       "시청자가 많은 방송은 HLS pull — 지연을 포기하는 대신 CDN 캐싱으로 대역폭 문제를 우회",
       "모니터링·알림, 자동 백업, CI/CD — 지금은 배포 헬스체크와 도커 로그가 전부다",
+      "Windows 배포 최신화 — macOS는 0.1.4인데 Windows 피드가 0.1.1에 멈춰 있다. 릴리스 파이프라인을 양쪽으로 맞추는 일이 남았다",
       "모바일 네이티브 본구현·녹화·JWT refresh — 구상 단계"
      ]
     }
@@ -10689,7 +10824,7 @@
    "slug": "ghc-native-capture-bridge",
    "category": "네이티브 · 멀티플랫폼",
    "date": "2026.08",
-   "read_time": "14분",
+   "read_time": "18분",
    "title": "웹 코어 하나에 Mac·Windows 네이티브 캡처를 붙이기 — OBS 없이 송출하는 데스크탑 셸",
    "excerpt": "UI는 웹 하나로 두고 OS 능력만 브리지로 주입했다. 같은 인터페이스 뒤에서 Swift와 C++/WinRT가 전혀 다른 함정을 파고 있었다.",
    "order": 34,
@@ -10713,7 +10848,17 @@
      "items": [
       "특정 앱의 **오디오만** 캡처하기 (브라우저는 탭 오디오나 전체 시스템 오디오만 준다)",
       "그 앱 소리를 **내 스피커에서만 끄고** 방송에는 보내기",
-      "**DRM으로 보호된 스트리밍 재생 화면** 캡처 (브라우저 캡처는 검은 화면이 된다)",
+      "**DRM으로 보호된 스트리밍**을 재생하기 — Electron이 쓰는 Chromium에는 사용 가능한 DRM 키 시스템이"
+     ],
+     "ordered": false
+    },
+    {
+     "type": "p",
+     "text": "아예 없어서, 앱 안에서는 재생 자체가 되지 않고 검은 화면에서 멈춘다"
+    },
+    {
+     "type": "list",
+     "items": [
       "다른 데스크탑(Space)으로 이동해도 **캡처가 끊기지 않게** 하기"
      ],
      "ordered": false
@@ -10888,7 +11033,37 @@
     },
     {
      "type": "h2",
-     "text": "브라우저 라이브 — 열기와 송출을 분리했다"
+     "text": "브라우저 라이브 — 왜 브라우저를 하나 더 띄우나"
+    },
+    {
+     "type": "p",
+     "text": "데스크탑 앱은 Electron이다. 즉 **Chromium이다.** 그런데 이 Chromium에는 사용 가능한 DRM 키 시스템이 하나도 없다. 렌더러에서 직접 물어보면 이렇게 나온다."
+    },
+    {
+     "type": "code",
+     "text": "await navigator.requestMediaKeySystemAccess('com.widevine.alpha', cfg)     // ✗ 실패\nawait navigator.requestMediaKeySystemAccess('com.apple.fps', cfg)          // ✗ 실패\nawait navigator.requestMediaKeySystemAccess('com.microsoft.playready', cfg) // ✗ 실패",
+     "lang": "js"
+    },
+    {
+     "type": "p",
+     "text": "Widevine CDM은 Electron 배포본에 들어있지 않고, FairPlay는 애초에 Safari 엔진에만 있다. 그래서 DRM 스트리밍은 **앱 안에서는 재생 자체가 시작되지 않는다.** 캡처를 아무리 잘 해도 잡을 픽셀이 없다."
+    },
+    {
+     "type": "p",
+     "text": "macOS에서 열려 있는 유일한 길이 FairPlay였고, FairPlay는 WKWebView에 있다. 그래서 브라우저 라이브는 **자체 번들 ID를 가진 WKWebView 창을 별도 프로세스로 띄운다.** 재생은 그 창이 하고, 캡처·오디오 탭· RTMP 송출은 네이티브 사이드카가 그 창만 골라서 한다."
+    },
+    {
+     "type": "image",
+     "mediaId": "@@ghc-desktop-drm-comparison.png",
+     "caption": "그림 2. Bitmovin 공식 DRM Stream Test(`art-of-motion_drm`)를 같은 맥에서 두 엔진에 띄웠다. 왼쪽(앱 내장 Chromium)은 페이지가 스스로 \"using No DRM\"이라 판정하고 `readyState 1`에서 멈춘 채 검은 화면, 오른쪽(WKWebView 헬퍼)은 \"using fairplay\"로 그대로 재생한다."
+    },
+    {
+     "type": "callout",
+     "text": "**한 가지 정정.** \"DRM 재생 화면은 화면 캡처로 잡으면 검게 나온다\"는 통설은 이 환경에서 **재현되지\n않았다.** FairPlay로 재생 중인 헬퍼 창을 일반 `screencapture`로 잡아도 영상이 그대로 찍힌다.\n실제 갈림길은 캡처가 아니라 **재생 가능 여부**다. (하드웨어 보호 경로를 쓰는 상용 서비스는 다를 수\n있으나 저작권 문제로 테스트하지 않았다 — 검증되지 않은 주장으로 남긴다.)"
+    },
+    {
+     "type": "h3",
+     "text": "열기와 송출을 분리했다"
     },
     {
      "type": "p",
@@ -10898,25 +11073,38 @@
      "type": "list",
      "items": [
       "웹 UI의 \"브라우저 라이브\" 메뉴 → 백엔드에서 Ingress 자격을 받아 `openBrowser({rtmpUrl, streamKey})`",
-      "헬퍼 창이 뜨고, 사용자는 거기서 로그인하고 원하는 페이지로 이동한다",
+      "헬퍼 창이 뜨고(실측 **220 ms**), 사용자는 거기서 로그인하고 원하는 페이지로 이동한다",
       "준비되면 **헬퍼 창 자신의 툴바에 있는 LIVE 버튼**을 누른다 → 그때부터 송출"
      ],
      "ordered": true
     },
     {
+     "type": "video",
+     "mediaId": "@@ghc-browser-live-flow.mp4",
+     "poster": "https://objectstore.ghmate.com/hub/media/ghc-browser-live-flow-poster.jpg",
+     "caption": "왼쪽이 송출하는 사람, 오른쪽이 다른 계정으로 같은 방을 보는 사람. 헬퍼 창을 열어도, DRM 영상이 재생돼도 오른쪽은 그대로다. LIVE를 누른 뒤 **1.99초** 만에 타일이 뜬다."
+    },
+    {
+     "type": "h3",
+     "text": "툴바는 화면에 남고 출력에서 사라진다"
+    },
+    {
+     "type": "p",
+     "text": "컨트롤을 창 안에 두면 조작은 편하지만 그대로 송출하면 주소창까지 방송된다. 그래서 툴바 높이(40 pt)를 캡처 포맷에 실어 보내고(`CaptureFormat.cropTop`), 사이드카가 출력 픽셀로 환산해 넘기면 ffmpeg가 인코딩 직전에 잘라낸다."
+    },
+    {
+     "type": "code",
+     "text": "ghc-capture capture --source-type window --source-id <id> --crop-top 40 ...\nffmpeg ... -vf \"crop=iw:ih-${cropTop}:0:${cropTop}\" ...",
+     "lang": "bash"
+    },
+    {
+     "type": "image",
+     "mediaId": "@@ghc-desktop-toolbar-crop.png",
+     "caption": "그림 3. 같은 창, 같은 순간. 왼쪽엔 주소창·소리잠금·LIVE 알약이 보이지만 오른쪽(시청자)에는 페이지만 도착한다."
+    },
+    {
      "type": "p",
      "text": "부수적으로 챙긴 것들:"
-    },
-    {
-     "type": "list",
-     "items": [
-      "헬퍼 툴바(40pt)는 화면에는 보이되 **방송 출력에서는 ffmpeg `crop`으로 잘라낸다** — 컨트롤은 필요하지만"
-     ],
-     "ordered": false
-    },
-    {
-     "type": "p",
-     "text": "시청자가 볼 필요는 없으니까"
     },
     {
      "type": "list",
@@ -10938,34 +11126,110 @@
     },
     {
      "type": "h2",
+     "text": "창/화면 캡처 모드 — 소스를 고르고, 소리는 나만 끈다"
+    },
+    {
+     "type": "p",
+     "text": "브라우저 라이브 말고 다른 한 축은 **아무 창이나 화면을 골라 송출하는 모드**다. 사이드카에게 물어본 `SCShareableContent` 목록이 그대로 소스 선택 UI가 된다."
+    },
+    {
+     "type": "image",
+     "mediaId": "@@ghc-desktop-native-live-modal.png",
+     "caption": "그림 4. 화면과 창을 그룹으로 나눠 보여준다. 개인 창 제목은 캡처용으로 가렸다."
+    },
+    {
+     "type": "p",
+     "text": "여기서 중요한 게 **오디오다.** 브라우저의 `getDisplayMedia`는 탭 오디오 아니면 시스템 전체 오디오만 준다. 반면 CoreAudio 프로세스 탭은 **그 앱의 오디오만** 뽑아낼 수 있고, 같은 탭에 muted 플래그를 걸면 \"내 스피커에서는 안 들리는데 방송에는 그대로 나가는\" 상태를 만들 수 있다."
+    },
+    {
+     "type": "image",
+     "mediaId": "@@ghc-desktop-app-audio-mute.png",
+     "caption": "그림 5. \"켜면 이 기기에선 안 들리고, 라이브에는 그대로 전달됩니다\" — 스피커로 나온 소리를 마이크가 다시 주워 에코가 생기는 걸 막으면서, 시청자에게는 원본 오디오를 보낸다."
+    },
+    {
+     "type": "image",
+     "mediaId": "@@ghc-desktop-room-window-capture.png",
+     "caption": "그림 6. 화면 공유가 아니다. 앱이 직접 창을 캡처해 RTMP로 밀어 넣고, Ingress를 거쳐 방의 타일로 들어온 것이다."
+    },
+    {
+     "type": "h2",
      "text": "결과"
     },
     {
      "type": "p",
-     "text": "로컬에서 확인한 값과 배포 상태다."
+     "text": "전부 이 맥(Apple M4 Max · 16코어 · macOS 26)에서 **앱 0.1.4를 실제로 돌려 잰 값**이다."
     },
     {
      "type": "table",
      "header": [
-      "항목",
+      "계측 항목",
+      "값",
+      "방법"
+     ],
+     "rows": [
+      [
+       "\"브라우저 라이브\" 클릭 → 헬퍼 창 등장",
+       "**220 ms** (3회: 218/220/222)",
+       "창 목록 120 ms 폴링"
+      ],
+      [
+       "LIVE 클릭 → 시청자 첫 프레임",
+       "**1.99 s** (1,981 / 1,993 ms · 콜드 첫 회 3,803 ms)",
+       "시청자 페이지의 재생 중 `<video>` 증가 시각"
+      ],
+      [
+       "캡처 fps (영상 재생 중)",
+       "**29.2–29.4** (목표 30)",
+       "사이드카 `[flow]` 워치독 273 샘플"
+      ],
+      [
+       "캡처 fps (대상 창 정지)",
+       "15.4–17.0",
+       "〃 — SCK가 변화 없는 프레임을 안 보낸다"
+      ],
+      [
+       "송출 파이프라인 CPU (브라우저 라이브)",
+       "**11.7%** of 1코어 = **0.73%** of 16코어 (`ghc-capture` 4.0 + `ffmpeg` 7.7)",
+       "`top -l 2` 순간 샘플"
+      ],
+      [
+       "송출 파이프라인 CPU (창 캡처)",
+       "**9.9%** of 1코어 = 0.62% (4.2 + 5.7)",
+       "〃"
+      ],
+      [
+       "송출 파이프라인 RSS",
+       "42 MB (사이드카 11 + ffmpeg 31)",
+       "〃"
+      ]
+     ]
+    },
+    {
+     "type": "p",
+     "text": "`Electron` 프로세스가 따로 25–30%를 쓰는데 이건 라이브가 아니라 **방 화면에서 원격 비디오를 디코드·합성하는 앱 UI** 몫이다. 캡처·인코딩 파이프라인 자체는 코어 하나의 10% 남짓으로, VideoToolbox 하드웨어 인코딩이 값을 다 깎아준 결과다."
+    },
+    {
+     "type": "table",
+     "header": [
+      "배포 항목",
       "값"
      ],
      "rows": [
       [
        "macOS 캡처 사이드카",
-       "`ghc-capture` (Swift, 릴리스 빌드 산출물 약 310 KB)"
+       "`ghc-capture` (Swift, 릴리스 빌드 산출물 310 KB)"
       ],
       [
        "인코딩 설정",
        "`h264_videotoolbox -profile:v high`, 10 Mbps, 헬퍼 창 1600×980"
       ],
       [
-       "배포 산출물",
-       "macOS `GHC.dmg` 98 MB · Windows `GHC-Setup.exe` 382 MB"
+       "설치본",
+       "macOS `GHC.dmg` **93 MB** · Windows `GHC-Setup.exe` **194 MB**"
       ],
       [
-       "현재 버전",
-       "0.1.4 (macOS는 코드서명 + 공증 + 인앱 자동 업데이트 라이브)"
+       "배포 버전",
+       "macOS **0.1.4** (서명 + 공증 + 인앱 자동 업데이트 라이브) · Windows **0.1.1** (구 피드에만 존재)"
       ],
       [
        "웹 UI 재사용률",
@@ -10988,6 +11252,10 @@
     {
      "type": "p",
      "text": "**폴백을 기본값으로 두면 멀티플랫폼이 덜 무섭다.** `isNativeShell()`이 false일 때가 정상 경로이고 네이티브가 추가 경로다. 반대로 설계했다면 웹에서 매번 \"데스크탑 아님\" 예외를 처리해야 했을 것이다."
+    },
+    {
+     "type": "p",
+     "text": "**\"안 된다\"의 이유를 정확히 짚어야 해법이 정해진다.** DRM이 안 되는 걸 오래 \"캡처가 막힌다\"로 알고 있었는데, 실제로 재보니 캡처는 멀쩡했고 **재생이 시작조차 안 되는 것**이 문제였다. 원인이 캡처였다면 캡처 API를 바꿔야 했겠지만, 재생이 원인이니 답은 \"재생할 수 있는 엔진을 하나 더 띄운다\"로 정해졌다. 통설을 한 번 재보는 데 든 시간이 설계를 바꿨다."
     },
     {
      "type": "p",
