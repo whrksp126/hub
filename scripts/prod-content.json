@@ -4502,7 +4502,7 @@
    "date": "2026.07",
    "read_time": "14분",
    "title": "SM2를 버리고 FSRS-5를 직접 구현하기 — 스키마리스 JSON 컬럼 위에서 학습 알고리즘 갈아끼우기",
-   "excerpt": "이지팩터 하나로 기억을 표현하던 SM2를, stability·difficulty·retrievability 3축의 FSRS-5로 교체했다. SQL 컬럼 하나 추가하지 않고, 운영 중인 715건의 학습 데이터를 무중단으로.",
+   "excerpt": "이지팩터 하나로 기억을 표현하던 SM2를, stability·difficulty·retrievability 3축의 FSRS로 교체했다. 단어 상태 컬럼은 그대로 둔 채, 이미 쌓인 학습 데이터를 읽는 순간 새 형식으로 바꿔가며.",
    "order": 10,
    "featured": 0,
    "status": "published",
