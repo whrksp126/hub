@@ -1,0 +1,243 @@
+{
+  "slug": "heyvoca",
+  "title": "HeyVoca",
+  "title_kr": "헤이보카",
+  "year": "2025.01 — 운영 중",
+  "role": "팀 리드 · 기획·마케팅·디자인·개발",
+  "url": "heyvoca.ghmate.com",
+  "summary": "외운 단어를 잊는 게 진짜 문제입니다. 담아두기만 하면 잊을 때쯤 알아서 다시 꺼내주는 단어 학습 서비스. 웹으로 만들어 iOS·Android 앱까지 한 벌로 제공합니다.",
+  "metrics": [
+    {
+      "value": "3단계",
+      "label": "기억 상태를 안정도·난이도·회상 확률로 계산"
+    },
+    {
+      "value": "3 → 16",
+      "label": "서버가 한 번에 받는 요청 수"
+    },
+    {
+      "value": "약 5만 단어",
+      "label": "사용자 DB와 분리 배포되는 사전 DB"
+    }
+  ],
+  "stack": [
+    "React 18 · Vite",
+    "Tailwind · Framer Motion",
+    "React Native 0.80 (WebView)",
+    "NativeWind",
+    "Firebase (FCM)",
+    "Flask · SQLAlchemy",
+    "MySQL (2-schema)",
+    "Redis",
+    "MinIO (S3)",
+    "Docker Compose"
+  ],
+  "sections": [
+    {
+      "kind": "lead",
+      "heading": "한 줄로 말하면",
+      "body": "영어 단어의 진짜 문제는 외우는 게 아니라 외운 걸 잊는 것입니다. 헤이보카는 단어를 담아두기만 하면, 잊을 때쯤 알아서 다시 꺼내 보여줍니다. 무엇을 언제 복습할지 고민할 필요가 없습니다.",
+      "bullets": [
+        "잊기 전에 다시 — 답한 속도와 단어 난이도까지 반영해 단어마다 복습일을 따로 계산한다",
+        "담는 순간이 쉽다 — 사전 검색, 사진 찍기, 다른 앱에서 가져오기까지",
+        "웹 하나로 3곳 — 같은 화면이 웹·iOS·Android에서 그대로 돈다",
+        "무료로 끊기지 않게 — 비용이 드는 기능은 대체 경로를 만들어 서비스가 멈추지 않게 했다"
+      ]
+    },
+    {
+      "kind": "gallery",
+      "heading": "① 잊을 때쯤 다시 보여줍니다",
+      "body": "단어마다 \"언제 다시 봐야 하는지\"를 따로 계산합니다. 자주 틀린 단어는 자주, 잘 외운 단어는 뜸하게 나옵니다. 단어마다 다음 복습일과 복습 효과가 따로 계산되고, 학습한 단어는 씨앗에서 당근으로 자라는 화면으로 상태를 보여줍니다.",
+      "media": [
+        {
+          "kind": "image",
+          "mediaId": 97,
+          "caption": "단어마다 자라는 단계와 다음 복습일이 따로 계산된다"
+        }
+      ]
+    },
+    {
+      "kind": "gallery",
+      "heading": "② 단어를 담는 데 3초",
+      "body": "학습은 단어를 담는 순간이 귀찮으면 시작되지 않습니다. 사전에서 검색해 바로 담고, 종이 단어장은 사진으로 찍어 넣고, 다른 앱에서 쓰던 단어장도 파일로 가져옵니다. 사진 인식은 기기 안에서 처리해 사진이 서버로 나가지 않습니다.",
+      "media": [
+        {
+          "kind": "video",
+          "mediaId": 93,
+          "caption": "검색해서 고르면 바로 내 단어장에 들어간다",
+          "poster": "https://objectstore.ghmate.com/hub/media/hv-vp-dict-to-test.jpg"
+        }
+      ]
+    },
+    {
+      "kind": "gallery",
+      "heading": "③ 계속하게 만듭니다",
+      "body": "아무리 좋은 복습 알고리즘도 안 들어오면 소용이 없습니다. 연속으로 맞히면 콤보가 오르고, 출석과 미션이 쌓이고, 내 단어들이 농장에서 자랍니다. 단어장을 사는 상점도 있고, 앱 안 결제가 실제로 이뤄집니다.",
+      "media": [
+        {
+          "kind": "video",
+          "mediaId": 92,
+          "caption": "연속 정답이 이어지면 콤보가 오른다",
+          "poster": "https://objectstore.ghmate.com/hub/media/hv-vp-combo-chain.jpg"
+        }
+      ]
+    },
+    {
+      "kind": "features",
+      "heading": "핵심 기능",
+      "bullets": [
+        "복습 알고리즘 — 자주 틀린 단어를 먼저, 단어마다 복습일을 따로 계산한다",
+        "6가지 문제 — 사지선다(정·역방향)·빈칸·카드 맞추기에 듣기까지. 틀린 문제는 다시 출제",
+        "단어 담기 — 영한 통합 사전 검색, 카메라 인식, 퀴즐렛·Anki·엑셀 등 6가지 형식 가져오기",
+        "게임 요소 — 단어가 씨앗에서 당근으로 자라는 농장, 연속 학습·미션·업적",
+        "상점 — 보석으로 단어장·농장 도구 구매. 앱스토어·구글플레이 결제 연동",
+        "웹·iOS·Android — 화면 한 벌을 세 곳이 공유. 발음 듣기와 다크모드 포함"
+      ]
+    },
+    {
+      "kind": "gallery",
+      "heading": "화면",
+      "media": [
+        {
+          "kind": "image",
+          "mediaId": 96,
+          "caption": "홈 — 내 단어 농장과 오늘 할 복습"
+        },
+        {
+          "kind": "image",
+          "mediaId": 99,
+          "caption": "상점 — 보석으로 단어장과 농장 도구를 산다"
+        }
+      ]
+    },
+    {
+      "kind": "timeline",
+      "heading": "무엇을 했나",
+      "body": "5인 팀(기획·마케팅 1 · 디자인 1 · 개발 3)에서 기획·마케팅·디자인·개발 전 영역을 리드하고 직접 작업했습니다.",
+      "bullets": [
+        "2025 상반기 — 서비스 기획과 구조 설계, 프론트·백엔드 기반 구축, 서버·DB·배포 셋업 (초기 일부 API는 개발팀과 분담)",
+        "2025 하반기 — 앱 구축. 소셜 로그인·결제·카메라 인식을 앱과 연결하고 웹 화면을 전면 개편, 2026.01 iOS 출시",
+        "2026 ~ 현재 — 복습 알고리즘 교체, 발음 엔진 교체·캐싱, DB 분리, 게임 요소, 온보딩 개편, 배포까지 사실상 단독 주도"
+      ]
+    },
+    {
+      "kind": "challenge",
+      "heading": "기술적으로 풀어낸 문제들",
+      "body": "자세한 과정은 아래 딥다이브에서 다룹니다.",
+      "bullets": [
+        "기존 복습 알고리즘을 버리고 최신 알고리즘을 직접 구현했다 — 서버의 구버전 Python에선 기존 라이브러리를 쓸 수 없었고, 한 번 틀렸다고 복습 간격이 급락하지 않게 보정도 넣어야 했다. 단어 상태 컬럼은 그대로 둔 채 교체",
+        "하나였던 DB를 사용자용과 사전용으로 분리했다 — 약 5만 단어 사전을 검증된 배포 파일로 만들어, 관리자 화면에서 한 번에 교체·되돌리게 했다",
+        "느린 외부 호출이 서버 전체를 막던 구조 — 한 번에 받는 요청 수를 3에서 16으로 늘리고 DB 연결 관리를 다시 잡아 막히지 않게 했다",
+        "발음 엔진을 갈아끼울 수 있게 만들고, 한 번 만든 음성은 저장해 재사용했다 — 유료 엔진을 무료 엔진으로 설정 한 줄에 교체"
+      ]
+    },
+    {
+      "kind": "default",
+      "heading": "AI 활용",
+      "body": "사전 데이터를 만드는 데도, 앱 기능에도 AI를 넣되 비용이 드는 호출은 마지막 수단으로 밀어냈습니다.",
+      "bullets": [
+        "관리자 도구에서 조건만 주면 AI가 단어장 초안을 만든다 — 정해진 형식으로 받고 중복 단어는 자동으로 뺀다",
+        "예문 강조는 3단계 — 무료 형태소 분석 → 규칙 검색 → 그래도 안 되는 것만 AI",
+        "사전 예문 4만 6천여 개의 단어 강조 위치를 사람이 아니라 형태소 분석과 검증 스크립트가 먼저 확인하게 만들었다",
+        "사진 인식은 기기 안에서 — 사진이 서버로 나가지 않아 비용도 보관 문제도 없다"
+      ]
+    },
+    {
+      "kind": "default",
+      "heading": "한계와 다음",
+      "bullets": [
+        "마케팅에 집중하지 못해 사용자와 매출이 아직 모이지 않았다. 채널을 찾는 중이다",
+        "복습 알고리즘을 사람마다 더 정교하게 맞추려면 학습 기록이 더 쌓여야 한다",
+        "리텐션·복습 완료율 같은 지표를 아직 계측하지 않고 있다"
+      ]
+    }
+  ],
+  "deepDives": [
+    {
+      "id": 9,
+      "slug": "fsrs-migration",
+      "title": "SM2를 버리고 FSRS-5를 직접 구현하기 — 스키마리스 JSON 컬럼 위에서 학습 알고리즘 갈아끼우기",
+      "excerpt": "이지팩터 하나로 기억을 표현하던 SM2를, stability·difficulty·retrievability 3축의 FSRS로 교체했다. 단어 상태 컬럼은 그대로 둔 채, 이미 쌓인 학습 데이터를 읽는 순간 새 형식으로 바꿔가며.",
+      "updated_at": 1790383182
+    },
+    {
+      "id": 10,
+      "slug": "tts-caching",
+      "title": "유료 TTS를 껐는데 아무도 몰랐다 — provider 추상화 + object key 캐싱으로 만든 무중단 엔진 교체",
+      "excerpt": "단어마다 발음을 들려주려면 TTS가 필요하다. 순진하게 매번 API를 호출하면 비용·지연·장애가 모두 터진다. object key에 provider를 인코딩한 캐싱 설계 하나로, 유료 ElevenLabs → 무료 Edge TTS 전환을 코드 변경 없이 흡수했다.",
+      "updated_at": 1790389187
+    },
+    {
+      "id": 11,
+      "slug": "dict-schema-split",
+      "title": "사용자 데이터와 사전 데이터는 같은 DB에 살면 안 된다 — 2-스키마 분리와 objectstore 사전 배포 허브",
+      "excerpt": "한 schema 안에 '절대 되돌리면 안 되는 사용자 데이터'와 '통째로 갈아끼워도 되는 사전 콘텐츠'가 섞여 있었다. bind_key로 두 schema를 쪼개고, 사전 배포를 git이 아닌 objectstore 허브로 옮겨 코드 배포와 콘텐츠 배포를 분리했다.",
+      "updated_at": 1790375066
+    },
+    {
+      "id": 12,
+      "slug": "login-session-webview",
+      "title": "앱을 껐다 켜도 로그인이 유지되게 — 하이브리드 WebView의 쿠키 영속화와 90일 슬라이딩 세션",
+      "excerpt": "실제 인증 상태는 웹이 HttpOnly 쿠키로 관리하는데, 그 웹을 감싼 네이티브 WebView가 재시작되면 세션이 날아간다. iOS/Android의 서로 다른 쿠키 저장 모델과 refresh 토큰 슬라이딩 회전으로 '껐다 켜도 로그인 유지'를 만들었다.",
+      "updated_at": 1790383182
+    }
+  ],
+  "media": [
+    {
+      "id": 13,
+      "filename": "1782737251610-547623aa.png",
+      "alt": "HeyVoca",
+      "url": "https://objectstore.ghmate.com/hub/media/1782737251610-547623aa.png",
+      "width": null,
+      "height": null
+    },
+    {
+      "id": 12,
+      "filename": "1782737226784-d725f0a0.png",
+      "alt": "HeyVoca",
+      "url": "https://objectstore.ghmate.com/hub/media/1782737226784-d725f0a0.png",
+      "width": null,
+      "height": null
+    },
+    {
+      "id": 97,
+      "filename": "word-detail-farm.png",
+      "alt": "단어 상세 · 당근 농장 — 생애주기 시각화",
+      "url": "https://objectstore.ghmate.com/hub/media/hv-s2-word-detail-farm.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": 93,
+      "filename": "dict-to-test.mp4",
+      "alt": "사전 검색 → 자동완성 → 단어 담기",
+      "url": "https://objectstore.ghmate.com/hub/media/hv-v-dict-to-test.mp4",
+      "width": 1080,
+      "height": 2340
+    },
+    {
+      "id": 92,
+      "filename": "combo-chain.mp4",
+      "alt": "테스트 연속 정답 → 콤보 상승",
+      "url": "https://objectstore.ghmate.com/hub/media/hv-v-combo-chain.mp4",
+      "width": 1080,
+      "height": 2340
+    },
+    {
+      "id": 96,
+      "filename": "home.png",
+      "alt": "홈 — 위험 그리팅·데일리 미션·업적",
+      "url": "https://objectstore.ghmate.com/hub/media/hv-s2-home.png",
+      "width": 402,
+      "height": 874
+    },
+    {
+      "id": 99,
+      "filename": "book-store-dark.png",
+      "alt": "다크 모드 — 서점",
+      "url": "https://objectstore.ghmate.com/hub/media/hv-s2-book-store-dark.png",
+      "width": 402,
+      "height": 874
+    }
+  ]
+}
