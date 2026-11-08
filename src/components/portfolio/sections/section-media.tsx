@@ -42,10 +42,21 @@ export function SectionMediaView({ media, urls }: { media: SectionMedia[]; urls:
   const list = (media ?? []).filter((m) => mediaSrc(m, urls))
   const [wide, setWide] = useState<Record<number, boolean>>({})
   if (list.length === 0) return null
+  const isWide = (i: number) => list[i].kind === 'embed' || wide[i] !== false
+  // 연속된 세로형 묶음에서 짝이 없는 마지막 하나는 반 폭 그대로 가운데 정렬
+  const layoutClass = (i: number) => {
+    if (isWide(i)) return 'sm:col-span-2'
+    let start = i
+    while (start > 0 && !isWide(start - 1)) start--
+    let end = i
+    while (end < list.length - 1 && !isWide(end + 1)) end++
+    const lone = (end - start + 1) % 2 === 1 && i === end
+    return lone ? 'sm:col-span-2 sm:w-[calc(50%-0.5rem)] sm:justify-self-center' : ''
+  }
   return (
     <div className="grid gap-4 sm:grid-cols-2">
       {list.map((m, i) => (
-        <figure key={i} className={`m-0 ${m.kind === 'embed' || wide[i] !== false ? 'sm:col-span-2' : ''}`}>
+        <figure key={i} className={`m-0 ${layoutClass(i)}`}>
           <MediaFrame m={m} urls={urls} onRatio={(w) => setWide((p) => (p[i] === w ? p : { ...p, [i]: w }))} />
           {m.caption && <figcaption className="mt-2 text-[12.5px] leading-[1.5] text-[var(--pf-fg-faint)]">{m.caption}</figcaption>}
         </figure>
