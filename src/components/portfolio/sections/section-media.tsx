@@ -12,7 +12,7 @@ function mediaSrc(m: SectionMedia, urls: Record<number, string>): string | null 
 }
 
 // 단일 미디어 렌더(공개·편집 공용 시각).
-function MediaFrame({ m, urls }: { m: SectionMedia; urls: Record<number, string> }) {
+function MediaFrame({ m, urls, onRatio }: { m: SectionMedia; urls: Record<number, string>; onRatio?: (wide: boolean) => void }) {
   const src = mediaSrc(m, urls)
   if (!src) return null
   if (m.kind === 'embed') {
@@ -30,21 +30,23 @@ function MediaFrame({ m, urls }: { m: SectionMedia; urls: Record<number, string>
   }
   if (m.kind === 'video') {
     // eslint-disable-next-line jsx-a11y/media-has-caption
-    return <video src={src} poster={m.poster || undefined} controls autoPlay muted loop playsInline preload="metadata" className="mx-auto block max-h-[82vh] w-full rounded-[14px] border border-white/[0.08] bg-black object-contain" />
+    return <video src={src} poster={m.poster || undefined} ref={(el) => { if (el && el.readyState >= 1) onRatio?.(el.videoWidth >= el.videoHeight) }} onLoadedMetadata={(e) => onRatio?.(e.currentTarget.videoWidth >= e.currentTarget.videoHeight)} controls autoPlay muted loop playsInline preload="metadata" className="mx-auto block max-h-[82vh] w-full rounded-[14px] border border-white/[0.08] bg-black object-contain" />
   }
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={src} alt={m.caption ?? ''} className="mx-auto block max-h-[82vh] w-full rounded-[14px] border border-white/[0.07] bg-white/[0.02] object-contain" />
+  return <img src={src} alt={m.caption ?? ''} ref={(el) => { if (el?.complete && el.naturalWidth) onRatio?.(el.naturalWidth >= el.naturalHeight) }} onLoad={(e) => onRatio?.(e.currentTarget.naturalWidth >= e.currentTarget.naturalHeight)} className="mx-auto block max-h-[82vh] w-full rounded-[14px] border border-white/[0.07] bg-white/[0.02] object-contain" />
 }
 
-// 공개: 미디어 그리드(1장=가로 꽉, 2장 이상=2열).
+// 공개: 미디어 그리드 — 가로형(이미지·영상)은 한 줄 전체, 세로형은 2열.
+// 비율은 로드 후 실제 크기로 판정(판정 전에는 가로형으로 간주해 큰 쪽으로 시작).
 export function SectionMediaView({ media, urls }: { media: SectionMedia[]; urls: Record<number, string> }) {
   const list = (media ?? []).filter((m) => mediaSrc(m, urls))
+  const [wide, setWide] = useState<Record<number, boolean>>({})
   if (list.length === 0) return null
   return (
-    <div className={`grid gap-4 ${list.length > 1 ? 'sm:grid-cols-2' : ''}`}>
+    <div className="grid gap-4 sm:grid-cols-2">
       {list.map((m, i) => (
-        <figure key={i} className="m-0">
-          <MediaFrame m={m} urls={urls} />
+        <figure key={i} className={`m-0 ${m.kind === 'embed' || wide[i] !== false ? 'sm:col-span-2' : ''}`}>
+          <MediaFrame m={m} urls={urls} onRatio={(w) => setWide((p) => (p[i] === w ? p : { ...p, [i]: w }))} />
           {m.caption && <figcaption className="mt-2 text-[12.5px] leading-[1.5] text-[var(--pf-fg-faint)]">{m.caption}</figcaption>}
         </figure>
       ))}
